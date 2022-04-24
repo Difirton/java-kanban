@@ -1,13 +1,13 @@
 package entitys;
 
-import controllers.TaskStatus;
-import static controllers.TaskStatus.*;
+import constants.TaskStatus;
+import static constants.TaskStatus.*;
 
 public abstract class Task {
-    long id;
-    String name;
-    String description;
-    TaskStatus status;
+    private long id;
+    private String name;
+    private String description;
+    private TaskStatus status;
 
     public Task(String name, String description) {
         this.name = name;
@@ -17,5 +17,25 @@ public abstract class Task {
 
     public long getId() {
         return id;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
