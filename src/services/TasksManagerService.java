@@ -43,10 +43,6 @@ public class TasksManagerService {
                 .map(o -> this.getEpicById(o))
                 .findFirst().get();
     }
-    //TODO not working
-    public void getSubtaskByIdOrNull(Long subtaskId) {
-        this.getAllSubtasks().stream().filter(o -> o.getEpicsId().equals(subtaskId)).forEach(System.out::println);
-    }
 
     public void createNewEpic(String name, String description) {
         allEpics.put(Epic.getNewId(), new Epic(name, description));
