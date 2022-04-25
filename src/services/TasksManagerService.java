@@ -36,6 +36,12 @@ public class TasksManagerService {
         return allEpics.get(epicId);
     }
 
+    public Subtask getSubtaskById(Long subtaskId) {
+        return this.getAllSubtasks().stream()
+                .filter(o -> subtaskId.equals(o.getId()))
+                .findFirst().get();
+    }
+
     public Epic getEpicBySubtaskId(Long subtaskId) {
         return this.getAllSubtasks().stream()
                 .filter(o -> subtaskId.equals(o.getId()))
@@ -81,10 +87,10 @@ public class TasksManagerService {
     }
 
     public void updateSubtaskName(Long subtaskId, String newName) {
-        getEpicBySubtaskId(subtaskId).setName(newName);
+        getSubtaskById(subtaskId).setName(newName);
     }
 
     public void updateSubtaskDescription(Long subtaskId, String newDescription) {
-        getEpicBySubtaskId(subtaskId).setName(newDescription);
+        getSubtaskById(subtaskId).setDescription(newDescription);
     }
 }

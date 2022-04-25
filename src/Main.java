@@ -31,8 +31,10 @@ public class Main {
         }
 
         taskManagerService.changeSubtaskStatusDone(1L);
+        taskManagerService.updateSubtaskDescription(1L, "HHHHHHHHHHHHHHH");
 
-        System.out.println(taskManagerService.getEpicBySubtaskId(1L));
+
+        System.out.println(taskManagerService.getSubtaskById(1L));
         System.out.println("1 - " + taskManagerService.getAllEpicsSubtasks(1L));
         System.out.println("2 - " + taskManagerService.getAllEpicsSubtasks(2L));
         System.out.println("3 - " + taskManagerService.getAllEpicsSubtasks(3L));
