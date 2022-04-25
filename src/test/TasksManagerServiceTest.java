@@ -1,5 +1,3 @@
-package test;
-
 import junit.framework.TestCase;
 import services.TasksManagerService;
 

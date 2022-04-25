@@ -37,7 +37,7 @@ public class Epic extends Task {
         return this.subtasks.values().stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public void changeStatusSubtask(Long subtaskId) {
+    public void changeStatusSubtaskDone(Long subtaskId) {
         subtasks.get(subtaskId).changeStatusDone();
         if (subtasks.values().stream()
                 .allMatch(o -> o.getStatus().equals(TaskStatus.DONE))) {
@@ -45,6 +45,11 @@ public class Epic extends Task {
         } else {
             this.setStatus(TaskStatus.IN_PROGRESS);
         }
+    }
+
+    public void changeStatusSubtaskInProgress(Long subtaskId) {
+        subtasks.get(subtaskId).changeStatusInProgress();
+        this.setStatus(TaskStatus.IN_PROGRESS);
     }
 
     @Override

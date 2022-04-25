@@ -24,6 +24,10 @@ public class Subtask extends Task {
         this.setStatus(TaskStatus.DONE);
     }
 
+    public void changeStatusInProgress() {
+        this.setStatus(TaskStatus.IN_PROGRESS);
+    }
+
     @Override
     public String toString() {
         return "Subtask{" +

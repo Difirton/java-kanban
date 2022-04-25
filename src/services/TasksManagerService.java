@@ -75,7 +75,11 @@ public class TasksManagerService {
     }
 
     public void changeSubtaskStatusDone(Long subtaskId) {
-        getEpicBySubtaskId(subtaskId).changeStatusSubtask(subtaskId);
+        getEpicBySubtaskId(subtaskId).changeStatusSubtaskDone(subtaskId);
+    }
+
+    public void changeSubtaskStatusInProgress(Long subtaskId) {
+        getEpicBySubtaskId(subtaskId).changeStatusSubtaskInProgress(subtaskId);
     }
 
     public void updateEpicName(Long epicId, String newName) {
