@@ -5,12 +5,12 @@ public class Main {
     public static void main(String[] args) {
         TasksManagerService tasksManagerService = new TasksManagerService();
         tasksManagerService.createNewEpic("Epic 1", "Desc 1");
-        tasksManagerService.createNewSubtask("Subtas 1.1", "Desc sub 1", 1L);
-        tasksManagerService.createNewSubtask("Subtas 1.2", "Desc sub 1", 1L);
-        tasksManagerService.createNewSubtask("Subtas 1.3", "Desc sub 1", 1L);
+        tasksManagerService.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
+        tasksManagerService.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
+        tasksManagerService.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L);
         tasksManagerService.createNewEpic("Epic 2", "Desc 2");
-        tasksManagerService.createNewSubtask("Subtas 2.1", "Desc sub 1", 2L);
-        tasksManagerService.createNewSubtask("Subtas 2.2", "Desc sub 1", 2L);
+        tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 1", 2L);
+        tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 1", 2L);
 
         System.out.println(tasksManagerService.getAllEpics());
         System.out.println(tasksManagerService.getAllSubtasks());
