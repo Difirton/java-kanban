@@ -31,8 +31,8 @@ public class Subtask extends Task {
     @Override
     public String toString() {
         return "Subtask{" +
-                "id=" + this.getId() + '\'' +
-                ", epicsId=" + this.getEpicsId() + '\'' +
+                "id='" + this.getId() + '\'' +
+                ", epicsId='" + this.getEpicsId() + '\'' +
                 ", name='" + this.getName() + '\'' +
                 ", description='" + this.getDescription() + '\'' +
                 ", status=" + this.getStatus() +

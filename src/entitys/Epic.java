@@ -4,7 +4,6 @@ import constants.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class Epic extends Task {
@@ -29,10 +28,6 @@ public class Epic extends Task {
         this.subtasks.clear();
     }
 
-    public Subtask getSubtaskById(Long subtaskId) {
-        return subtasks.get(subtaskId);
-    }
-
     public ArrayList<Subtask> getAllSubtask() {
         return this.subtasks.values().stream().collect(Collectors.toCollection(ArrayList::new));
     }
@@ -55,8 +50,8 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Subtask{" +
-                "id=" + this.getId()  + '\'' +
-                ", subtaskId=" + subtasks.keySet()  + '\'' +
+                "id='" + this.getId()  + '\'' +
+                ", subtaskId='" + subtasks.keySet()  + '\'' +
                 ", name='" + this.getName() + '\'' +
                 ", description='" + this.getDescription() + '\'' +
                 ", status=" + this.getStatus() +
