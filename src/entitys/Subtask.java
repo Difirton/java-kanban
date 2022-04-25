@@ -23,4 +23,15 @@ public class Subtask extends Task {
     public void changeStatusDone() {
         this.setStatus(TaskStatus.DONE);
     }
+
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "id=" + this.getId() + '\'' +
+                ", epicsId=" + this.getEpicsId() + '\'' +
+                ", name='" + this.getName() + '\'' +
+                ", description='" + this.getDescription() + '\'' +
+                ", status=" + this.getStatus() +
+                '}';
+    }
 }

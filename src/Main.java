@@ -30,12 +30,16 @@ public class Main {
                     Math.random())), examplesDescription, (long)(5 * Math.random() + 1l));
         }
 
-        System.out.println(taskManagerService.getEpicBySubtaskId(2L));
+        taskManagerService.changeSubtaskStatusDone(1L);
+
+        System.out.println(taskManagerService.getEpicBySubtaskId(1L));
         System.out.println("1 - " + taskManagerService.getAllEpicsSubtasks(1L));
         System.out.println("2 - " + taskManagerService.getAllEpicsSubtasks(2L));
         System.out.println("3 - " + taskManagerService.getAllEpicsSubtasks(3L));
         System.out.println("4 - " + taskManagerService.getAllEpicsSubtasks(4L));
         System.out.println("5 - " + taskManagerService.getAllEpicsSubtasks(5L));
+
+
 
     }
 }

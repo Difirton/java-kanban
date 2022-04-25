@@ -46,4 +46,15 @@ public class Epic extends Task {
             this.setStatus(TaskStatus.IN_PROGRESS);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "id=" + this.getId()  + '\'' +
+                ", subtaskId=" + subtasks.keySet()  + '\'' +
+                ", name='" + this.getName() + '\'' +
+                ", description='" + this.getDescription() + '\'' +
+                ", status=" + this.getStatus() +
+                '}';
+    }
 }
