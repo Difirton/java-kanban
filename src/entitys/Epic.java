@@ -5,6 +5,7 @@ import constants.TaskStatus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Epic extends Task {
     private static long amountId = 1;
@@ -17,7 +18,7 @@ public class Epic extends Task {
     }
 
     public static long getNewId() {
-        return ++amountId;
+        return amountId;
     }
 
     public void addSubtasks(String name, String description) {
@@ -33,7 +34,7 @@ public class Epic extends Task {
     }
 
     public ArrayList<Subtask> getAllSubtask() {
-        return new ArrayList(List.of(subtasks.values()));
+        return this.subtasks.values().stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void changeStatusSubtask(Long subtaskId) {

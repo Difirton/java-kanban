@@ -4,7 +4,7 @@ import constants.TaskStatus;
 
 public class Subtask extends Task {
     private static long amountId = 1;
-    private long epicsId;
+    private Long epicsId;
 
     public Subtask(String name, String description, long epicsId) {
         super(name, description);
@@ -13,10 +13,10 @@ public class Subtask extends Task {
     }
 
     public static long getNewId() {
-        return ++amountId;
+        return amountId;
     }
 
-    public long getEpicsId() {
+    public Long getEpicsId() {
         return epicsId;
     }
 

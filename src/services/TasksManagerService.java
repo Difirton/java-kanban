@@ -2,9 +2,9 @@ package services;
 
 import entitys.Epic;
 import entitys.Subtask;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TasksManagerService {
     private HashMap<Long, Epic> allEpics;
@@ -28,6 +28,7 @@ public class TasksManagerService {
     }
 
     public void  removeEpic(Long epicId) {
+        allEpics.get(epicId).removeSubtasks();
         allEpics.remove(epicId);
     }
 
@@ -35,22 +36,16 @@ public class TasksManagerService {
         return allEpics.get(epicId);
     }
 
-    public Epic getEpicBySubtaskIdOrNull(Long subtaskId) {
-        for (long epic:allEpics.keySet()) {
-            if (allEpics.get(epic).getAllSubtask().contains(subtaskId)) {
-                return allEpics.get(epic);
-            }
-        }
-        return null;
+    public Epic getEpicBySubtaskId(Long subtaskId) {
+        return this.getAllSubtasks().stream()
+                .filter(o -> subtaskId.equals(o.getId()))
+                .map(o -> o.getEpicsId())
+                .map(o -> this.getEpicById(o))
+                .findFirst().get();
     }
-
-    public Subtask getSubtaskByIdOrNull(Long subtaskId) {
-        for (long epic:allEpics.keySet()) {
-            if (allEpics.get(epic).getAllSubtask().contains(subtaskId)) {
-                return allEpics.get(epic).getSubtaskById(subtaskId);
-            }
-        }
-        return null;
+    //TODO not working
+    public void getSubtaskByIdOrNull(Long subtaskId) {
+        this.getAllSubtasks().stream().filter(o -> o.getEpicsId().equals(subtaskId)).forEach(System.out::println);
     }
 
     public void createNewEpic(String name, String description) {
@@ -62,14 +57,14 @@ public class TasksManagerService {
     }
 
     public ArrayList<Epic> getAllEpics() {
-        return new ArrayList(List.of(allEpics.values()));
+        return allEpics.values().stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Subtask> getAllSubtasks() {
         ArrayList<Subtask> allSubtasks = new ArrayList<>();
-        allEpics.values().stream()
+        this.getAllEpics().stream()
                 .map(o -> o.getAllSubtask())
-                .forEach(o ->allSubtasks.addAll(o));
+                .forEach(o -> allSubtasks.addAll(o));
         return allSubtasks;
     }
 
@@ -78,7 +73,7 @@ public class TasksManagerService {
     }
 
     public void changeSubtaskStatusDone(Long subtaskId) {
-        getEpicBySubtaskIdOrNull(subtaskId).changeStatusSubtask(subtaskId);
+        getEpicBySubtaskId(subtaskId).changeStatusSubtask(subtaskId);
     }
 
     public void updateEpicName(Long epicId, String newName) {
@@ -90,10 +85,10 @@ public class TasksManagerService {
     }
 
     public void updateSubtaskName(Long subtaskId, String newName) {
-        getEpicBySubtaskIdOrNull(subtaskId).setName(newName);
+        getEpicBySubtaskId(subtaskId).setName(newName);
     }
 
     public void updateSubtaskDescription(Long subtaskId, String newDescription) {
-        getEpicBySubtaskIdOrNull(subtaskId).setName(newDescription);
+        getEpicBySubtaskId(subtaskId).setName(newDescription);
     }
 }
