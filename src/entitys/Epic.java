@@ -28,6 +28,10 @@ public class Epic extends Task {
         this.subtasks.clear();
     }
 
+    public void removeSubtask(Long subtaskId) {
+        this.subtasks.remove(subtaskId);
+    }
+
     public ArrayList<Subtask> getAllSubtask() {
         return this.subtasks.values().stream().collect(Collectors.toCollection(ArrayList::new));
     }

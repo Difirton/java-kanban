@@ -32,6 +32,10 @@ public class TasksManagerService {
         allEpics.remove(epicId);
     }
 
+    public void  removeSubtasksById(Long subtaskId) {
+        this.getEpicBySubtaskId(subtaskId).removeSubtask(subtaskId);
+    }
+
     public Epic getEpicById(Long epicId) {
         return allEpics.get(epicId);
     }

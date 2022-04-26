@@ -1,11 +1,15 @@
-import junit.framework.TestCase;
+import constants.TaskStatus;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import services.TasksManagerService;
 
-public class TasksManagerServiceTest extends TestCase {
+public class TasksManagerServiceTest {
     TasksManagerService tasksManagerService;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         tasksManagerService = new TasksManagerService();
         tasksManagerService.createNewEpic("Epic 1", "Desc 1");
         tasksManagerService.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
@@ -15,26 +19,146 @@ public class TasksManagerServiceTest extends TestCase {
         tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 1", 2L);
         tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 1", 2L);
     }
+
+    @Test
     public void testGetAllSubtasks() {
         int actual = tasksManagerService.getAllSubtasks().size();
         int expected = 5;
-        assertEquals(actual, expected);
+        Assert.assertEquals(actual, expected);
     }
 
+    @Test
     public void testGetAllEpics() {
         int actual = tasksManagerService.getAllEpics().size();
         int expected = 2;
-        assertEquals(actual, expected);
+        Assert.assertEquals(actual, expected);
     }
 
+    @Test
     public void testGetEpicBySubtaskId() {
         long actual = tasksManagerService.getEpicBySubtaskId(3L).getId();
         long expected = 1L;
-        assertEquals(actual, expected);
+        Assert.assertEquals(actual, expected);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @Test
+    public void testChangeSubtaskStatusInProgress() {
+        tasksManagerService.changeSubtaskStatusInProgress(1L);
+        TaskStatus actual = tasksManagerService.getSubtaskById(1L).getStatus();
+        TaskStatus expected = TaskStatus.IN_PROGRESS;
+        Assert.assertEquals(actual, expected);
+    }
 
+    @Test
+    public void testChangeSubtaskStatusEpicInProgress() {
+        tasksManagerService.changeSubtaskStatusInProgress(1L);
+        TaskStatus actual = tasksManagerService.getEpicById(1L).getStatus();
+        TaskStatus expected = TaskStatus.IN_PROGRESS;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testChangeSubtaskStatusDone() {
+        tasksManagerService.changeSubtaskStatusDone(1L);
+        TaskStatus actual = tasksManagerService.getSubtaskById(1L).getStatus();
+        TaskStatus expected = TaskStatus.DONE;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testChangeSubtaskStatusEpicNotDone() {
+        tasksManagerService.changeSubtaskStatusDone(1L);
+        TaskStatus actual = tasksManagerService.getEpicById(1L).getStatus();
+        TaskStatus expected = TaskStatus.IN_PROGRESS;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testChangeSubtaskStatusEpicDone() {
+        tasksManagerService.changeSubtaskStatusDone(4L);
+        tasksManagerService.changeSubtaskStatusDone(5L);
+        TaskStatus actual = tasksManagerService.getEpicById(2L).getStatus();
+        TaskStatus expected = TaskStatus.DONE;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testUpdateEpicName() {
+        tasksManagerService.updateEpicName(1L, "New Name");
+        String actual = tasksManagerService.getEpicById(1L).getName();
+        String expected = "New Name";
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testUpdateEpicDescription() {
+        tasksManagerService.updateEpicDescription(2L, "New Description");
+        String actual = tasksManagerService.getEpicById(2L).getDescription();
+        String expected = "New Description";
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testUpdateSubtaskName() {
+        tasksManagerService.updateSubtaskName(3L, "New Name");
+        String actual = tasksManagerService.getSubtaskById(3L).getName();
+        String expected = "New Name";
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testUpdateSubtaskDescription() {
+        tasksManagerService.updateSubtaskDescription(4L, "New Description");
+        String actual = tasksManagerService.getSubtaskById(4L).getDescription();
+        String expected = "New Description";
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testRemoveSubtasksByEpicId() {
+        tasksManagerService.removeSubtasksByEpicId(1L);
+        int actual = tasksManagerService.getAllSubtasks().size();
+        int expected = 2;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testRemoveEpic() {
+        tasksManagerService.removeEpic(1L);
+        int actual = tasksManagerService.getAllEpics().size();
+        int expected = 1;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testСascadeRemoveSubtask() {
+        tasksManagerService.removeEpic(1L);
+        int actual = tasksManagerService.getAllSubtasks().size();
+        int expected = 2;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testRemoveSubtaskById() {
+        tasksManagerService.removeSubtasksById(1L);
+        int actual = tasksManagerService.getAllSubtasks().size();
+        int expected = 4;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testRemoveAllSubtasks() {
+        tasksManagerService.removeAllSubtasks();
+        int actual = tasksManagerService.getAllSubtasks().size();
+        int expected = 0;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testRemoveAllEpics() {
+        tasksManagerService.removeAllEpics();
+        int actual = tasksManagerService.getAllEpics().size();
+        int expected = 0;
+        Assert.assertEquals(actual, expected);
     }
 }
