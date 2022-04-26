@@ -3,6 +3,10 @@ import services.TasksManagerService;
 public class Main {
 
     public static void main(String[] args) {
+        /*Добавил тестов в папке test с инспользование junit-4.13.2, это не входило в ТЗ, но захотелось попробовать.
+        Удалять не стал, так как в задании сказано, что мы будем доделывать программу, могут еще пригодиться.
+        Ниже только обязатеьные тесты по ТЗ.*/
+
         TasksManagerService tasksManagerService = new TasksManagerService();
         tasksManagerService.createNewEpic("Epic 1", "Desc 1");
         tasksManagerService.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
