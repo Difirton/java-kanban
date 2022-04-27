@@ -1,9 +1,8 @@
-import constants.TaskStatus;
+import constant.TaskStatus;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import services.TasksManagerService;
+import service.TasksManagerService;
 
 public class TasksManagerServiceTest {
     TasksManagerService tasksManagerService;

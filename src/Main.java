@@ -1,4 +1,6 @@
-import services.TasksManagerService;
+import service.TasksManagerService;
+
+import java.util.Objects;
 
 public class Main {
 
@@ -15,6 +17,20 @@ public class Main {
         tasksManagerService.createNewEpic("Epic 2", "Desc 2");
         tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 1", 2L);
         tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 1", 2L);
+
+        System.out.println(tasksManagerService.getEpicById(1L).hashCode());
+        System.out.println(tasksManagerService.getEpicById(2L).hashCode());
+        System.out.println(tasksManagerService.getSubtaskById(1L).hashCode());
+        System.out.println(tasksManagerService.getSubtaskById(2L).hashCode());
+        System.out.println(tasksManagerService.getSubtaskById(3L).hashCode());
+        System.out.println(tasksManagerService.getEpicById(1L).equals(tasksManagerService.getEpicById(1L)));
+        System.out.println(tasksManagerService.getEpicById(1L).equals(tasksManagerService.getEpicById(2L)));
+        System.out.println(tasksManagerService.getSubtaskById(1L)
+                .equals(tasksManagerService.getSubtaskById(1L)));
+        System.out.println(tasksManagerService.getSubtaskById(2L)
+                .equals(tasksManagerService.getSubtaskById(3L)));
+        tasksManagerService.changeSubtaskStatusDone(6L);
+        System.out.println();
 
         System.out.println(tasksManagerService.getAllEpics());
         System.out.println(tasksManagerService.getAllSubtasks());

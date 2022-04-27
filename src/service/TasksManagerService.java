@@ -1,8 +1,7 @@
-package services;
+package service;
 
-import entitys.Epic;
-import entitys.Subtask;
-
+import entity.Epic;
+import entity.Subtask;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,7 +78,11 @@ public class TasksManagerService {
     }
 
     public void changeSubtaskStatusDone(Long subtaskId) {
-        getEpicBySubtaskId(subtaskId).changeStatusSubtaskDone(subtaskId);
+        try {
+            getEpicBySubtaskId(subtaskId).changeStatusSubtaskDone(subtaskId);
+        } catch (NoSuchElementException exception) {
+            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+        }
     }
 
     public void changeSubtaskStatusInProgress(Long subtaskId) {
