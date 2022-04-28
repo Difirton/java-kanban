@@ -1,7 +1,5 @@
 import service.TasksManagerService;
 
-import java.util.Objects;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -20,15 +18,15 @@ public class Main {
 
         System.out.println(tasksManagerService.getEpicById(1L).hashCode());
         System.out.println(tasksManagerService.getEpicById(2L).hashCode());
-        System.out.println(tasksManagerService.getSubtaskById(1L).hashCode());
-        System.out.println(tasksManagerService.getSubtaskById(2L).hashCode());
-        System.out.println(tasksManagerService.getSubtaskById(3L).hashCode());
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(1L).hashCode());
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(2L).hashCode());
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(3L).hashCode());
         System.out.println(tasksManagerService.getEpicById(1L).equals(tasksManagerService.getEpicById(1L)));
         System.out.println(tasksManagerService.getEpicById(1L).equals(tasksManagerService.getEpicById(2L)));
-        System.out.println(tasksManagerService.getSubtaskById(1L)
-                .equals(tasksManagerService.getSubtaskById(1L)));
-        System.out.println(tasksManagerService.getSubtaskById(2L)
-                .equals(tasksManagerService.getSubtaskById(3L)));
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(1L)
+                .equals(tasksManagerService.getSubtaskByIdOrNull(1L)));
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(2L)
+                .equals(tasksManagerService.getSubtaskByIdOrNull(3L)));
         tasksManagerService.changeSubtaskStatusDone(6L);
         System.out.println();
 
@@ -56,12 +54,13 @@ public class Main {
 
         System.out.println(tasksManagerService.getEpicById(1L));
         System.out.println(tasksManagerService.getEpicById(2L));
-        System.out.println(tasksManagerService.getSubtaskById(1L));
-        System.out.println(tasksManagerService.getSubtaskById(2L));
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(1L));
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(2L));
         System.out.println();
 
         tasksManagerService.removeSubtasksByEpicId(2L);
         tasksManagerService.removeEpic(2L); //Удаление эпика влечет каскадное удаление подзадач
+        tasksManagerService.removeEpic(2L);
 
         System.out.println(tasksManagerService.getAllEpics());
         System.out.println(tasksManagerService.getAllSubtasks());
@@ -72,5 +71,17 @@ public class Main {
         System.out.println(tasksManagerService.getAllEpics());
         tasksManagerService.removeAllEpics();
         System.out.println(tasksManagerService.getAllEpics());
+        System.out.println();
+
+        tasksManagerService.removeEpic(1L);
+        tasksManagerService.changeSubtaskStatusInProgress(1L);
+        tasksManagerService.updateEpicName(1L, "Abra-kadabra");
+        tasksManagerService.updateEpicDescription(1L, "Again Abra-kadabra");
+        tasksManagerService.updateSubtaskName(1L, "Not Abra-kadabra");
+        tasksManagerService.updateEpicDescription(1L, "Again not Abra-kadabra");
+        tasksManagerService.getEpicById(1L);
+        tasksManagerService.removeSubtasksByEpicId(1L);
+        tasksManagerService.getSubtaskByIdOrNull(1L);
+        tasksManagerService.getEpicBySubtaskIdOrNull(1L);
     }
 }

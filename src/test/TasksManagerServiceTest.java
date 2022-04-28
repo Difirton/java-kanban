@@ -35,7 +35,7 @@ public class TasksManagerServiceTest {
 
     @Test
     public void testGetEpicBySubtaskId() {
-        long actual = tasksManagerService.getEpicBySubtaskId(3L).getId();
+        long actual = tasksManagerService.getEpicBySubtaskIdOrNull(3L).getId();
         long expected = 1L;
         Assert.assertEquals(actual, expected);
     }
@@ -43,7 +43,7 @@ public class TasksManagerServiceTest {
     @Test
     public void testChangeSubtaskStatusInProgress() {
         tasksManagerService.changeSubtaskStatusInProgress(1L);
-        TaskStatus actual = tasksManagerService.getSubtaskById(1L).getStatus();
+        TaskStatus actual = tasksManagerService.getSubtaskByIdOrNull(1L).getStatus();
         TaskStatus expected = TaskStatus.IN_PROGRESS;
         Assert.assertEquals(actual, expected);
     }
@@ -59,7 +59,7 @@ public class TasksManagerServiceTest {
     @Test
     public void testChangeSubtaskStatusDone() {
         tasksManagerService.changeSubtaskStatusDone(1L);
-        TaskStatus actual = tasksManagerService.getSubtaskById(1L).getStatus();
+        TaskStatus actual = tasksManagerService.getSubtaskByIdOrNull(1L).getStatus();
         TaskStatus expected = TaskStatus.DONE;
         Assert.assertEquals(actual, expected);
     }
@@ -100,7 +100,7 @@ public class TasksManagerServiceTest {
     @Test
     public void testUpdateSubtaskName() {
         tasksManagerService.updateSubtaskName(3L, "New Name");
-        String actual = tasksManagerService.getSubtaskById(3L).getName();
+        String actual = tasksManagerService.getSubtaskByIdOrNull(3L).getName();
         String expected = "New Name";
         Assert.assertEquals(actual, expected);
     }
@@ -108,7 +108,7 @@ public class TasksManagerServiceTest {
     @Test
     public void testUpdateSubtaskDescription() {
         tasksManagerService.updateSubtaskDescription(4L, "New Description");
-        String actual = tasksManagerService.getSubtaskById(4L).getDescription();
+        String actual = tasksManagerService.getSubtaskByIdOrNull(4L).getDescription();
         String expected = "New Description";
         Assert.assertEquals(actual, expected);
     }
