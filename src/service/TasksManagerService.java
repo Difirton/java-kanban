@@ -42,8 +42,9 @@ public class TasksManagerService {
 
     public void  removeSubtasksById(Long subtaskId) {
         try {
-            this.getEpicBySubtaskIdOrNull(subtaskId).removeSubtask(subtaskId);
-            checkEpicStatusAfterSubtaskChange(subtaskId);
+            Long epicId = this.getEpicBySubtaskIdOrNull(subtaskId).getId();
+            this.getEpicById(epicId).removeSubtask(subtaskId);
+            checkEpicStatus(epicId);
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
         }
@@ -84,7 +85,7 @@ public class TasksManagerService {
     public void createNewSubtask(String name, String description, long epicId) {
         try {
             allEpics.get(epicId).addSubtask(name, description);
-            checkEpicStatusAfterSubtaskCreate(epicId);
+            checkEpicStatus(epicId);
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Епик с id="+ epicId + " не существует");
         }
@@ -108,8 +109,9 @@ public class TasksManagerService {
 
     public void changeSubtaskStatusDone(Long subtaskId) {
         try {
+            Long epicId = this.getEpicBySubtaskIdOrNull(subtaskId).getId();
             this.getSubtaskByIdOrNull(subtaskId).changeStatusDone();
-            checkEpicStatusAfterSubtaskChange(subtaskId);
+            checkEpicStatus(epicId);
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
         }
@@ -155,20 +157,15 @@ public class TasksManagerService {
         }
     }
 
-    public void checkEpicStatusAfterSubtaskChange(Long subtaskId) {
-        if (this.getEpicBySubtaskIdOrNull(subtaskId)
-                .getAllSubtask().stream()
+    public void checkEpicStatus(Long epicId) {
+        if (this.getAllEpicsSubtasks(epicId).stream()
                 .allMatch(o -> o.getStatus().equals(TaskStatus.DONE))) {
-            this.getEpicBySubtaskIdOrNull(subtaskId).setStatus(TaskStatus.DONE);
-        } else {
-            this.getEpicBySubtaskIdOrNull(subtaskId).setStatus(TaskStatus.IN_PROGRESS);
-        }
-    }
-
-    public void checkEpicStatusAfterSubtaskCreate(Long epicId) {
-        if (!this.getEpicById(epicId)
+            this.getEpicById(epicId).setStatus(TaskStatus.DONE);
+        } else if (this.getEpicById(epicId)
                 .getAllSubtask().stream()
                 .allMatch(o -> o.getStatus().equals(TaskStatus.NEW))) {
+            this.getEpicById(epicId).setStatus(TaskStatus.NEW);
+        } else {
             this.getEpicById(epicId).setStatus(TaskStatus.IN_PROGRESS);
         }
     }

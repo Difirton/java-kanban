@@ -124,6 +124,15 @@ public class TasksManagerServiceTest {
     }
 
     @Test
+    public void testChangeEpicStatusIfRemoveNotFinishSubtask() {
+        tasksManagerService.changeSubtaskStatusDone(4L);
+        tasksManagerService.removeSubtasksById(5L);
+        TaskStatus actual = tasksManagerService.getEpicById(2L).getStatus();
+        TaskStatus expected = TaskStatus.DONE;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
     public void testRemoveSubtasksByEpicId() {
         tasksManagerService.removeSubtasksByEpicId(1L);
         int actual = tasksManagerService.getAllSubtasks().size();

@@ -3,9 +3,10 @@ import service.TasksManagerService;
 public class Main {
 
     public static void main(String[] args) {
-        /*Добавил тестов в папке test с инспользование junit-4.13.2, это не входило в ТЗ, но захотелось попробовать.
-        Удалять не стал, так как в задании сказано, что мы будем доделывать программу, могут еще пригодиться.
-        Ниже только обязатеьные тесты по ТЗ.*/
+        /*С последней проверки выполнил перенос метода по изменению статуса epic в TasksManagerService, еще подумал, что
+        может epic - Done, но мы создаем еще одну подзадачу, тогда он должен стать In Progress, и еще если из epic
+        удалить последнюю незавршенную задачу, то он должен стать Done. В папке тест добавил тестов для этих ситуаций.
+        Еще try-catch обавил везде, где смог получить исключения.*/
 
         TasksManagerService tasksManagerService = new TasksManagerService();
         tasksManagerService.createNewEpic("Epic 1", "Desc 1");
