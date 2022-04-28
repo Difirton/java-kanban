@@ -13,8 +13,21 @@ public class Main {
         tasksManagerService.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
         tasksManagerService.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L);
         tasksManagerService.createNewEpic("Epic 2", "Desc 2");
-        tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 1", 2L);
-        tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 1", 2L);
+        tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 2", 2L);
+        tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 2", 2L);
+
+        System.out.println(tasksManagerService.getEpicBySubtaskIdOrNull(4L));
+        tasksManagerService.changeSubtaskStatusInProgress(5L);
+        System.out.println(tasksManagerService.getSubtaskByIdOrNull(5L));
+        tasksManagerService.changeSubtaskStatusDone(5L);
+        System.out.println(tasksManagerService.getAllSubtasks());
+        tasksManagerService.changeSubtaskStatusDone(4L);
+        System.out.println();
+        System.out.println(tasksManagerService.getEpicBySubtaskIdOrNull(4L));
+        tasksManagerService.createNewSubtask("Subtask 2.3", "Desc sub 2", 2L);
+        System.out.println(tasksManagerService.getEpicBySubtaskIdOrNull(4L));
+        tasksManagerService.changeSubtaskStatusDone(6L);
+        System.out.println(tasksManagerService.getEpicBySubtaskIdOrNull(4L));
 
         System.out.println(tasksManagerService.getEpicById(1L).hashCode());
         System.out.println(tasksManagerService.getEpicById(2L).hashCode());
@@ -27,7 +40,6 @@ public class Main {
                 .equals(tasksManagerService.getSubtaskByIdOrNull(1L)));
         System.out.println(tasksManagerService.getSubtaskByIdOrNull(2L)
                 .equals(tasksManagerService.getSubtaskByIdOrNull(3L)));
-        tasksManagerService.changeSubtaskStatusDone(6L);
         System.out.println();
 
         System.out.println(tasksManagerService.getAllEpics());

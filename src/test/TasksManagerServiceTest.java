@@ -15,8 +15,8 @@ public class TasksManagerServiceTest {
         tasksManagerService.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
         tasksManagerService.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L);
         tasksManagerService.createNewEpic("Epic 2", "Desc 2");
-        tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 1", 2L);
-        tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 1", 2L);
+        tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 2", 2L);
+        tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 2", 2L);
     }
 
     @Test
@@ -74,6 +74,16 @@ public class TasksManagerServiceTest {
 
     @Test
     public void testChangeSubtaskStatusEpicDone() {
+        tasksManagerService.changeSubtaskStatusDone(4L);
+        tasksManagerService.changeSubtaskStatusDone(5L);
+        tasksManagerService.createNewSubtask("Subtask 2.3", "Desc sub 2", 2L);
+        TaskStatus actual = tasksManagerService.getEpicById(2L).getStatus();
+        TaskStatus expected = TaskStatus.IN_PROGRESS;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testChangeEpicStatusIfCreateNewSubtask() {
         tasksManagerService.changeSubtaskStatusDone(4L);
         tasksManagerService.changeSubtaskStatusDone(5L);
         TaskStatus actual = tasksManagerService.getEpicById(2L).getStatus();

@@ -20,7 +20,7 @@ public class Epic extends Task {
         return amountId;
     }
 
-    public void addSubtasks(String name, String description) {
+    public void addSubtask(String name, String description) {
         this.subtasks.put(Subtask.getNewId(), new Subtask(name, description, this.getId()));
     }
 
@@ -36,24 +36,22 @@ public class Epic extends Task {
         return this.subtasks.values().stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public void changeStatusSubtaskDone(Long subtaskId) {
-        subtasks.get(subtaskId).changeStatusDone();
-        if (subtasks.values().stream()
-                .allMatch(o -> o.getStatus().equals(TaskStatus.DONE))) {
-            this.setStatus(TaskStatus.DONE);
-        } else {
-            this.setStatus(TaskStatus.IN_PROGRESS);
-        }
-    }
-
     public void changeStatusSubtaskInProgress(Long subtaskId) {
         subtasks.get(subtaskId).changeStatusInProgress();
         this.setStatus(TaskStatus.IN_PROGRESS);
     }
 
+    public static long getAmountId() {
+        return amountId;
+    }
+
+    public HashMap<Long, Subtask> getSubtasks() {
+        return subtasks;
+    }
+
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "Epic{" +
                 "id=" +  + this.getId() +
                 ", subtaskId=" + subtasks.keySet() +
                 ", name='" + this.getName() + '\'' +

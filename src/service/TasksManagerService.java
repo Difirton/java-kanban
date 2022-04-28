@@ -1,5 +1,6 @@
 package service;
 
+import constant.TaskStatus;
 import entity.Epic;
 import entity.Subtask;
 import java.util.*;
@@ -42,6 +43,7 @@ public class TasksManagerService {
     public void  removeSubtasksById(Long subtaskId) {
         try {
             this.getEpicBySubtaskIdOrNull(subtaskId).removeSubtask(subtaskId);
+            checkEpicStatusAfterSubtaskChange(subtaskId);
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
         }
@@ -80,7 +82,8 @@ public class TasksManagerService {
     }
 
     public void createNewSubtask(String name, String description, long epicsId) {
-        allEpics.get(epicsId).addSubtasks(name, description);
+        allEpics.get(epicsId).addSubtask(name, description);
+        checkEpicStatusAfterSubtaskCreate(epicsId);
     }
 
     public ArrayList<Epic> getAllEpics() {
@@ -101,7 +104,8 @@ public class TasksManagerService {
 
     public void changeSubtaskStatusDone(Long subtaskId) {
         try {
-            getEpicBySubtaskIdOrNull(subtaskId).changeStatusSubtaskDone(subtaskId);
+            this.getSubtaskByIdOrNull(subtaskId).changeStatusDone();
+            checkEpicStatusAfterSubtaskChange(subtaskId);
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
         }
@@ -144,6 +148,24 @@ public class TasksManagerService {
             getSubtaskByIdOrNull(subtaskId).setDescription(newDescription);
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+        }
+    }
+
+    public void checkEpicStatusAfterSubtaskChange(Long subtaskId) {
+        if (this.getEpicBySubtaskIdOrNull(subtaskId)
+                .getAllSubtask().stream()
+                .allMatch(o -> o.getStatus().equals(TaskStatus.DONE))) {
+            this.getEpicBySubtaskIdOrNull(subtaskId).setStatus(TaskStatus.DONE);
+        } else {
+            this.getEpicBySubtaskIdOrNull(subtaskId).setStatus(TaskStatus.IN_PROGRESS);
+        }
+    }
+
+    public void checkEpicStatusAfterSubtaskCreate(Long epicsId) {
+        if (!this.getEpicById(epicsId)
+                .getAllSubtask().stream()
+                .allMatch(o -> o.getStatus().equals(TaskStatus.NEW))) {
+            this.getEpicById(epicsId).setStatus(TaskStatus.IN_PROGRESS);
         }
     }
 }
