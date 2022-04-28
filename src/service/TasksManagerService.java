@@ -81,9 +81,13 @@ public class TasksManagerService {
         allEpics.put(Epic.getNewId(), new Epic(name, description));
     }
 
-    public void createNewSubtask(String name, String description, long epicsId) {
-        allEpics.get(epicsId).addSubtask(name, description);
-        checkEpicStatusAfterSubtaskCreate(epicsId);
+    public void createNewSubtask(String name, String description, long epicId) {
+        try {
+            allEpics.get(epicId).addSubtask(name, description);
+            checkEpicStatusAfterSubtaskCreate(epicId);
+        } catch (NullPointerException exception) {
+            System.out.println("Недопустимое действие. Епик с id="+ epicId + " не существует");
+        }
     }
 
     public ArrayList<Epic> getAllEpics() {
@@ -161,11 +165,11 @@ public class TasksManagerService {
         }
     }
 
-    public void checkEpicStatusAfterSubtaskCreate(Long epicsId) {
-        if (!this.getEpicById(epicsId)
+    public void checkEpicStatusAfterSubtaskCreate(Long epicId) {
+        if (!this.getEpicById(epicId)
                 .getAllSubtask().stream()
                 .allMatch(o -> o.getStatus().equals(TaskStatus.NEW))) {
-            this.getEpicById(epicsId).setStatus(TaskStatus.IN_PROGRESS);
+            this.getEpicById(epicId).setStatus(TaskStatus.IN_PROGRESS);
         }
     }
 }

@@ -16,6 +16,8 @@ public class Main {
         tasksManagerService.createNewSubtask("Subtask 2.1", "Desc sub 2", 2L);
         tasksManagerService.createNewSubtask("Subtask 2.2", "Desc sub 2", 2L);
 
+
+        tasksManagerService.createNewSubtask("Subtask 6.1", "Desc sub 6", 6L);
         System.out.println(tasksManagerService.getEpicBySubtaskIdOrNull(4L));
         tasksManagerService.changeSubtaskStatusInProgress(5L);
         System.out.println(tasksManagerService.getSubtaskByIdOrNull(5L));
