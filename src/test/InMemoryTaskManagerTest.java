@@ -1,15 +1,18 @@
+import constant.TaskManagerType;
 import constant.TaskStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import service.InMemoryTaskManager;
+import utill.Manager;
+import utill.TasksManager;
 
 public class InMemoryTaskManagerTest {
-    InMemoryTaskManager inMemoryTaskManager;
+    TasksManager inMemoryTaskManager;
 
     @Before
     public void setUp() throws Exception {
-        inMemoryTaskManager = new InMemoryTaskManager();
+        inMemoryTaskManager = Manager.getDefault(TaskManagerType.MANAGER_OF_EPIC_AND_SUBTASK);
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
         inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
@@ -55,7 +58,7 @@ public class InMemoryTaskManagerTest {
         TaskStatus expected = TaskStatus.IN_PROGRESS;
         Assert.assertEquals(actual, expected);
     }
-
+    //TODO разобраться с тестами
     @Test
     public void testChangeSubtaskStatusDone() {
         inMemoryTaskManager.changeSubtaskStatusDone(1L);

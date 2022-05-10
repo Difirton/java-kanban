@@ -1,13 +1,19 @@
 package service;
 
+import constant.HistoryManagerType;
 import constant.TaskStatus;
 import entity.Epic;
 import entity.Subtask;
+import utill.HistoryManager;
+import utill.Manager;
+import utill.TasksManager;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InMemoryTaskManager implements TasksManager{
+public class InMemoryTaskManager implements TasksManager {
     private HashMap<Long, Epic> allEpics;
+    HistoryManager inMemoryHistoryManager = Manager.getDefaultHistory(HistoryManagerType.HISTORY_MANAGER_TYPE);
 
     public InMemoryTaskManager() {
         this.allEpics = new HashMap<>();
@@ -57,15 +63,18 @@ public class InMemoryTaskManager implements TasksManager{
 
     @Override
     public Epic getEpicById(Long epicId) {
+        inMemoryHistoryManager.add(allEpics.get(epicId));
         return allEpics.get(epicId);
     }
 
     @Override
     public Subtask getSubtaskByIdOrNull(Long subtaskId) {
         try {
-            return this.getAllSubtasks().stream()
+            Subtask foundSubtask =  this.getAllSubtasks().stream()
                     .filter(o -> subtaskId.equals(o.getId()))
                     .findFirst().get();
+            inMemoryHistoryManager.add(foundSubtask);
+            return foundSubtask;
         } catch (NoSuchElementException exception) {
             System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
             return null;
