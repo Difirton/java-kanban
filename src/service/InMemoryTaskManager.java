@@ -6,24 +6,27 @@ import entity.Subtask;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TasksManagerService {
+public class InMemoryTaskManager implements TasksManager{
     private HashMap<Long, Epic> allEpics;
 
-    public TasksManagerService() {
+    public InMemoryTaskManager() {
         this.allEpics = new HashMap<>();
     }
 
+    @Override
     public void removeAllEpics() {
         this.allEpics.clear();
     }
 
+    @Override
     public void removeAllSubtasks() {
         for (long epic:allEpics.keySet()) {
             allEpics.get(epic).removeSubtasks();
         }
     }
 
-    public void  removeSubtasksByEpicId(Long epicId) {
+    @Override
+    public void removeSubtasksByEpicId(Long epicId) {
         try {
             allEpics.get(epicId).removeSubtasks();
         } catch (NullPointerException exception) {
@@ -31,7 +34,8 @@ public class TasksManagerService {
         }
     }
 
-    public void  removeEpic(Long epicId) {
+    @Override
+    public void removeEpicById(Long epicId) {
         try {
             allEpics.get(epicId).removeSubtasks();
             allEpics.remove(epicId);
@@ -40,7 +44,8 @@ public class TasksManagerService {
         }
     }
 
-    public void  removeSubtasksById(Long subtaskId) {
+    @Override
+    public void removeSubtasksById(Long subtaskId) {
         try {
             Long epicId = this.getEpicBySubtaskIdOrNull(subtaskId).getId();
             this.getEpicById(epicId).removeSubtask(subtaskId);
@@ -50,10 +55,12 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public Epic getEpicById(Long epicId) {
         return allEpics.get(epicId);
     }
 
+    @Override
     public Subtask getSubtaskByIdOrNull(Long subtaskId) {
         try {
             return this.getAllSubtasks().stream()
@@ -65,6 +72,7 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public Epic getEpicBySubtaskIdOrNull(Long subtaskId) {
         try {
             return this.getAllSubtasks().stream()
@@ -78,10 +86,12 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public void createNewEpic(String name, String description) {
         allEpics.put(Epic.getNewId(), new Epic(name, description));
     }
 
+    @Override
     public void createNewSubtask(String name, String description, long epicId) {
         try {
             allEpics.get(epicId).addSubtask(name, description);
@@ -91,10 +101,12 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public ArrayList<Epic> getAllEpics() {
         return allEpics.values().stream().collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @Override
     public ArrayList<Subtask> getAllSubtasks() {
         ArrayList<Subtask> allSubtasks = new ArrayList<>();
         this.getAllEpics().stream()
@@ -103,6 +115,7 @@ public class TasksManagerService {
         return allSubtasks;
     }
 
+    @Override
     public ArrayList<Subtask> getAllEpicsSubtasks(Long epicId) {
         return allEpics.get(epicId).getAllSubtask();
     }
@@ -117,6 +130,7 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public void changeSubtaskStatusInProgress(Long subtaskId) {
         try {
             getEpicBySubtaskIdOrNull(subtaskId).changeStatusSubtaskInProgress(subtaskId);
@@ -125,6 +139,7 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public void updateEpicName(Long epicId, String newName) {
         try {
             allEpics.get(epicId).setName(newName);
@@ -133,6 +148,7 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public void updateEpicDescription(Long epicId, String newDescription) {
         try {
             allEpics.get(epicId).setDescription(newDescription);
@@ -141,6 +157,7 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public void updateSubtaskName(Long subtaskId, String newName) {
         try {
             getSubtaskByIdOrNull(subtaskId).setName(newName);
@@ -149,6 +166,7 @@ public class TasksManagerService {
         }
     }
 
+    @Override
     public void updateSubtaskDescription(Long subtaskId, String newDescription) {
         try{
             getSubtaskByIdOrNull(subtaskId).setDescription(newDescription);
