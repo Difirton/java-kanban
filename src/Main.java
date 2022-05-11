@@ -14,7 +14,6 @@ public class Main {
         tasksManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 2L);
         tasksManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 2L);
 
-
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(1L);
@@ -54,6 +53,15 @@ public class Main {
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(1L);
+        tasksManager.getHistory().forEach(System.out::println);
+        System.out.println(tasksManager.getHistory().size());
+        System.out.println("_________________________________________________");
+        tasksManager.removeEpicById(2L);
+        tasksManager.getEpicById(2L);
+        tasksManager.getSubtaskByIdOrNull(4L);
+        tasksManager.getSubtaskByIdOrNull(5L);
+        tasksManager.getSubtaskByIdOrNull(2L);
+        tasksManager.getSubtaskByIdOrNull(2L);
         tasksManager.getHistory().forEach(System.out::println);
         System.out.println(tasksManager.getHistory().size());
     }

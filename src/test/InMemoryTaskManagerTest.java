@@ -1,5 +1,6 @@
 import constant.TaskManagerType;
 import constant.TaskStatus;
+import entity.Task;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -181,5 +182,112 @@ public class InMemoryTaskManagerTest {
         int actual = inMemoryTaskManager.getAllEpics().size();
         int expected = 0;
         Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testSizeHistoryTasksQueue() {
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(4L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(2L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(2L);
+        inMemoryTaskManager.getAllSubtasks();
+        inMemoryTaskManager.getSubtaskByIdOrNull(5L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(3L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        int actual = inMemoryTaskManager.getHistory().size();
+        int expected = 10;
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testFirstOutHistoryTasksQueue() {
+        inMemoryTaskManager.getEpicById(2L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        Task actual = inMemoryTaskManager.getHistory().get(0);
+        Task expected = inMemoryTaskManager.getEpicById(1L);
+        Assert.assertNotEquals(actual, expected);
+    }
+
+    @Test
+    public void testLastInHistoryTasksQueue() {
+        Task actual = inMemoryTaskManager.getEpicById(2L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        Task expected = inMemoryTaskManager.getHistory().get(inMemoryTaskManager.getHistory().size() - 1);
+        Assert.assertNotEquals(actual, expected);
+    }
+
+    @Test
+    public void testGettingInsideHistoryTasksQueueSubtask() {
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        Task actual = inMemoryTaskManager.getSubtaskByIdOrNull(2L);
+        Task expected = inMemoryTaskManager.getHistory().get(inMemoryTaskManager.getHistory().size() - 1);
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testGettingInsideHistoryTasksQueueEpic() {
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        inMemoryTaskManager.getSubtaskByIdOrNull(1L);
+        Task actual = inMemoryTaskManager.getEpicById(2L);
+        Task expected = inMemoryTaskManager.getHistory().get(inMemoryTaskManager.getHistory().size() - 1);
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testNotGettingInsideHistoryTasksQueueNull() {
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.getEpicById(1L);
+        inMemoryTaskManager.removeEpicById(2L);
+        inMemoryTaskManager.getEpicById(2L);
+        Task expected = inMemoryTaskManager.getHistory().get(inMemoryTaskManager.getHistory().size() - 1);
+        Assert.assertNotEquals(null, expected);
+
     }
 }
