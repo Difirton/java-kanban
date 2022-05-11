@@ -12,7 +12,7 @@ public class InMemoryTaskManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        inMemoryTaskManager = Manager.getDefault(TaskManagerType.MANAGER_OF_EPIC_AND_SUBTASK);
+        inMemoryTaskManager = Manager.INSTANCE.getDefault(TaskManagerType.MANAGER_OF_EPIC_AND_SUBTASK);
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
         inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
