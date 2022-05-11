@@ -5,6 +5,8 @@ import utill.TasksManager;
 public class Main {
 
     public static void main(String[] args) {
+        //Добавил еще тестов в папку test с использование Junit 3.8.2, более новые версии без Maven не получилось подключить
+
         TasksManager tasksManager = Manager.getDefault(TaskManagerType.MANAGER_OF_EPIC_AND_SUBTASK);
         tasksManager.createNewEpic("Epic 1", "Desc 1");
         tasksManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager {
     private HashMap<Long, Epic> allEpics;
-    HistoryManager inMemoryHistoryManager = Manager.getDefaultHistory(HistoryManagerType.HISTORY_MANAGER_TYPE);
+    HistoryManager inMemoryHistoryManager = Manager.getDefaultHistory(HistoryManagerType.EPIC_AND_SUBTASK);
 
     public InMemoryTaskManager() {
         this.allEpics = new HashMap<>();

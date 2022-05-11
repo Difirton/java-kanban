@@ -1,5 +1,5 @@
 package constant;
 
 public enum HistoryManagerType {
-    HISTORY_MANAGER_TYPE
+    EPIC_AND_SUBTASK
 }

@@ -11,7 +11,7 @@ public enum Manager {
     public static HistoryManager getDefaultHistory(HistoryManagerType historyManagerType) {
         HistoryManager historyManager = null;
         switch (historyManagerType) {
-            case HISTORY_MANAGER_TYPE: historyManager = new InMemoryHistoryManager();
+            case EPIC_AND_SUBTASK: historyManager = new InMemoryHistoryManager();
             break;
         }
         return historyManager;
