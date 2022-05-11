@@ -12,9 +12,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        historyQueueTasks.add(task);
+        if (task != null) {
+            historyQueueTasks.add(task);
+        }
         while (historyQueueTasks.size() > LIMIT_HISTORY_QUEUE_TASKS) {
-            historyQueueTasks.remove(1);
+            historyQueueTasks.remove(0);
         }
     }
 

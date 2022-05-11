@@ -2,8 +2,10 @@ package utill;
 
 import entity.Epic;
 import entity.Subtask;
+import entity.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TasksManager {
 
@@ -17,6 +19,7 @@ public interface TasksManager {
     ArrayList<Subtask> getAllSubtasks();
     ArrayList<Subtask> getAllEpicsSubtasks(Long epicId);
 
+    void changeSubtaskStatusDone(Long subtaskId);
     void changeSubtaskStatusInProgress(Long subtaskId);
     void updateEpicName(Long epicId, String newName);
     void updateEpicDescription(Long epicId, String newDescription);
@@ -28,4 +31,6 @@ public interface TasksManager {
     void removeEpicById(Long epicId);
     void removeSubtasksById(Long subtaskId);
     void removeSubtasksByEpicId(Long epicId);
+
+    List<Task> getHistory();
 }

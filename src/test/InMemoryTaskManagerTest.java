@@ -58,7 +58,7 @@ public class InMemoryTaskManagerTest {
         TaskStatus expected = TaskStatus.IN_PROGRESS;
         Assert.assertEquals(actual, expected);
     }
-    //TODO разобраться с тестами
+
     @Test
     public void testChangeSubtaskStatusDone() {
         inMemoryTaskManager.changeSubtaskStatusDone(1L);

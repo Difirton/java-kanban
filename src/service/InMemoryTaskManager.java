@@ -4,6 +4,7 @@ import constant.HistoryManagerType;
 import constant.TaskStatus;
 import entity.Epic;
 import entity.Subtask;
+import entity.Task;
 import utill.HistoryManager;
 import utill.Manager;
 import utill.TasksManager;
@@ -195,5 +196,10 @@ public class InMemoryTaskManager implements TasksManager {
         } else {
             this.getEpicById(epicId).setStatus(TaskStatus.IN_PROGRESS);
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return inMemoryHistoryManager.getHistory();
     }
 }
