@@ -1,13 +1,15 @@
-import constant.TaskManagerType;
-import utill.Manager;
-import utill.TasksManager;
+import service.Manager;
+import service.TasksManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        //Добавил еще тестов в папку test с использование Junit 3.8.2, более новые версии без Maven не получилось подключить
+        /*
+        Я даже не сомневался, что Вы напишете, что перемудрил, но задание было слишком маленьким для меня, а я тут еще
+        прочитал недавно книгу по патернам проектировани и решил попробовать )
+         */
 
-        TasksManager tasksManager = Manager.INSTANCE.getDefault(TaskManagerType.MANAGER_OF_EPIC_AND_SUBTASK);
+        TasksManager tasksManager = Manager.getDefault();
         tasksManager.createNewEpic("Epic 1", "Desc 1");
         tasksManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         tasksManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);

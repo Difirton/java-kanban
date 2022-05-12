@@ -1,20 +1,19 @@
 package service;
 
-import constant.HistoryManagerType;
 import constant.TaskStatus;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
-import utill.HistoryManager;
-import utill.Manager;
-import utill.TasksManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager {
-    private HashMap<Long, Epic> allEpics;
-    private HistoryManager inMemoryHistoryManager = Manager.getDefaultHistory(HistoryManagerType.EPIC_AND_SUBTASK);
+    private final HashMap<Long, Epic> allEpics;
+    private final HistoryManager inMemoryHistoryManager = Manager.getDefaultHistory();
 
     public InMemoryTaskManager() {
         this.allEpics = new HashMap<>();
@@ -27,7 +26,7 @@ public class InMemoryTaskManager implements TasksManager {
 
     @Override
     public void removeAllSubtasks() {
-        for (long epic:allEpics.keySet()) {
+        for (long epic : allEpics.keySet()) {
             allEpics.get(epic).removeSubtasks();
         }
     }
@@ -37,7 +36,7 @@ public class InMemoryTaskManager implements TasksManager {
         try {
             allEpics.get(epicId).removeSubtasks();
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id="+ epicId + " не существует");
+            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
         }
     }
 
@@ -47,7 +46,7 @@ public class InMemoryTaskManager implements TasksManager {
             allEpics.get(epicId).removeSubtasks();
             allEpics.remove(epicId);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id="+ epicId + " не существует");
+            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
         }
     }
 
@@ -58,7 +57,7 @@ public class InMemoryTaskManager implements TasksManager {
             this.getEpicById(epicId).removeSubtask(subtaskId);
             checkEpicStatus(epicId);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+            System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
         }
     }
 
@@ -71,13 +70,13 @@ public class InMemoryTaskManager implements TasksManager {
     @Override
     public Subtask getSubtaskByIdOrNull(Long subtaskId) {
         try {
-            Subtask foundSubtask =  this.getAllSubtasks().stream()
+            Subtask foundSubtask = this.getAllSubtasks().stream()
                     .filter(o -> subtaskId.equals(o.getId()))
                     .findFirst().get();
             inMemoryHistoryManager.add(foundSubtask);
             return foundSubtask;
         } catch (NoSuchElementException exception) {
-            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+            System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
             return null;
         }
     }
@@ -91,7 +90,7 @@ public class InMemoryTaskManager implements TasksManager {
                     .map(o -> this.getEpicById(o))
                     .findFirst().get();
         } catch (NoSuchElementException exception) {
-            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+            System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
             return null;
         }
     }
@@ -107,7 +106,7 @@ public class InMemoryTaskManager implements TasksManager {
             allEpics.get(epicId).addSubtask(name, description);
             checkEpicStatus(epicId);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id="+ epicId + " не существует");
+            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
         }
     }
 
@@ -136,7 +135,7 @@ public class InMemoryTaskManager implements TasksManager {
             this.getSubtaskByIdOrNull(subtaskId).changeStatusDone();
             checkEpicStatus(epicId);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+            System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
         }
     }
 
@@ -145,7 +144,7 @@ public class InMemoryTaskManager implements TasksManager {
         try {
             getEpicBySubtaskIdOrNull(subtaskId).changeStatusSubtaskInProgress(subtaskId);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+            System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
         }
     }
 
@@ -154,7 +153,7 @@ public class InMemoryTaskManager implements TasksManager {
         try {
             allEpics.get(epicId).setName(newName);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id="+ epicId + " не существует");
+            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
         }
     }
 
@@ -163,7 +162,7 @@ public class InMemoryTaskManager implements TasksManager {
         try {
             allEpics.get(epicId).setDescription(newDescription);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id="+ epicId + " не существует");
+            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
         }
     }
 
@@ -172,20 +171,20 @@ public class InMemoryTaskManager implements TasksManager {
         try {
             getSubtaskByIdOrNull(subtaskId).setName(newName);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+            System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
         }
     }
 
     @Override
     public void updateSubtaskDescription(Long subtaskId, String newDescription) {
-        try{
+        try {
             getSubtaskByIdOrNull(subtaskId).setDescription(newDescription);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Подзадача с id="+ subtaskId + " не существует");
+            System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
         }
     }
 
-    public void checkEpicStatus(Long epicId) {
+    private void checkEpicStatus(Long epicId) {
         if (this.getAllEpicsSubtasks(epicId).stream()
                 .allMatch(o -> o.getStatus().equals(TaskStatus.DONE))) {
             this.getEpicById(epicId).setStatus(TaskStatus.DONE);

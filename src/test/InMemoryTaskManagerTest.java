@@ -1,18 +1,17 @@
-import constant.TaskManagerType;
 import constant.TaskStatus;
 import entity.Task;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import utill.Manager;
-import utill.TasksManager;
+import service.Manager;
+import service.TasksManager;
 
 public class InMemoryTaskManagerTest {
     TasksManager inMemoryTaskManager;
 
     @Before
     public void setUp() throws Exception {
-        inMemoryTaskManager = Manager.INSTANCE.getDefault(TaskManagerType.MANAGER_OF_EPIC_AND_SUBTASK);
+        inMemoryTaskManager = Manager.getDefault();
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
         inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);

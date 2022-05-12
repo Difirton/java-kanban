@@ -1,14 +1,15 @@
 package service;
 
 import entity.Task;
-import utill.HistoryManager;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final int LIMIT_HISTORY_QUEUE_TASKS = 10;
-    private List<Task> historyQueueTasks = new LinkedList<>();
+    private static final int LIMIT_HISTORY_QUEUE_TASKS = 10;
+    private final List<Task> historyQueueTasks = new LinkedList<>();
+    /* В LinkedList нет конструктора с интовым аргументом для указания емкости, он же просто подвязывает двойные ссылки
+    к смежным элементам, емкость есть у ArrayList, но его DEFAULT_CAPACITY итак равна 10 */
 
     @Override
     public void add(Task task) {
