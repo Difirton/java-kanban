@@ -4,10 +4,6 @@ import service.TasksManager;
 public class Main {
 
     public static void main(String[] args) {
-        /*
-        Я даже не сомневался, что Вы напишете, что перемудрил, но задание было слишком маленьким для меня, а я тут еще
-        прочитал недавно книгу по патернам проектировани и решил попробовать )
-         */
 
         TasksManager tasksManager = Manager.getDefault();
         tasksManager.createNewEpic("Epic 1", "Desc 1");

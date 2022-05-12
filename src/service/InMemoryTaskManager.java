@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager {
     private final HashMap<Long, Epic> allEpics;
-    private final HistoryManager inMemoryHistoryManager = Manager.getDefaultHistory();
+    private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
         this.allEpics = new HashMap<>();
+        this.inMemoryHistoryManager = Manager.getDefaultHistory();
     }
 
     @Override

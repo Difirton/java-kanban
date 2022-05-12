@@ -18,11 +18,11 @@ public interface TasksManager {
 
     Epic getEpicBySubtaskIdOrNull(Long subtaskId);
 
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
-    ArrayList<Subtask> getAllSubtasks();
+    List<Subtask> getAllSubtasks();
 
-    ArrayList<Subtask> getAllEpicsSubtasks(Long epicId);
+    List<Subtask> getAllEpicsSubtasks(Long epicId);
 
     void changeSubtaskStatusDone(Long subtaskId);
 

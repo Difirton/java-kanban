@@ -286,6 +286,5 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.getEpicById(2L);
         Task expected = inMemoryTaskManager.getHistory().get(inMemoryTaskManager.getHistory().size() - 1);
         Assert.assertNotEquals(null, expected);
-
     }
 }
