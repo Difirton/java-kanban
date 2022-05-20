@@ -14,7 +14,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task != null) {
             historyQueueTasks.add(task);
         }
-        //while был установлен, чтобы наверняка исключить все возможные варианты=)
         if (historyQueueTasks.size() > LIMIT_HISTORY_QUEUE_TASKS) {
             historyQueueTasks.remove(0);
         }
