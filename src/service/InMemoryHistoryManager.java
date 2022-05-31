@@ -23,16 +23,16 @@ public class InMemoryHistoryManager implements HistoryManager {
         return historyQueueTasks.toList();
     }
 
-    class CustomLinkedList {
+    private class CustomLinkedList {
         private Map<Long, Node> entryMap;
         private Long head;
         private Long tail;
 
-        public CustomLinkedList() {
+        private CustomLinkedList() {
             this.entryMap = new HashMap<>();
         }
 
-        void add(Task task) {
+        private void add(Task task) {
             Long id = task.getId();
             if (this.head == null) {
                 Node node = new Node(task);
@@ -42,6 +42,9 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else {
                 if (entryMap.containsKey(id)){
                     Node node = entryMap.get(id);
+                    if (node.getHead() == null) {
+                        this.head = node.getTail();
+                    }
                     rebindingLinksAfterTaskExtraction(id);
                     entryMap.get(tail).setTail(id);
                     node.setHead(this.tail);
@@ -56,12 +59,12 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
         }
 
-        void remove(Long id) {
+        private void remove(Long id) {
             rebindingLinksAfterTaskExtraction(id);
             this.entryMap.remove(id);
         }
 
-        List<Task> toList() {
+        private List<Task> toList() {
             List<Task> taskList = new ArrayList<>();
             Node node = this.entryMap.getOrDefault(this.head, null);
             while (node != null) {
@@ -72,17 +75,23 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         private void rebindingLinksAfterTaskExtraction(Long id) {
-            Node removedNode= entryMap.get(id);
+            Node removedNode= this.entryMap.get(id);
             Long tail = removedNode.getTail();
-            Long head = removedNode.getHead();
-            entryMap.get(head).setTail(tail);
-            entryMap.get(tail).setHead(head);
+            if (tail != null) {
+                Long head = removedNode.getHead();
+                if (head != null) {
+                    this.entryMap.get(tail).setHead(head);
+                    this.entryMap.get(head).setTail(tail);
+                } else {
+                    this.entryMap.get(tail).setHead(null);
+                }
+            }
         }
 
         private class Node{
-            final Task task;
-            Long head;
-            Long tail;
+            private final Task task;
+            private Long head;
+            private Long tail;
 
             private Node(Task task) {
                 this.task = task;
