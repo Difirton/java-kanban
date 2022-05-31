@@ -7,22 +7,18 @@ public class Main {
         TasksManager tasksManager = Manager.getDefault();
         tasksManager.createNewEpic("Epic 1", "Description Epic 1");
         tasksManager.createNewEpic("Epic 2", "Description Epic 2");
-        tasksManager.createNewEpic("Epic 3", "Description Epic 3");
-        tasksManager.createNewEpic("Epic 4", "Description Epic 4");
-        tasksManager.createNewEpic("Epic 5", "Description Epic 5");
-
-//        tasksManager.createNewSubtask("Subtask 1", "Subtask 1", 1L);
-//        tasksManager.createNewSubtask("Subtask 2", "Subtask 2", 1L);
-//        tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 2L);
-//        tasksManager.createNewSubtask("Subtask 4", "Subtask 4", 2L);
-//        tasksManager.createNewSubtask("Subtask 5", "Subtask 5", 2L);
+        tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 1L);
+        tasksManager.createNewSubtask("Subtask 4", "Subtask 4", 1L);
+        tasksManager.createNewSubtask("Subtask 5", "Subtask 5", 1L);
+        System.out.println(tasksManager.getHistory());
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(2L);
-        tasksManager.getEpicById(4L);
-        tasksManager.getEpicById(5L);
-        tasksManager.getEpicById(5L);
-        tasksManager.getEpicById(1L);
+        tasksManager.getSubtaskByIdOrNull(3L);
         System.out.println(tasksManager.getHistory());
+        tasksManager.getEpicById(2L);
+        System.out.println(tasksManager.getHistory());
+
+
 
     }
 }

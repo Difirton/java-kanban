@@ -5,6 +5,7 @@ import java.util.Objects;
 import static constant.TaskStatus.*;
 
 public abstract class Task {
+    protected static long amountId = 1L;
     private long id;
     private String name;
     private String description;

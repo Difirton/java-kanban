@@ -9,7 +9,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        //TODO подумать о хранении id не подходит
         historyQueueTasks.add(task);
     }
 
@@ -21,6 +20,14 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getHistory() {
         return historyQueueTasks.toList();
+    }
+
+    // Добавил этот метод, чтобы можно было очистить всю историю и в случае удалении всех Эпиков
+    @Override
+    public void clearHistory() {
+        historyQueueTasks.entryMap.clear();
+        historyQueueTasks.head = null;
+        historyQueueTasks.tail = null;
     }
 
     private class CustomLinkedList {
@@ -42,9 +49,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else {
                 if (entryMap.containsKey(id)){
                     Node node = entryMap.get(id);
-                    if (node.getHead() == null) {
-                        this.head = node.getTail();
-                    }
                     rebindingLinksAfterTaskExtraction(id);
                     entryMap.get(tail).setTail(id);
                     node.setHead(this.tail);
@@ -60,8 +64,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         private void remove(Long id) {
-            rebindingLinksAfterTaskExtraction(id);
-            this.entryMap.remove(id);
+            try {
+                rebindingLinksAfterTaskExtraction(id);
+                this.entryMap.remove(id);
+            } catch (NullPointerException e) {
+                System.out.println("Задача с id = " + id + " не просматривалась");
+            }
         }
 
         private List<Task> toList() {
@@ -77,6 +85,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         private void rebindingLinksAfterTaskExtraction(Long id) {
             Node removedNode= this.entryMap.get(id);
             Long tail = removedNode.getTail();
+            if (removedNode.getHead() == null) {
+                this.head = removedNode.getTail();
+            }
             if (tail != null) {
                 Long head = removedNode.getHead();
                 if (head != null) {

@@ -22,19 +22,22 @@ public class InMemoryTaskManager implements TasksManager {
 
     @Override
     public void removeAllEpics() {
-        this.allEpics.clear();
+        allEpics.clear();
+        inMemoryHistoryManager.clearHistory();
     }
 
     @Override
     public void removeAllSubtasks() {
-        for (long epic : allEpics.keySet()) {
-            allEpics.get(epic).removeSubtasks();
+        for (long epicId : allEpics.keySet()) {
+            allEpics.get(epicId).getAllSubtask().stream().forEach(o -> inMemoryHistoryManager.remove(o.getId()));
+            allEpics.get(epicId).removeSubtasks();
         }
     }
 
     @Override
     public void removeSubtasksByEpicId(Long epicId) {
         try {
+            allEpics.get(epicId).getAllSubtask().stream().forEach(o -> inMemoryHistoryManager.remove(o.getId()));
             allEpics.get(epicId).removeSubtasks();
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
@@ -44,6 +47,8 @@ public class InMemoryTaskManager implements TasksManager {
     @Override
     public void removeEpicById(Long epicId) {
         try {
+            allEpics.get(epicId).getAllSubtask().stream().forEach(o -> inMemoryHistoryManager.remove(o.getId()));
+            inMemoryHistoryManager.remove(epicId);
             allEpics.get(epicId).removeSubtasks();
             allEpics.remove(epicId);
         } catch (NullPointerException exception) {
@@ -55,6 +60,7 @@ public class InMemoryTaskManager implements TasksManager {
     public void removeSubtasksById(Long subtaskId) {
         try {
             Long epicId = this.getEpicBySubtaskIdOrNull(subtaskId).getId();
+            inMemoryHistoryManager.remove(subtaskId);
             this.getEpicById(epicId).removeSubtask(subtaskId);
             checkEpicStatus(epicId);
         } catch (NullPointerException exception) {

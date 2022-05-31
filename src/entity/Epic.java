@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Epic extends Task {
-    private static long amountId = 1L;
     private HashMap<Long, Subtask> subtasks;
 
     public Epic(String name, String description) {

@@ -4,7 +4,6 @@ import constant.TaskStatus;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private static long amountId = 1L;
     private Long epicsId;
 
     public Subtask(String name, String description, long epicsId) {
