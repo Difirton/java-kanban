@@ -43,12 +43,15 @@ public class InMemoryHistoryManager implements HistoryManager {
                 if (entryMap.containsKey(id)){
                     Node node = entryMap.get(id);
                     rebindingLinksAfterTaskExtraction(id);
+                    entryMap.get(tail).setTail(id);
                     node.setHead(this.tail);
                     node.setTail(null);
                     this.tail = id;
                 } else {
                     Node newTail = new Node(task, this.tail);
+                    entryMap.put(id, newTail);
                     this.entryMap.get(this.tail).setTail(id);
+                    this.tail = id;
                 }
             }
         }
@@ -115,7 +118,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
 
             public final String toString() {
-                return task.toString() + head + "^" + tail;
+                return task.toString() + ", head: " + head + "; tail: " + tail;
             }
         }
     }

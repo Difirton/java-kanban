@@ -7,7 +7,7 @@ public class Main {
         TasksManager tasksManager = Manager.getDefault();
         tasksManager.createNewEpic("Epic 1", "Description Epic 1");
         tasksManager.createNewEpic("Epic 2", "Description Epic 2");
-        tasksManager.createNewEpic("Epic 2", "Description Epic 3");
+        tasksManager.createNewEpic("Epic 3", "Description Epic 3");
 //        tasksManager.createNewSubtask("Subtask 1", "Subtask 1", 1L);
 //        tasksManager.createNewSubtask("Subtask 2", "Subtask 2", 1L);
 //        tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 2L);
@@ -16,6 +16,7 @@ public class Main {
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(2L);
         tasksManager.getEpicById(3L);
+        tasksManager.getEpicById(2L);
         System.out.println(tasksManager.getHistory());
 
     }
