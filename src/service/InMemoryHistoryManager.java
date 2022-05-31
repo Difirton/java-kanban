@@ -85,11 +85,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         private void rebindingLinksAfterTaskExtraction(Long id) {
             Node removedNode= this.entryMap.get(id);
             Long tail = removedNode.getTail();
-            if (removedNode.getHead() == null) {
+            Long head = removedNode.getHead();
+            if (head == null) {
                 this.head = removedNode.getTail();
             }
             if (tail != null) {
-                Long head = removedNode.getHead();
                 if (head != null) {
                     this.entryMap.get(tail).setHead(head);
                     this.entryMap.get(head).setTail(tail);
