@@ -126,8 +126,8 @@ public class InMemoryHistoryManager implements HistoryManager {
                 if (o == null || this.getClass() != o.getClass()) return false;
                 Node node = (Node) o;
                 return Objects.equals(node.task, this.task) &&
-                        Objects.equals(node.head, this.head) &&
-                        Objects.equals(node.tail, this.tail);
+                       Objects.equals(node.head, this.head) &&
+                       Objects.equals(node.tail, this.tail);
             }
 
             @Override
