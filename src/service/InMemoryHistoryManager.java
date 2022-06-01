@@ -2,10 +2,7 @@ package service;
 
 import entity.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     CustomLinkedList historyQueueTasks = new CustomLinkedList();
@@ -93,15 +90,14 @@ public class InMemoryHistoryManager implements HistoryManager {
             Node removedNode = this.entryMap.get(id);
             Long tail = removedNode.getTail();
             Long head = removedNode.getHead();
-//            if (head == null) {
-//                this.head = removedNode.getTail();
-//            }
+            if (head == null) {
+                this.head = removedNode.getTail();
+            }
             if (tail != null) {
                 if (head != null) {
                     this.entryMap.get(tail).setHead(head);
                     this.entryMap.get(head).setTail(tail);
                 } else {
-                    this.head = removedNode.getTail();
                     this.entryMap.get(tail).setHead(null);
                 }
             }
@@ -122,6 +118,23 @@ public class InMemoryHistoryManager implements HistoryManager {
                 this.task = task;
                 this.head = head;
                 this.tail = null;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || this.getClass() != o.getClass()) return false;
+                Node node = (Node) o;
+                return Objects.equals(node.task, this.task) &&
+                        Objects.equals(node.head, this.head) &&
+                        Objects.equals(node.tail, this.tail);
+            }
+
+            @Override
+            public int hashCode() {
+                int result = task.hashCode();
+                result = 31 * result + (head != null ? head.hashCode() : 0) + (tail != null ? tail.hashCode() : 0);
+                return result;
             }
 
             private Task getTask() {
