@@ -9,7 +9,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        historyQueueTasks.add(task);
+        try {
+            historyQueueTasks.add(task);
+        } catch (NullPointerException exception) { }
     }
 
     @Override
@@ -37,6 +39,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         private CustomLinkedList() {
             this.entryMap = new HashMap<>();
+            this.head = null;
+            this.tail = null;
         }
 
         private void add(Task task) {
@@ -67,9 +71,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             try {
                 rebindingLinksAfterTaskExtraction(id);
                 this.entryMap.remove(id);
-            } catch (NullPointerException e) {
-                System.out.println("Задача с id = " + id + " не просматривалась");
-            }
+            } catch (NullPointerException e) { }
         }
 
         private List<Task> toList() {
@@ -94,6 +96,7 @@ public class InMemoryHistoryManager implements HistoryManager {
                     this.entryMap.get(tail).setHead(head);
                     this.entryMap.get(head).setTail(tail);
                 } else {
+//                    this.head = removedNode.getTail();
                     this.entryMap.get(tail).setHead(null);
                 }
             }
@@ -108,7 +111,6 @@ public class InMemoryHistoryManager implements HistoryManager {
                 this.task = task;
                 this.head = null;
                 this.tail = null;
-
             }
 
             private Node(Task task, Long head) {
