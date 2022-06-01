@@ -2,7 +2,10 @@ package service;
 
 import entity.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     CustomLinkedList historyQueueTasks = new CustomLinkedList();
@@ -11,7 +14,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void add(Task task) {
         try {
             historyQueueTasks.add(task);
-        } catch (NullPointerException exception) { }
+        } catch (NullPointerException exception) {
+            System.out.println("Здача с id = " + task.getId() + "не существует");
+        }
     }
 
     @Override
@@ -51,7 +56,7 @@ public class InMemoryHistoryManager implements HistoryManager {
                 this.head = id;
                 this.tail = id;
             } else {
-                if (entryMap.containsKey(id)){
+                if (entryMap.containsKey(id)) {
                     Node node = entryMap.get(id);
                     rebindingLinksAfterTaskExtraction(id);
                     entryMap.get(tail).setTail(id);
@@ -85,24 +90,24 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         private void rebindingLinksAfterTaskExtraction(Long id) {
-            Node removedNode= this.entryMap.get(id);
+            Node removedNode = this.entryMap.get(id);
             Long tail = removedNode.getTail();
             Long head = removedNode.getHead();
-            if (head == null) {
-                this.head = removedNode.getTail();
-            }
+//            if (head == null) {
+//                this.head = removedNode.getTail();
+//            }
             if (tail != null) {
                 if (head != null) {
                     this.entryMap.get(tail).setHead(head);
                     this.entryMap.get(head).setTail(tail);
                 } else {
-//                    this.head = removedNode.getTail();
+                    this.head = removedNode.getTail();
                     this.entryMap.get(tail).setHead(null);
                 }
             }
         }
 
-        private class Node{
+        private class Node {
             private final Task task;
             private Long head;
             private Long tail;

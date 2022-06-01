@@ -3,7 +3,7 @@ import service.TasksManager;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         TasksManager tasksManager = Manager.getDefault();
         tasksManager.createNewEpic("Epic 1", "Description Epic 1");
         tasksManager.createNewEpic("Epic 2", "Description Epic 2");

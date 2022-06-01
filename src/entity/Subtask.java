@@ -30,13 +30,13 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
-                "id=" + this.getId() +
-                ", epicsId=" + this.getEpicsId() +
-                ", name='" + this.getName() + '\'' +
-                ", description='" + this.getDescription() + '\'' +
-                ", status=" + this.getStatus() +
-                '}';
+        StringBuilder sb = new StringBuilder("Subtask{");
+        sb.append("id=").append(this.getId());
+        sb.append(", epicsId=").append(this.getEpicsId());
+        sb.append(", name='").append(this.getName()).append('\'');
+        sb.append(", description='").append(this.getDescription()).append('\'');
+        sb.append(", status=").append(this.getStatus()).append('}');
+        return sb.toString();
     }
 
     @Override
