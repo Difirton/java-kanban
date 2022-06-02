@@ -5,14 +5,11 @@ import entity.Epic;
 import entity.Subtask;
 import entity.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager {
-    private final HashMap<Long, Epic> allEpics;
+    private final Map<Long, Epic> allEpics; //Это мой косяк, Вы писали не в этом месте про интерфес, а здесь я е увидел, что тоже можно исправить
     private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
@@ -78,7 +75,7 @@ public class InMemoryTaskManager implements TasksManager {
     public Subtask getSubtaskByIdOrNull(Long subtaskId) {
         try {
             Subtask foundSubtask = this.getAllSubtasks().stream()
-                    .filter(o -> subtaskId.equals(o.getId()))
+                    .filter(o -> Objects.equals(subtaskId, o.getId()))
                     .findFirst().get();
             inMemoryHistoryManager.add(foundSubtask);
             return foundSubtask;
