@@ -3,8 +3,7 @@ package utill;
 import entity.Task;
 
 import java.util.*;
-/*Я с Вами согласен, просто в заднии было: "Отдельный класс для списка создавать не нужно — реализуйте его прямо в
-классе InMemoryHistoryManager". Мне самому было непонятно зачем такая матрешка.*/
+
 public class CustomLinkedList {
     private final Map<Long, Node> entryMap;
     private Long head;
@@ -24,16 +23,16 @@ public class CustomLinkedList {
             this.head = id;
             this.tail = id;
         } else {
-            if (entryMap.containsKey(id)) {
+            if (this.entryMap.containsKey(id)) {
                 Node node = entryMap.get(id);
                 rebindingLinksAfterTaskExtraction(id);
-                entryMap.get(tail).setTail(id);
+                this.entryMap.get(tail).setTail(id);
                 node.setHead(this.tail);
                 node.setTail(null);
                 this.tail = id;
             } else {
                 Node newTail = new Node(task, this.tail);
-                entryMap.put(id, newTail);
+                this.entryMap.put(id, newTail);
                 this.entryMap.get(this.tail).setTail(id);
                 this.tail = id;
             }
@@ -41,10 +40,10 @@ public class CustomLinkedList {
     }
 
     public void remove(Long id) {
-        try { //Да, может. У меня был NPE, если попытаться удалить несуществующую задачу. Ситуация спецефичная=)
+        if (entryMap.containsKey(id)) {
             rebindingLinksAfterTaskExtraction(id);
             this.entryMap.remove(id);
-        } catch (NullPointerException e) { }
+        }
     }
 
     public List<Task> toList() {

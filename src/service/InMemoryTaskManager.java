@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager {
-    private final Map<Long, Epic> allEpics; //Это мой косяк, Вы писали не в этом месте про интерфес, а здесь я е увидел, что тоже можно исправить
+    private final Map<Long, Epic> allEpics;
     private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
@@ -26,7 +26,8 @@ public class InMemoryTaskManager implements TasksManager {
     @Override
     public void removeAllSubtasks() {
         for (long epicId : allEpics.keySet()) {
-            allEpics.get(epicId).getAllSubtask().stream().forEach(o -> inMemoryHistoryManager.remove(o.getId()));
+            allEpics.get(epicId).getAllSubtask().stream()
+                    .forEach(o -> inMemoryHistoryManager.remove(o.getId()));
             allEpics.get(epicId).removeSubtasks();
         }
     }
@@ -34,7 +35,8 @@ public class InMemoryTaskManager implements TasksManager {
     @Override
     public void removeSubtasksByEpicId(Long epicId) {
         try {
-            allEpics.get(epicId).getAllSubtask().stream().forEach(o -> inMemoryHistoryManager.remove(o.getId()));
+            allEpics.get(epicId).getAllSubtask().stream()
+                    .forEach(o -> inMemoryHistoryManager.remove(o.getId()));
             allEpics.get(epicId).removeSubtasks();
         } catch (NullPointerException exception) {
             System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
@@ -44,7 +46,8 @@ public class InMemoryTaskManager implements TasksManager {
     @Override
     public void removeEpicById(Long epicId) {
         try {
-            allEpics.get(epicId).getAllSubtask().stream().forEach(o -> inMemoryHistoryManager.remove(o.getId()));
+            allEpics.get(epicId).getAllSubtask().stream()
+                    .forEach(o -> inMemoryHistoryManager.remove(o.getId()));
             inMemoryHistoryManager.remove(epicId);
             allEpics.get(epicId).removeSubtasks();
             allEpics.remove(epicId);
@@ -67,8 +70,13 @@ public class InMemoryTaskManager implements TasksManager {
 
     @Override
     public Epic getEpicById(Long epicId) {
-        inMemoryHistoryManager.add(allEpics.get(epicId));
-        return allEpics.get(epicId);
+        try {
+            inMemoryHistoryManager.add(allEpics.get(epicId));
+            return allEpics.get(epicId);
+        } catch (NoSuchElementException | NullPointerException exception) {
+            System.out.println("Недопустимое действие. Эпика с id=" + epicId + " не существует");
+            return null;
+        }
     }
 
     @Override
@@ -76,10 +84,11 @@ public class InMemoryTaskManager implements TasksManager {
         try {
             Subtask foundSubtask = this.getAllSubtasks().stream()
                     .filter(o -> Objects.equals(subtaskId, o.getId()))
-                    .findFirst().get();
+                    .findFirst()
+                    .get();
             inMemoryHistoryManager.add(foundSubtask);
             return foundSubtask;
-        } catch (NoSuchElementException exception) {
+        } catch (NoSuchElementException | NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
             return null;
         }
@@ -92,8 +101,9 @@ public class InMemoryTaskManager implements TasksManager {
                     .filter(o -> subtaskId.equals(o.getId()))
                     .map(o -> o.getEpicsId())
                     .map(o -> this.getEpicById(o))
-                    .findFirst().get();
-        } catch (NoSuchElementException exception) {
+                    .findFirst()
+                    .get();
+        } catch (NoSuchElementException | NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
             return null;
         }
@@ -116,7 +126,8 @@ public class InMemoryTaskManager implements TasksManager {
 
     @Override
     public ArrayList<Epic> getAllEpics() {
-        return allEpics.values().stream().collect(Collectors.toCollection(ArrayList::new));
+        return allEpics.values().stream()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -190,11 +201,11 @@ public class InMemoryTaskManager implements TasksManager {
 
     private void checkEpicStatus(Long epicId) {
         if (this.getAllEpicsSubtasks(epicId).stream()
-                .allMatch(o -> o.getStatus().equals(TaskStatus.DONE))) {
+                .allMatch(o -> o.getStatus() == TaskStatus.DONE)) {
             this.getEpicById(epicId).setStatus(TaskStatus.DONE);
         } else if (this.getEpicById(epicId)
                 .getAllSubtask().stream()
-                .allMatch(o -> o.getStatus().equals(TaskStatus.NEW))) {
+                .allMatch(o -> o.getStatus() == TaskStatus.NEW)) {
             this.getEpicById(epicId).setStatus(TaskStatus.NEW);
         } else {
             this.getEpicById(epicId).setStatus(TaskStatus.IN_PROGRESS);

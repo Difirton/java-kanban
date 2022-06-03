@@ -10,11 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        try {
-            historyQueueTasks.add(task);
-        } catch (NullPointerException exception) {
-            System.out.println("Здача с id = " + task.getId() + "не существует");
-        }
+        historyQueueTasks.add(task);
     }
 
     @Override
