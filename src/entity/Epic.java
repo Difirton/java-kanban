@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 public class Epic extends Task implements Serializable {
@@ -53,13 +54,13 @@ public class Epic extends Task implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Epic{");
-        sb.append("id=").append(this.getId());
-        sb.append(", subtaskId=").append(subtasks.keySet());
-        sb.append(", name='").append(this.getName()).append('\'');
-        sb.append(", description='").append(this.getDescription()).append('\'');
-        sb.append(", status=").append(this.getStatus()).append('}');
-        return sb.toString();
+        return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
+                .add("id=" + this.getId())
+                .add(", subtaskId=" + subtasks.keySet())
+                .add("name='" + this.getName() + "'")
+                .add("description='" + this.getDescription() + "'")
+                .add("status=" + this.getStatus())
+                .toString();
     }
 
     @Override

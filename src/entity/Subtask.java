@@ -4,6 +4,7 @@ import constant.TaskStatus;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class Subtask extends Task implements Serializable {
     private final long serialVersionUID = 1L;
@@ -33,13 +34,13 @@ public class Subtask extends Task implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Subtask{");
-        sb.append("id=").append(this.getId());
-        sb.append(", epicsId=").append(this.getEpicsId());
-        sb.append(", name='").append(this.getName()).append('\'');
-        sb.append(", description='").append(this.getDescription()).append('\'');
-        sb.append(", status=").append(this.getStatus()).append('}');
-        return sb.toString();
+        return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
+                .add("id=" + this.getId())
+                .add(", epicsId=" + this.getEpicsId())
+                .add("name='" + this.getName() + "'")
+                .add("description='" + this.getDescription() + "'")
+                .add("status=" + this.getStatus())
+                .toString();
     }
 
     @Override

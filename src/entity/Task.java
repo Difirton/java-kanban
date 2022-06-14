@@ -4,6 +4,8 @@ import constant.TaskStatus;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.StringJoiner;
+
 import static constant.TaskStatus.*;
 
 public abstract class Task implements Serializable {
@@ -54,12 +56,12 @@ public abstract class Task implements Serializable {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                '}';
+        return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("name='" + name + "'")
+                .add("description='" + description + "'")
+                .add("status=" + status)
+                .toString();
     }
 
     @Override

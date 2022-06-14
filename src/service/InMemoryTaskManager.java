@@ -54,7 +54,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
             allEpics.get(epicId).removeSubtasks();
             allEpics.remove(epicId);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
+            System.out.println("Недопустимое действие. Эпик с id=" + epicId + " не существует");
         }
     }
 
