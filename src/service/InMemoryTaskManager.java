@@ -5,10 +5,12 @@ import entity.Epic;
 import entity.Subtask;
 import entity.Task;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InMemoryTaskManager implements TasksManager {
+public class InMemoryTaskManager implements TasksManager, Serializable {
+    private final long serialVersionUID = 1L;
     private final Map<Long, Epic> allEpics;
     private final HistoryManager inMemoryHistoryManager;
 

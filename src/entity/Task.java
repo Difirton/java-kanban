@@ -1,10 +1,13 @@
 package entity;
 
 import constant.TaskStatus;
+
+import java.io.Serializable;
 import java.util.Objects;
 import static constant.TaskStatus.*;
 
-public abstract class Task {
+public abstract class Task implements Serializable {
+    private final long serialVersionUID = 1L;
     protected static long amountId = 1L;
     private long id;
     private String name;

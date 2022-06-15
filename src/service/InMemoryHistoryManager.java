@@ -3,9 +3,11 @@ package service;
 import entity.Task;
 import utill.CustomLinkedList;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class InMemoryHistoryManager implements HistoryManager {
+public class InMemoryHistoryManager implements HistoryManager, Serializable {
+    private final long serialVersionUID = 1L;
     private CustomLinkedList historyQueueTasks = new CustomLinkedList();
 
     @Override

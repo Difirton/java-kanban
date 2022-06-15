@@ -1,9 +1,12 @@
 package entity;
 
 import constant.TaskStatus;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Subtask extends Task {
+public class Subtask extends Task implements Serializable {
+    private final long serialVersionUID = 1L;
     private Long epicsId;
 
     public Subtask(String name, String description, long epicsId) {

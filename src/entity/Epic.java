@@ -1,12 +1,15 @@
 package entity;
 
 import constant.TaskStatus;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Epic extends Task {
+public class Epic extends Task implements Serializable {
+    private final long serialVersionUID = 1L;
     private HashMap<Long, Subtask> subtasks;
 
     public Epic(String name, String description) {

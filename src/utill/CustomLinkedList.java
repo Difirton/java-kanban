@@ -2,9 +2,11 @@ package utill;
 
 import entity.Task;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class CustomLinkedList {
+public class CustomLinkedList implements Serializable {
+    private final long serialVersionUID = 1L;
     private final Map<Long, Node> entryMap;
     private Long head;
     private Long tail;
@@ -79,7 +81,8 @@ public class CustomLinkedList {
         this.tail = null;
     }
 
-    private class Node {
+    private class Node implements Serializable {
+        private final long serialVersionUID = 1L;
         private final Task task;
         private Long head;
         private Long tail;

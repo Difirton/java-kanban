@@ -5,7 +5,11 @@ public class Manager {
         return new InMemoryHistoryManager();
     }
 
-    public static TasksManager getDefault() {
+    public static TasksManager getInMemoryTaskManager() {
         return new InMemoryTaskManager();
+    }
+
+    public static FileBackedTasksManager getFileBackedTasksManager() {
+        return new FileBackedTasksManager();
     }
 }
