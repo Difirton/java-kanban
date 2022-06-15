@@ -1,14 +1,16 @@
 package main.java;
 
+import main.java.constant.TypeTasksManager;
 import main.java.service.FileBackedTasksManager;
 import main.java.service.Manager;
+import main.java.service.TasksManager;
 
 import java.io.File;
 
 public class Main {
 
     public static void main(String... args) {
-        FileBackedTasksManager tasksManager = Manager.getFileBackedTasksManager();
+        TasksManager tasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         tasksManager.createNewEpic("Epic 1", "Description Epic 1");
         tasksManager.createNewEpic("Epic 2", "Description Epic 2");
         tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 1L);
@@ -23,7 +25,6 @@ public class Main {
         tasksManager.getSubtaskByIdOrNull(5L);
         System.out.println(tasksManager.getHistory());
         System.out.println(tasksManager);
-        tasksManager.save();
 
         File fileToRead = new File("src" + File.separator + "main" + File.separator+ "resources"
                 + File.separator + "data" + File.separator + "data.bin");

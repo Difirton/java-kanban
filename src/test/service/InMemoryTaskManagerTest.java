@@ -1,6 +1,7 @@
 package service;
 
 import main.java.constant.TaskStatus;
+import main.java.constant.TypeTasksManager;
 import main.java.entity.Task;
 import main.java.service.Manager;
 import main.java.service.TasksManager;
@@ -12,7 +13,7 @@ public class InMemoryTaskManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        inMemoryTaskManager = Manager.getInMemoryTaskManager();
+        inMemoryTaskManager = Manager.getTaskManager(TypeTasksManager.IN_MEMORY_TASKS_MANAGER);
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
         inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);

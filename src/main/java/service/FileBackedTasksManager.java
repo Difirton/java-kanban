@@ -116,7 +116,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
 
     /*Реализовал через сериализацию, так как ТЗ не обязывает использовать CSV. Я с ним уже несколько раз работал, было
      не интересно просто повторить. С бинарной сериализацией не работал, но вычитал, что она быстрее работает. */
-    public void save() {
+    private void save() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(this);
         } catch (IOException e) {

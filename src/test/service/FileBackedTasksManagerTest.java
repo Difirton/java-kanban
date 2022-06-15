@@ -1,8 +1,10 @@
 package service;
 
 import junit.framework.TestCase;
+import main.java.constant.TypeTasksManager;
 import main.java.service.FileBackedTasksManager;
 import main.java.service.Manager;
+import main.java.service.TasksManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,12 +13,12 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 public class FileBackedTasksManagerTest extends TestCase {
-    FileBackedTasksManager fileBackedTasksManager;
+    TasksManager fileBackedTasksManager;
     File testFile;
 
     @Before
     public void setUp() throws Exception{
-        fileBackedTasksManager = Manager.getFileBackedTasksManager();
+        fileBackedTasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         testFile = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator
                 + "data" + File.separator + "data.bin");
         fileBackedTasksManager.createNewEpic("Epic 1", "Desc 1");
@@ -33,7 +35,7 @@ public class FileBackedTasksManagerTest extends TestCase {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);
         field.set(fileBackedTasksManager, testFile);
-        fileBackedTasksManager.save();
+        fileBackedTasksManager.getEpicById(1L);
         File actualFile = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator
                 + "data" + File.separator + "data.bin");
         Assert.assertTrue(actualFile.exists());
@@ -45,7 +47,11 @@ public class FileBackedTasksManagerTest extends TestCase {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);
         field.set(fileBackedTasksManager, testFile);
-        fileBackedTasksManager.save();
+        fileBackedTasksManager.getEpicById(1L);
+        fileBackedTasksManager.getEpicById(5L);
+        fileBackedTasksManager.getSubtaskByIdOrNull(2L);
+        fileBackedTasksManager.getSubtaskByIdOrNull(6L);
+        fileBackedTasksManager.getEpicById(1L);
 
         FileBackedTasksManager testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(testFile);
         Assert.assertEquals(fileBackedTasksManager.getAllEpics(), testFileBackedTasksManager.getAllEpics());
