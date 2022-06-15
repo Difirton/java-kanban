@@ -1,11 +1,10 @@
+package service;
+
 import constant.TaskStatus;
 import entity.Task;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import service.Manager;
-import service.TasksManager;
-
 public class InMemoryTaskManagerTest {
     TasksManager inMemoryTaskManager;
 

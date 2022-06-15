@@ -27,8 +27,5 @@ public class Main {
         FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(fileToRead);
         System.out.println(newTaskManager);
         System.out.println(newTaskManager.getHistory());
-
-
-
     }
 }

@@ -5,8 +5,6 @@ import entity.Subtask;
 import error.ManagerSaveException;
 
 import java.io.*;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements Serializable {
     private final long serialVersionUID = 1L;
@@ -105,8 +103,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
 
     @Override
     public void updateSubtaskName(Long subtaskId, String newName) {
-       super.updateSubtaskName(subtaskId, newName);
-       this.save();
+        super.updateSubtaskName(subtaskId, newName);
+        this.save();
     }
 
     @Override
@@ -118,7 +116,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     /*Реализовал через сериализацию, так как ТЗ не обязывает использовать CSV. Я с ним уже несколько раз работал, было
      не интересно просто повторить. С бинарной сериализацией не сталкивался, но вычитал, что она быстрее работает. */
     public void save() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file)) ) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(this);
         } catch (IOException e) {
             throw new ManagerSaveException();
@@ -127,7 +125,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
 
     public static FileBackedTasksManager loadFromFile(File loadFile) {
         FileBackedTasksManager fileBackedTasksManager = null;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(loadFile)) ) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(loadFile))) {
             fileBackedTasksManager = (FileBackedTasksManager) ois.readObject();
         } catch (FileNotFoundException | ClassNotFoundException e) {
             e.printStackTrace();
