@@ -1,4 +1,4 @@
-package constant;
+package main.java.constant;
 
 public enum TaskStatus {
     NEW,

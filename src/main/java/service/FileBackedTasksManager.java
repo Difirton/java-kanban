@@ -1,8 +1,8 @@
-package service;
+package main.java.service;
 
-import entity.Epic;
-import entity.Subtask;
-import error.ManagerSaveException;
+import main.java.entity.Epic;
+import main.java.entity.Subtask;
+import main.java.error.ManagerSaveException;
 
 import java.io.*;
 
@@ -11,7 +11,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     private final File file;
 
     FileBackedTasksManager() {
-        file = new File("resources" + File.separator + "data" + File.separator + "data.bin");
+        file = new File("src" + File.separator + "main" + File.separator+ "resources" + File.separator
+                + "data" + File.separator + "data.bin");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package service;
+package main.java.service;
 
 public class Manager {
     public static HistoryManager getDefaultHistory() {

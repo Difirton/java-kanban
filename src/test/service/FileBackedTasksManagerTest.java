@@ -1,8 +1,11 @@
 package service;
 
 import junit.framework.TestCase;
+import main.java.service.FileBackedTasksManager;
+import main.java.service.Manager;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -25,6 +28,7 @@ public class FileBackedTasksManagerTest extends TestCase {
         fileBackedTasksManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L);
     }
 
+    @Test
     public void testSave() throws NoSuchFieldException, IllegalAccessException {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);
@@ -36,6 +40,7 @@ public class FileBackedTasksManagerTest extends TestCase {
         actualFile.delete();
     }
 
+    @Test
     public void testLoadFromFile() throws NoSuchFieldException, IllegalAccessException {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);

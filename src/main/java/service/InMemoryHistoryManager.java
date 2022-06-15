@@ -1,7 +1,7 @@
-package service;
+package main.java.service;
 
-import entity.Task;
-import utill.CustomLinkedList;
+import main.java.entity.Task;
+import main.java.utill.CustomLinkedList;
 
 import java.io.Serializable;
 import java.util.List;

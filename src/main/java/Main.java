@@ -1,5 +1,7 @@
-import service.FileBackedTasksManager;
-import service.Manager;
+package main.java;
+
+import main.java.service.FileBackedTasksManager;
+import main.java.service.Manager;
 
 import java.io.File;
 
@@ -23,7 +25,8 @@ public class Main {
         System.out.println(tasksManager);
         tasksManager.save();
 
-        File fileToRead = new File("resources" + File.separator + "data" + File.separator + "data.bin");
+        File fileToRead = new File("src" + File.separator + "main" + File.separator+ "resources"
+                + File.separator + "data" + File.separator + "data.bin");
         FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(fileToRead);
         System.out.println(newTaskManager);
         System.out.println(newTaskManager.getHistory());

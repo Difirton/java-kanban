@@ -1,12 +1,12 @@
-package entity;
+package main.java.entity;
 
-import constant.TaskStatus;
+import main.java.constant.TaskStatus;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static constant.TaskStatus.*;
+import static main.java.constant.TaskStatus.*;
 
 public abstract class Task implements Serializable {
     private final long serialVersionUID = 1L;

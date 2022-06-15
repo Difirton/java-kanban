@@ -1,6 +1,6 @@
-package entity;
+package main.java.entity;
 
-import constant.TaskStatus;
+import main.java.constant.TaskStatus;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -1,7 +1,9 @@
 package service;
 
-import constant.TaskStatus;
-import entity.Task;
+import main.java.constant.TaskStatus;
+import main.java.entity.Task;
+import main.java.service.Manager;
+import main.java.service.TasksManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
