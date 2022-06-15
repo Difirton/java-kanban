@@ -1,7 +1,7 @@
 # java-kanban
 
 ## About 
-This repository contains homework for sprint number 3 yandex practicum. This is the backend of the task tracker program. It contains the main classes epic and subtask. All main functions are performed by Tasks Manager Service.
+This repository contains homework for sprint number 6 yandex practicum. This is the backend of the task tracker program. It contains the main classes epic and subtask. All main functions are performed by In Memory Tasks Manager. Saving the history of viewing tasks is engaged in In Memory History Manager. To save the tasks tracker state file, it is provided File Backed Tasks Manager.
 
 ## Main function
 
