@@ -2,8 +2,8 @@ package main.java.error;
 
 public class ManagerSaveException extends RuntimeException {
 
-    public ManagerSaveException() {
-        super("There was a problem saving the file, probably the directory specified for saving the data does not " +
-                "exist. Check if the directory exists: \"resources\\data\"");
+    public ManagerSaveException(String message) { //Я как раз думал и выбирал из двух вариантов: записать сразу
+        // месседж(поскольку исключение бросается в одном методе или передать из конкретного места. Не угадал...))
+        super(message);
     }
 }

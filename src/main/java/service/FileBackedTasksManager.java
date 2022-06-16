@@ -11,7 +11,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     private final File file;
 
     FileBackedTasksManager() {
-        file = new File("src" + File.separator + "main" + File.separator+ "resources" + File.separator
+        this.file = new File("src" + File.separator + "main" + File.separator+ "resources" + File.separator
                 + "data" + File.separator + "data.bin");
     }
 
@@ -114,13 +114,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
         this.save();
     }
 
-    /*Реализовал через сериализацию, так как ТЗ не обязывает использовать CSV. Я с ним уже несколько раз работал, было
-     не интересно просто повторить. С бинарной сериализацией не работал, но вычитал, что она быстрее работает. */
     private void save() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(this);
+        try (ObjectOutputStream reader = new ObjectOutputStream(new FileOutputStream(file))) {
+            reader.writeObject(this);
         } catch (IOException e) {
-            throw new ManagerSaveException();
+            throw new ManagerSaveException("There was a problem saving the file, probably the directory specified for" +
+                    " saving the data does not exist. Check if the directory exists: \"resources\\data\"");
         }
     }
 
@@ -138,11 +137,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("FileBackedTasksManager{");
-        sb.append("Epics=").append(this.getAllEpics());
-        sb.append(", Subtasks=").append(this.getAllSubtasks());
-        sb.append(", History=").append(this.getHistory());
-        sb.append('}');
+        final StringBuilder sb = new StringBuilder("FileBackedTasksManager{")
+        .append("Epics=").append(this.getAllEpics())
+        .append(", Subtasks=").append(this.getAllSubtasks())
+        .append(", History=").append(this.getHistory())
+        .append('}');
         return sb.toString();
     }
 }

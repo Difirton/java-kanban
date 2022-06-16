@@ -13,8 +13,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 public class FileBackedTasksManagerTest extends TestCase {
-    TasksManager fileBackedTasksManager;
-    File testFile;
+    private TasksManager fileBackedTasksManager;
+    private File testFile;
 
     @Before
     public void setUp() throws Exception{

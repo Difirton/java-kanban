@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 public class InMemoryTaskManagerTest {
-    TasksManager inMemoryTaskManager;
+    private TasksManager inMemoryTaskManager;
 
     @Before
     public void setUp() throws Exception {
