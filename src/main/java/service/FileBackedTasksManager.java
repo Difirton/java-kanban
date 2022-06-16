@@ -115,8 +115,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     }
 
     private void save() {
-        try (ObjectOutputStream reader = new ObjectOutputStream(new FileOutputStream(file))) {
-            reader.writeObject(this);
+        try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(file))) {
+            writer.writeObject(this);//Наверное здесь тогда не reader, а writer. А в loadFromFile как раз reader
         } catch (IOException e) {
             throw new ManagerSaveException("There was a problem saving the file, probably the directory specified for" +
                     " saving the data does not exist. Check if the directory exists: \"resources\\data\"");
@@ -125,12 +125,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
 
     public static FileBackedTasksManager loadFromFile(File loadFile) {
         FileBackedTasksManager fileBackedTasksManager = null;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(loadFile))) {
-            fileBackedTasksManager = (FileBackedTasksManager) ois.readObject();
-        } catch (FileNotFoundException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(loadFile))) {
+            fileBackedTasksManager = (FileBackedTasksManager) reader.readObject();
+        } catch (FileNotFoundException | ClassNotFoundException exception) {
+            exception.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
         return fileBackedTasksManager;
     }
