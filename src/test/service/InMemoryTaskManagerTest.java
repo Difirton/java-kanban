@@ -1,4 +1,4 @@
-package service;
+package test.service;
 
 import main.java.constant.TaskStatus;
 import main.java.constant.TypeTasksManager;
@@ -6,12 +6,14 @@ import main.java.entity.Task;
 import main.java.service.Manager;
 import main.java.service.TasksManager;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+
 public class InMemoryTaskManagerTest {
     private TasksManager inMemoryTaskManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         inMemoryTaskManager = Manager.getTaskManager(TypeTasksManager.IN_MEMORY_TASKS_MANAGER);
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
@@ -24,6 +26,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test get all subtasks, expected ok")
     public void testGetAllSubtasks() {
         int actual = inMemoryTaskManager.getAllSubtasks().size();
         int expected = 5;
@@ -31,6 +34,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test get all epics, expected ok")
     public void testGetAllEpics() {
         int actual = inMemoryTaskManager.getAllEpics().size();
         int expected = 2;
@@ -38,6 +42,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test return epic by subtasks id, expected ok")
     public void testGetEpicBySubtaskId() {
         long actual = inMemoryTaskManager.getEpicBySubtaskIdOrNull(3L).getId();
         long expected = 1L;
@@ -45,6 +50,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test change subtasks status to InProgress, expected ok")
     public void testChangeSubtaskStatusInProgress() {
         inMemoryTaskManager.changeSubtaskStatusInProgress(2L);
         TaskStatus actual = inMemoryTaskManager.getSubtaskByIdOrNull(2L).getStatus();
@@ -53,6 +59,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test change subtasks status epic to InProgress, expected ok")
     public void testChangeSubtaskStatusEpicInProgress() {
         inMemoryTaskManager.changeSubtaskStatusInProgress(3L);
         TaskStatus actual = inMemoryTaskManager.getEpicById(1L).getStatus();
@@ -61,6 +68,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test change subtasks status to Done, expected ok")
     public void testChangeSubtaskStatusDone() {
         inMemoryTaskManager.changeSubtaskStatusDone(4L);
         TaskStatus actual = inMemoryTaskManager.getSubtaskByIdOrNull(4L).getStatus();
@@ -69,6 +77,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test change subtasks status Done, epic to InProgress, expected ok")
     public void testChangeSubtaskStatusEpicNotDone() {
         inMemoryTaskManager.changeSubtaskStatusDone(2L);
         TaskStatus actual = inMemoryTaskManager.getEpicById(1L).getStatus();
@@ -77,6 +86,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test change subtask status Done, epic to InProgress, expected ok")
     public void testChangeSubtaskStatusEpicDone() {
         inMemoryTaskManager.changeSubtaskStatusDone(6L);
         inMemoryTaskManager.changeSubtaskStatusDone(7L);
@@ -87,6 +97,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test change subtasks status Done, epic to Done, expected ok")
     public void testChangeEpicStatusIfCreateNewSubtask() {
         inMemoryTaskManager.changeSubtaskStatusDone(6L);
         inMemoryTaskManager.changeSubtaskStatusDone(7L);
@@ -96,6 +107,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test update epics name, expected ok")
     public void testUpdateEpicName() {
         inMemoryTaskManager.updateEpicName(1L, "New Name");
         String actual = inMemoryTaskManager.getEpicById(1L).getName();
@@ -104,6 +116,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test update epics description, expected ok")
     public void testUpdateEpicDescription() {
         inMemoryTaskManager.updateEpicDescription(5L, "New Description");
         String actual = inMemoryTaskManager.getEpicById(5L).getDescription();
@@ -112,6 +125,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test update subtask name, expected ok")
     public void testUpdateSubtaskName() {
         inMemoryTaskManager.updateSubtaskName(3L, "New Name");
         String actual = inMemoryTaskManager.getSubtaskByIdOrNull(3L).getName();
@@ -120,6 +134,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test update subtask description, expected ok")
     public void testUpdateSubtaskDescription() {
         inMemoryTaskManager.updateSubtaskDescription(4L, "New Description");
         String actual = inMemoryTaskManager.getSubtaskByIdOrNull(4L).getDescription();
@@ -128,6 +143,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test change epic status to Done after remove his subtask with status InProgress or New, expected ok")
     public void testChangeEpicStatusIfRemoveNotFinishSubtask() {
         inMemoryTaskManager.changeSubtaskStatusDone(6L);
         inMemoryTaskManager.removeSubtasksById(7L);
@@ -137,6 +153,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove all subtasks by epics id, expected ok")
     public void testRemoveSubtasksByEpicId() {
         inMemoryTaskManager.removeSubtasksByEpicId(1L);
         int actual = inMemoryTaskManager.getAllSubtasks().size();
@@ -145,6 +162,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove epic, expected ok")
     public void testRemoveEpicById() {
         inMemoryTaskManager.removeEpicById(1L);
         int actual = inMemoryTaskManager.getAllEpics().size();
@@ -153,6 +171,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test cascade remove subtasks, expected ok")
     public void testСascadeRemoveSubtask() {
         inMemoryTaskManager.removeEpicById(1L);
         int actual = inMemoryTaskManager.getAllSubtasks().size();
@@ -161,6 +180,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove subtask, expected ok")
     public void testRemoveSubtaskById() {
         inMemoryTaskManager.removeSubtasksById(3L);
         int actual = inMemoryTaskManager.getAllSubtasks().size();
@@ -169,6 +189,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove all subtask, expected ok")
     public void testRemoveAllSubtasks() {
         inMemoryTaskManager.removeAllSubtasks();
         int actual = inMemoryTaskManager.getAllSubtasks().size();
@@ -177,6 +198,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove all epics, expected ok")
     public void testRemoveAllEpics() {
         inMemoryTaskManager.removeAllEpics();
         int actual = inMemoryTaskManager.getAllEpics().size();
@@ -185,6 +207,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test creating history of inMemoryTaskManager, expected ok")
     public void testTasksQueue() {
         inMemoryTaskManager.getEpicById(1L);
         inMemoryTaskManager.getEpicById(5L);
@@ -196,6 +219,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test of getting last task in history of inMemoryTaskManager, expected ok")
     public void testLastInHistoryTasksQueue() {
         inMemoryTaskManager.getEpicById(1L);
         inMemoryTaskManager.getEpicById(5L);
@@ -206,6 +230,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove repeat tasks in history of inMemoryTaskManager, when in history only one task, expected ok")
     public void testSizeHistoryToOneTask() {
         inMemoryTaskManager.getSubtaskByIdOrNull(2L);
         inMemoryTaskManager.getSubtaskByIdOrNull(2L);
@@ -218,6 +243,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove repeat tasks in history of inMemoryTaskManager, when in history many tasks, expected ok")
     public void testSizeHistoryToSameTasks() {
         inMemoryTaskManager.getEpicById(1L);
         inMemoryTaskManager.getEpicById(5L);
@@ -234,6 +260,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove subtasks in history of inMemoryTaskManager after remove this subtask , expected ok")
     public void testRemoveHistoryAfterRemoveSubtask() {
         inMemoryTaskManager.getEpicById(1L);
         inMemoryTaskManager.getEpicById(5L);
@@ -251,6 +278,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Test remove epic in history of inMemoryTaskManager after remove this epic , expected ok")
     public void testRemoveHistoryAfterRemoveEpic() {
         inMemoryTaskManager.getEpicById(1L);
         inMemoryTaskManager.getEpicById(5L);

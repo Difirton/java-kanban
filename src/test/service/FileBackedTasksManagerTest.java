@@ -6,8 +6,9 @@ import main.java.service.FileBackedTasksManager;
 import main.java.service.Manager;
 import main.java.service.TasksManager;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -16,7 +17,7 @@ public class FileBackedTasksManagerTest extends TestCase {
     private TasksManager fileBackedTasksManager;
     private File testFile;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception{
         fileBackedTasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         testFile = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator
@@ -31,18 +32,20 @@ public class FileBackedTasksManagerTest extends TestCase {
     }
 
     @Test
+    @DisplayName("Test save in file all parameters of fileBackedTasksManager, expected ok")
     public void testSave() throws NoSuchFieldException, IllegalAccessException {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);
         field.set(fileBackedTasksManager, testFile);
         fileBackedTasksManager.getEpicById(1L);
-        File actualFile = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator
-                + "data" + File.separator + "data.bin");
+        File actualFile = new File("src" + File.separator + "test" + File.separator + "resources" +
+                File.separator + "data" + File.separator + "data.bin");
         Assert.assertTrue(actualFile.exists());
         actualFile.delete();
     }
 
     @Test
+    @DisplayName("Test load from file fileBackedTasksManager, expected ok")
     public void testLoadFromFile() throws NoSuchFieldException, IllegalAccessException {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);
