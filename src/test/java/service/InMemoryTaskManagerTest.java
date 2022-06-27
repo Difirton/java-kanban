@@ -3,17 +3,17 @@ package service;
 import constant.TaskStatus;
 import constant.TypeTasksManager;
 import entity.Task;
-import org.junit.Assert;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryTaskManagerTest {
     private TasksManager inMemoryTaskManager;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         inMemoryTaskManager = Manager.getTaskManager(TypeTasksManager.IN_MEMORY_TASKS_MANAGER);
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
         inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
@@ -24,12 +24,13 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L);
     }
 
+    //TODO разобраться с тестами
     @Test
     @DisplayName("Test get all subtasks, expected ok")
     public void testGetAllSubtasks() {
         int actual = inMemoryTaskManager.getAllSubtasks().size();
         int expected = 5;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -37,7 +38,7 @@ public class InMemoryTaskManagerTest {
     public void testGetAllEpics() {
         int actual = inMemoryTaskManager.getAllEpics().size();
         int expected = 2;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class InMemoryTaskManagerTest {
     public void testGetEpicBySubtaskId() {
         long actual = inMemoryTaskManager.getEpicBySubtaskIdOrNull(3L).getId();
         long expected = 1L;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -54,7 +55,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.changeSubtaskStatusInProgress(2L);
         TaskStatus actual = inMemoryTaskManager.getSubtaskByIdOrNull(2L).getStatus();
         TaskStatus expected = TaskStatus.IN_PROGRESS;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -63,7 +64,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.changeSubtaskStatusInProgress(3L);
         TaskStatus actual = inMemoryTaskManager.getEpicById(1L).getStatus();
         TaskStatus expected = TaskStatus.IN_PROGRESS;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -72,7 +73,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.changeSubtaskStatusDone(4L);
         TaskStatus actual = inMemoryTaskManager.getSubtaskByIdOrNull(4L).getStatus();
         TaskStatus expected = TaskStatus.DONE;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -81,7 +82,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.changeSubtaskStatusDone(2L);
         TaskStatus actual = inMemoryTaskManager.getEpicById(1L).getStatus();
         TaskStatus expected = TaskStatus.IN_PROGRESS;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -92,7 +93,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.createNewSubtask("Subtask 2.3", "Desc sub 2", 5L);
         TaskStatus actual = inMemoryTaskManager.getEpicById(5L).getStatus();
         TaskStatus expected = TaskStatus.IN_PROGRESS;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -102,7 +103,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.changeSubtaskStatusDone(7L);
         TaskStatus actual = inMemoryTaskManager.getEpicById(5L).getStatus();
         TaskStatus expected = TaskStatus.DONE;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -111,7 +112,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.updateEpicName(1L, "New Name");
         String actual = inMemoryTaskManager.getEpicById(1L).getName();
         String expected = "New Name";
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -120,7 +121,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.updateEpicDescription(5L, "New Description");
         String actual = inMemoryTaskManager.getEpicById(5L).getDescription();
         String expected = "New Description";
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -129,7 +130,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.updateSubtaskName(3L, "New Name");
         String actual = inMemoryTaskManager.getSubtaskByIdOrNull(3L).getName();
         String expected = "New Name";
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -138,7 +139,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.updateSubtaskDescription(4L, "New Description");
         String actual = inMemoryTaskManager.getSubtaskByIdOrNull(4L).getDescription();
         String expected = "New Description";
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -148,7 +149,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeSubtasksById(7L);
         TaskStatus actual = inMemoryTaskManager.getEpicById(5L).getStatus();
         TaskStatus expected = TaskStatus.DONE;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -157,7 +158,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeSubtasksByEpicId(1L);
         int actual = inMemoryTaskManager.getAllSubtasks().size();
         int expected = 2;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -166,7 +167,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeEpicById(1L);
         int actual = inMemoryTaskManager.getAllEpics().size();
         int expected = 1;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -175,7 +176,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeEpicById(1L);
         int actual = inMemoryTaskManager.getAllSubtasks().size();
         int expected = 2;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -184,7 +185,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeSubtasksById(3L);
         int actual = inMemoryTaskManager.getAllSubtasks().size();
         int expected = 4;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -193,7 +194,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeAllSubtasks();
         int actual = inMemoryTaskManager.getAllSubtasks().size();
         int expected = 0;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -202,7 +203,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeAllEpics();
         int actual = inMemoryTaskManager.getAllEpics().size();
         int expected = 0;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -214,7 +215,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.getEpicById(5L);
         Task actual = inMemoryTaskManager.getHistory().get(inMemoryTaskManager.getHistory().size() - 1);
         Task expected = inMemoryTaskManager.getEpicById(1L);
-        Assert.assertNotEquals(actual, expected);
+        assertNotEquals(actual, expected);
     }
 
     @Test
@@ -225,7 +226,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.getEpicById(5L);
         Task actual = inMemoryTaskManager.getHistory().get(0);
         Task expected = inMemoryTaskManager.getEpicById(5L);
-        Assert.assertNotEquals(actual, expected);
+        assertNotEquals(actual, expected);
     }
 
     @Test
@@ -238,7 +239,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.getSubtaskByIdOrNull(2L);
         int actual = inMemoryTaskManager.getHistory().size();
         int expected = 1;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -255,7 +256,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.getSubtaskByIdOrNull(2L);
         int actual = inMemoryTaskManager.getHistory().size();
         int expected = 3;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -273,7 +274,7 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeSubtasksById(2L);
         int actual = inMemoryTaskManager.getHistory().size();
         int expected = 2;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -291,6 +292,6 @@ public class InMemoryTaskManagerTest {
         inMemoryTaskManager.removeEpicById(1L);
         int actual = inMemoryTaskManager.getHistory().size();
         int expected = 1;
-        Assert.assertEquals(actual, expected);
+        assertEquals(actual, expected);
     }
 }

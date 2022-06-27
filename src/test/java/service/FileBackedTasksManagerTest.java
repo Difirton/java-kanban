@@ -3,11 +3,14 @@ package service;
 import constant.TypeTasksManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.lang.reflect.Field;
 
-public class FileBackedTasksManagerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class FileBackedTasksManagerTest {
     private TasksManager fileBackedTasksManager;
     private File testFile;
 
@@ -34,7 +37,7 @@ public class FileBackedTasksManagerTest extends TestCase {
         fileBackedTasksManager.getEpicById(1L);
         File actualFile = new File("src" + File.separator + "test" + File.separator + "resources" +
                 File.separator + "data" + File.separator + "data.bin");
-        Assert.assertTrue(actualFile.exists());
+        assertTrue(actualFile.exists());
         actualFile.delete();
     }
 
@@ -51,9 +54,9 @@ public class FileBackedTasksManagerTest extends TestCase {
         fileBackedTasksManager.getEpicById(1L);
 
         FileBackedTasksManager testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(testFile);
-        Assert.assertEquals(fileBackedTasksManager.getAllEpics(), testFileBackedTasksManager.getAllEpics());
-        Assert.assertEquals(fileBackedTasksManager.getAllSubtasks(), testFileBackedTasksManager.getAllSubtasks());
-        Assert.assertEquals(fileBackedTasksManager.getHistory(), testFileBackedTasksManager.getHistory());
+        assertEquals(fileBackedTasksManager.getAllEpics(), testFileBackedTasksManager.getAllEpics());
+        assertEquals(fileBackedTasksManager.getAllSubtasks(), testFileBackedTasksManager.getAllSubtasks());
+        assertEquals(fileBackedTasksManager.getHistory(), testFileBackedTasksManager.getHistory());
         testFile.delete();
     }
 }
