@@ -1,14 +1,13 @@
-package test.service;
+package service;
 
-import main.java.constant.TaskStatus;
-import main.java.constant.TypeTasksManager;
-import main.java.entity.Task;
-import main.java.service.Manager;
-import main.java.service.TasksManager;
+import constant.TaskStatus;
+import constant.TypeTasksManager;
+import entity.Task;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class InMemoryTaskManagerTest {
     private TasksManager inMemoryTaskManager;

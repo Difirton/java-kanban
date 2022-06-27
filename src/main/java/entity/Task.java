@@ -1,12 +1,10 @@
-package main.java.entity;
+package entity;
 
-import main.java.constant.TaskStatus;
+import constant.TaskStatus;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.StringJoiner;
-
-import static main.java.constant.TaskStatus.*;
 
 public abstract class Task implements Serializable {
     private final long serialVersionUID = 1L;
@@ -19,7 +17,7 @@ public abstract class Task implements Serializable {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.status = NEW;
+        this.status = TaskStatus.NEW;
     }
 
     public long getId() {

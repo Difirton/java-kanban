@@ -1,6 +1,6 @@
-package main.java.service;
+package service;
 
-import main.java.entity.Task;
+import entity.Task;
 
 import java.util.List;
 

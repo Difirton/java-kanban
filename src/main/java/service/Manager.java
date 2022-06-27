@@ -1,6 +1,6 @@
-package main.java.service;
+package service;
 
-import main.java.constant.TypeTasksManager;
+import constant.TypeTasksManager;
 
 public class Manager {
     public static HistoryManager getDefaultHistory() {

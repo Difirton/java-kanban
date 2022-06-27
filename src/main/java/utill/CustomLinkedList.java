@@ -1,6 +1,6 @@
-package main.java.utill;
+package utill;
 
-import main.java.entity.Task;
+import entity.Task;
 
 import java.io.Serializable;
 import java.util.*;

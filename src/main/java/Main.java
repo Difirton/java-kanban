@@ -1,9 +1,7 @@
-package main.java;
-
-import main.java.constant.TypeTasksManager;
-import main.java.service.FileBackedTasksManager;
-import main.java.service.Manager;
-import main.java.service.TasksManager;
+import constant.TypeTasksManager;
+import service.FileBackedTasksManager;
+import service.Manager;
+import service.TasksManager;
 
 import java.io.File;
 

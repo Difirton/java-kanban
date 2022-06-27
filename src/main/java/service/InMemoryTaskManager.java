@@ -1,9 +1,9 @@
-package main.java.service;
+package service;
 
-import main.java.constant.TaskStatus;
-import main.java.entity.Epic;
-import main.java.entity.Subtask;
-import main.java.entity.Task;
+import constant.TaskStatus;
+import entity.Epic;
+import entity.Subtask;
+import entity.Task;
 
 import java.io.Serializable;
 import java.util.*;

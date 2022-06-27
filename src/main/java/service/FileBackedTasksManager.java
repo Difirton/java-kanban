@@ -1,8 +1,9 @@
-package main.java.service;
+package service;
 
-import main.java.entity.Epic;
-import main.java.entity.Subtask;
-import main.java.error.ManagerSaveException;
+import entity.Epic;
+import entity.Subtask;
+import error.ManagerSaveException;
+import service.InMemoryTaskManager;
 
 import java.io.*;
 

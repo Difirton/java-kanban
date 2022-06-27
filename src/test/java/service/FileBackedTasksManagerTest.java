@@ -1,12 +1,6 @@
 package service;
 
-import junit.framework.TestCase;
-import main.java.constant.TypeTasksManager;
-import main.java.service.FileBackedTasksManager;
-import main.java.service.Manager;
-import main.java.service.TasksManager;
-import org.junit.Assert;
-import org.junit.Test;
+import constant.TypeTasksManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
@@ -20,8 +14,8 @@ public class FileBackedTasksManagerTest extends TestCase {
     @BeforeEach
     public void setUp() throws Exception{
         fileBackedTasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
-        testFile = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator
-                + "data" + File.separator + "data.bin");
+        testFile = new File("src" + File.separator + "test" + File.separator + "resources" +
+                File.separator + "data" + File.separator + "data.bin");
         fileBackedTasksManager.createNewEpic("Epic 1", "Desc 1");
         fileBackedTasksManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         fileBackedTasksManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);

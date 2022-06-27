@@ -1,8 +1,8 @@
-package main.java.service;
+package service;
 
-import main.java.entity.Epic;
-import main.java.entity.Subtask;
-import main.java.entity.Task;
+import entity.Epic;
+import entity.Subtask;
+import entity.Task;
 
 import java.util.List;
 
