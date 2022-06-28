@@ -3,19 +3,16 @@ package entity;
 import constant.TaskStatus;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Epic extends Task implements Serializable {
     private final long serialVersionUID = 1L;
-    private HashMap<Long, Subtask> subtasks;
+    private List<Long> subtasksId; //TODO Переименовать поле
 
     public Epic(String name, String description) {
         super(name, description);
-        this.subtasks = new HashMap<>();
+        this.subtasksId = new ArrayList<>();
         this.setId(amountId++);
     }
 
@@ -23,40 +20,31 @@ public class Epic extends Task implements Serializable {
         return amountId;
     }
 
-    public void addSubtask(String name, String description) {
-        this.subtasks.put(Subtask.getNewId(), new Subtask(name, description, this.getId()));
+    public void addSubtask(Long idSubtask) {
+        this.subtasksId.add(idSubtask);
     }
 
     public void removeSubtasks() {
-        this.subtasks.clear();
+        this.subtasksId.clear();
     }
 
-    public void removeSubtask(Long subtaskId) {
-        this.subtasks.remove(subtaskId);
+    public void removeSubtask(Long idSubtask) {
+        this.subtasksId.remove(idSubtask);
     }
 
-    public ArrayList<Subtask> getAllSubtask() {
-        return this.subtasks.values().stream().collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    public void changeStatusSubtaskInProgress(Long subtaskId) {
-        subtasks.get(subtaskId).changeStatusInProgress();
-        this.setStatus(TaskStatus.IN_PROGRESS);
+    public List<Long> getAllIdSubtasks() {
+        return subtasksId;
     }
 
     public static long getAmountId() {
         return amountId;
     }
 
-    public HashMap<Long, Subtask> getSubtasks() {
-        return subtasks;
-    }
-
     @Override
     public String toString() {
         return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
                 .add("id=" + this.getId())
-                .add(", subtaskId=" + subtasks.keySet())
+                .add(", subtaskId=" + subtasksId)
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())
@@ -69,11 +57,13 @@ public class Epic extends Task implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Epic epic = (Epic) o;
-        return Objects.equals(subtasks, epic.subtasks);
+        Collections.sort(subtasksId);
+        Collections.sort( epic.subtasksId);
+        return Objects.equals(subtasksId, epic.subtasksId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), subtasks);
+        return Objects.hash(super.hashCode(), subtasksId);
     }
 }

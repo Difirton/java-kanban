@@ -104,28 +104,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     }
 
     @Override
-    public void updateEpicName(Long epicId, String newName) {
-        super.updateEpicName(epicId, newName);
+    public void updateTaskName(Long taskId, String newName) {
+        super.updateTaskName(taskId, newName);
         this.save();
     }
 
     @Override
-    public void updateEpicDescription(Long epicId, String newDescription) {
-        super.updateEpicDescription(epicId, newDescription);
+    public void updateTaskDescription(Long taskId, String newDescription) {
+        super.updateTaskDescription(taskId, newDescription);
         this.save();
     }
 
-    @Override
-    public void updateSubtaskName(Long subtaskId, String newName) {
-        super.updateSubtaskName(subtaskId, newName);
-        this.save();
-    }
-
-    @Override
-    public void updateSubtaskDescription(Long subtaskId, String newDescription) {
-        super.updateSubtaskDescription(subtaskId, newDescription);
-        this.save();
-    }
 
     private void save() {
         try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(file))) {

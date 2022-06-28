@@ -11,11 +11,7 @@ public interface TasksManager {
 
     void createNewSubtask(String name, String description, long epicId);
 
-    Epic getEpicById(Long epicId);
-
-    Subtask getSubtaskByIdOrNull(Long subtaskId);
-
-    Epic getEpicBySubtaskIdOrNull(Long subtaskId);
+    Task getTaskById(Long taskId);
 
     List<Epic> getAllEpics();
 
@@ -27,13 +23,9 @@ public interface TasksManager {
 
     void changeSubtaskStatusInProgress(Long subtaskId);
 
-    void updateEpicName(Long epicId, String newName);
+    void updateTaskName(Long taskId, String newName);
 
-    void updateEpicDescription(Long epicId, String newDescription);
-
-    void updateSubtaskName(Long subtaskId, String newName);
-
-    void updateSubtaskDescription(Long subtaskId, String newDescription);
+    void updateTaskDescription(Long taskId, String newDescription);
 
     void removeAllEpics();
 
