@@ -10,26 +10,43 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager, Serializable {
-    private final long serialVersionUID = 1L;
-    private final Map<Long, Epic> allEpics;
+    private final long serialVersionUID = 2L;
+    private final Map<Long, Task> allTasks;
     private final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
-        this.allEpics = new HashMap<>();
+        this.allTasks = new HashMap<>();
         this.inMemoryHistoryManager = Manager.getDefaultHistory();
     }
 
     @Override
+    public void createNewEpic(String name, String description) {
+        allTasks.put(Epic.getNewId(), new Epic(name, description));
+    }
+
+    @Override
+    public void createNewSubtask(String name, String description, long epicId) {
+        try {
+            allEpics.get(epicId).addSubtask(name, description);
+            checkEpicStatus(epicId);
+        } catch (NullPointerException exception) {
+            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
+        }
+    }
+
+    @Override
     public void removeAllEpics() {
-        allEpics.clear();
+        allTasks.clear();
         inMemoryHistoryManager.clearHistory();
     }
 
     @Override
     public void removeAllSubtasks() {
-        for (long epicId : allEpics.keySet()) {
-            allEpics.get(epicId).getAllSubtask().stream()
-                    .forEach(o -> inMemoryHistoryManager.remove(o.getId()));
+        for (long taskId : allTasks.keySet()) {
+            allTasks.entrySet().stream()
+                    .filter(o -> o.getValue() instanceof Subtask)
+                    .map(o -> o.getKey())
+                    .forEach(inMemoryHistoryManager::remove);
             allEpics.get(epicId).removeSubtasks();
         }
     }
@@ -108,21 +125,6 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         } catch (NoSuchElementException | NullPointerException exception) {
             System.out.println("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
             return null;
-        }
-    }
-
-    @Override
-    public void createNewEpic(String name, String description) {
-        allEpics.put(Epic.getNewId(), new Epic(name, description));
-    }
-
-    @Override
-    public void createNewSubtask(String name, String description, long epicId) {
-        try {
-            allEpics.get(epicId).addSubtask(name, description);
-            checkEpicStatus(epicId);
-        } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
         }
     }
 
