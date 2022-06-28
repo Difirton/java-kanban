@@ -3,17 +3,29 @@ package service;
 import entity.Epic;
 import entity.Subtask;
 import error.ManagerSaveException;
-import service.InMemoryTaskManager;
 
 import java.io.*;
+import java.util.Properties;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements Serializable {
     private final long serialVersionUID = 1L;
     private final File file;
 
     FileBackedTasksManager() {
-        this.file = new File("src" + File.separator + "main" + File.separator+ "resources" + File.separator
-                + "data" + File.separator + "data.bin");
+        String pathToSaveAndLoadData = readPathToSave();
+        this.file = new File(pathToSaveAndLoadData + File.separator + "dataFileBackedTasksManager.bin");
+    }
+
+    private String readPathToSave() {
+        try (FileInputStream propertiesReader = new FileInputStream("config.properties")) {
+            Properties properties = new Properties();
+            properties.load(propertiesReader);
+            return properties.getProperty("directory.toSaveFileBackedTasksManager");
+        } catch (IOException exception) {
+            throw new ManagerSaveException("There is no data for the path where the object will be serialized. " +
+                    "Check that there is a config.properties file at the root of the project with the key " +
+                    "directory.toSaveFileBackedTasksManager" + exception.getMessage());
+        }
     }
 
     @Override

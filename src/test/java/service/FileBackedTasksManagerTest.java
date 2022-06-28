@@ -18,7 +18,7 @@ public class FileBackedTasksManagerTest {
     public void setUp() throws Exception{
         fileBackedTasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         testFile = new File("src" + File.separator + "test" + File.separator + "resources" +
-                File.separator + "data" + File.separator + "data.bin");
+                File.separator + "data" + File.separator + "dataTestFileBackedTasksManager.bin");
         fileBackedTasksManager.createNewEpic("Epic 1", "Desc 1");
         fileBackedTasksManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         fileBackedTasksManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);

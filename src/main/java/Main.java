@@ -25,7 +25,7 @@ public class Main {
         System.out.println(tasksManager);
 
         File fileToRead = new File("src" + File.separator + "main" + File.separator+ "resources"
-                + File.separator + "data" + File.separator + "data.bin");
+                + File.separator + "data" + File.separator + "dataFileBackedTasksManager.bin");
         FileBackedTasksManager newTaskManager = FileBackedTasksManager.loadFromFile(fileToRead);
         System.out.println(newTaskManager);
         System.out.println(newTaskManager.getHistory());
