@@ -10,14 +10,9 @@ public class Epic extends Task implements Serializable {
     private final long serialVersionUID = 1L;
     private List<Long> subtasksId; //TODO Переименовать поле
 
-    public Epic(String name, String description) {
-        super(name, description);
+    public Epic(long id,String name, String description) {
+        super(id, name, description);
         this.subtasksId = new ArrayList<>();
-        this.setId(amountId++);
-    }
-
-    public static long getNewId() {
-        return amountId;
     }
 
     public void addSubtask(Long idSubtask) {
@@ -36,15 +31,11 @@ public class Epic extends Task implements Serializable {
         return subtasksId;
     }
 
-    public static long getAmountId() {
-        return amountId;
-    }
-
     @Override
     public String toString() {
-        return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Epic.class.getSimpleName() + "[", "]")
                 .add("id=" + this.getId())
-                .add(", subtaskId=" + subtasksId)
+                .add(", subtasksId=" + subtasksId)
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())

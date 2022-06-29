@@ -1,7 +1,6 @@
 package service;
 
-import entity.Epic;
-import entity.Subtask;
+import entity.Task;
 import error.ManagerSaveException;
 
 import java.io.*;
@@ -59,24 +58,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     }
 
     @Override
-    public Epic getEpicById(Long epicId) {
-        Epic tempEpic = super.getEpicById(epicId);
-        this.save();
-        return tempEpic;
-    }
-
-    @Override
-    public Subtask getSubtaskByIdOrNull(Long subtaskId) {
-        Subtask tempSubtask = super.getSubtaskByIdOrNull(subtaskId);
+    public Task getTaskById(Long taskId) {
+        Task tempSubtask = super.getTaskById(taskId);
         this.save();
         return tempSubtask;
-    }
-
-    @Override
-    public Epic getEpicBySubtaskIdOrNull(Long subtaskId) {
-        Epic tempEpic = super.getEpicBySubtaskIdOrNull(subtaskId);
-        this.save();
-        return tempEpic;
     }
 
     @Override

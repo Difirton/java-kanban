@@ -8,13 +8,13 @@ import java.util.StringJoiner;
 
 public abstract class Task implements Serializable {
     private final long serialVersionUID = 1L;
-    protected static long amountId = 1L;
-    private long id;
+    private final long id;
     private String name;
     private String description;
     private TaskStatus status;
 
-    public Task(String name, String description) {
+    public Task(long id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.status = TaskStatus.NEW;
@@ -38,10 +38,6 @@ public abstract class Task implements Serializable {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

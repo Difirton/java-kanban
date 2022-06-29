@@ -10,14 +10,9 @@ public class Subtask extends Task implements Serializable {
     private final long serialVersionUID = 1L;
     private Long epicsId;
 
-    public Subtask(String name, String description, long epicsId) {
-        super(name, description);
-        this.setId(amountId++);
+    public Subtask(long id, String name, String description, long epicsId) {
+        super(id, name, description);
         this.epicsId = epicsId;
-    }
-
-    public static long getNewId() {
-        return amountId;
     }
 
     public Long getEpicsId() {
@@ -34,7 +29,7 @@ public class Subtask extends Task implements Serializable {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Subtask.class.getSimpleName() + "[", "]")
                 .add("id=" + this.getId())
                 .add(", epicsId=" + this.getEpicsId())
                 .add("name='" + this.getName() + "'")
