@@ -30,14 +30,14 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     @Override
     public void createNewSubtask(String name, String description, long epicId) {
-//        try {
+        try {
             long idNewSubtask = amountTaskId++;
             this.allTasks.put(idNewSubtask, new Subtask(idNewSubtask, name, description, epicId));
             getEpicAfterValid(epicId).addSubtask(idNewSubtask);
             checkEpicStatus(epicId);
-//        } catch (NullPointerException exception) {
-//            throw new TaskNotFoundException("Недопустимое действие. Епик с id=" + epicId + " не существует");
-//        }
+        } catch (NullPointerException exception) {
+            throw new TaskNotFoundException("Недопустимое действие. Епик с id=" + epicId + " не существует");
+        }
     }
 
     private void checkEpicStatus(Long epicId) {
@@ -205,22 +205,23 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toCollection(ArrayList::new));
         idSubtasksToRemove.stream()
-                .forEach(this::removeSubtasksById);
+                .forEach(this.allTasks::remove);
+        this.allTasks.keySet().stream()
+                .map(this::getEpicAfterValid)
+                .forEach(Epic::removeSubtasks);
+        idSubtasksToRemove.stream()
+                .forEach(inMemoryHistoryManager::remove);
     }
 
     @Override
     public void removeSubtasksByEpicId(Long epicId) {
-        try { //TODO переименовать epic и разобраться с историей
-            Task taskToCheck = this.allTasks.get(epicId);
-            Epic epicToRemove = (Epic) taskToCheck;
-            epicToRemove.getAllIdSubtasks().stream()
-                    .forEach(this.allTasks::remove);
-            epicToRemove.removeSubtasks();
-        } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Епик с id=" + epicId + " не существует");
-        }
+        Epic epicToRemoveSubtasks = getEpicAfterValid(epicId);
+        epicToRemoveSubtasks.getAllIdSubtasks().stream()
+                .forEach(this.allTasks::remove);
+        epicToRemoveSubtasks.getAllIdSubtasks().stream()
+                .forEach(inMemoryHistoryManager::remove);
+        epicToRemoveSubtasks.removeSubtasks();
     }
-
 
     @Override
     public List<Task> getHistory() {
