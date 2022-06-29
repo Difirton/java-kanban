@@ -30,14 +30,14 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     @Override
     public void createNewSubtask(String name, String description, long epicId) {
-        try {
+//        try {
             long idNewSubtask = amountTaskId++;
             this.allTasks.put(idNewSubtask, new Subtask(idNewSubtask, name, description, epicId));
             getEpicAfterValid(epicId).addSubtask(idNewSubtask);
             checkEpicStatus(epicId);
-        } catch (NullPointerException exception) {
-            throw new TaskNotFoundException("Недопустимое действие. Епик с id=" + epicId + " не существует");
-        }
+//        } catch (NullPointerException exception) {
+//            throw new TaskNotFoundException("Недопустимое действие. Епик с id=" + epicId + " не существует");
+//        }
     }
 
     private void checkEpicStatus(Long epicId) {
@@ -205,7 +205,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toCollection(ArrayList::new));
         idSubtasksToRemove.stream()
-                .forEach(this.allTasks::remove);
+                .forEach(this::removeSubtasksById);
     }
 
     @Override

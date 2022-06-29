@@ -31,7 +31,7 @@ public class Subtask extends Task implements Serializable {
     public String toString() {
         return new StringJoiner(", ", Subtask.class.getSimpleName() + "[", "]")
                 .add("id=" + this.getId())
-                .add(", epicsId=" + this.getEpicsId())
+                .add("epicsId=" + this.getEpicsId())
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())

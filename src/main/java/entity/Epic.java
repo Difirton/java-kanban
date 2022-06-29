@@ -35,7 +35,7 @@ public class Epic extends Task implements Serializable {
     public String toString() {
         return new StringJoiner(", ", Epic.class.getSimpleName() + "[", "]")
                 .add("id=" + this.getId())
-                .add(", subtasksId=" + subtasksId)
+                .add("subtasksId=" + subtasksId)
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())
