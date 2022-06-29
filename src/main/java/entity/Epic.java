@@ -3,16 +3,26 @@ package entity;
 import constant.TaskStatus;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Epic extends Task implements Serializable {
-    private final long serialVersionUID = 1L;
+    private final long serialVersionUID = 2L;
     private List<Long> subtasksId; //TODO Переименовать поле
 
-    public Epic(long id,String name, String description) {
-        super(id, name, description);
-        this.subtasksId = new ArrayList<>();
+    private Epic() {
+        super(0);
+    }
+
+    private Epic(EpicBuilder epicBuilder) {
+        super(epicBuilder.id);
+        super.setName(epicBuilder.name);
+        super.setDescription(epicBuilder.description);
+        super.setStatus(epicBuilder.status);
+        super.setExecutionTime(epicBuilder.executionTime);
+        super.setStartDateTime(epicBuilder.startDateTime);
+        this.subtasksId = epicBuilder.subtasksId;
     }
 
     public void addSubtask(Long idSubtask) {
@@ -56,5 +66,33 @@ public class Epic extends Task implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), subtasksId);
+    }
+
+    public static class EpicBuilder {
+        private final long id;
+        private String name = "";
+        private String description = "";
+        private TaskStatus status = TaskStatus.NEW;
+        private List<Long> subtasksId = new ArrayList<>();
+        private Duration executionTime = Duration.ofMinutes(0);
+        private LocalDateTime startDateTime = LocalDateTime.MAX;
+
+        public EpicBuilder(long id) {
+            this.id = id;
+        }
+
+        public EpicBuilder Name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public EpicBuilder Description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Epic build() {
+            return new Epic(this);
+        }
     }
 }

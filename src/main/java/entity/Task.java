@@ -3,21 +3,22 @@ package entity;
 import constant.TaskStatus;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 public abstract class Task implements Serializable {
-    private final long serialVersionUID = 1L;
+    private final long serialVersionUID = 2L;
     private final long id;
     private String name;
     private String description;
     private TaskStatus status;
+    private Duration executionTime;
+    private LocalDateTime startDateTime;
 
-    public Task(long id, String name, String description) {
+    public Task(long id) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.status = TaskStatus.NEW;
     }
 
     public long getId() {
@@ -46,6 +47,22 @@ public abstract class Task implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    public Duration getExecutionTime() {
+        return executionTime;
+    }
+
+    public void setExecutionTime(Duration executionTime) {
+        this.executionTime = executionTime;
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
     }
 
     @Override

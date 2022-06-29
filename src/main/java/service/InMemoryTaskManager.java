@@ -25,19 +25,23 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     @Override
     public void createNewEpic(String name, String description) {
         long idNewEpic = amountTaskId++;
-        this.allTasks.put(idNewEpic, new Epic(idNewEpic, name, description));
+        Epic newEpic = new Epic.EpicBuilder(idNewEpic)
+                .Name(name)
+                .Description(description)
+                .build();
+        this.allTasks.put(idNewEpic, newEpic);
     }
 
     @Override
     public void createNewSubtask(String name, String description, long epicId) {
-        try {
             long idNewSubtask = amountTaskId++;
-            this.allTasks.put(idNewSubtask, new Subtask(idNewSubtask, name, description, epicId));
+            Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
+                    .Name(name)
+                    .Description(description)
+                    .build();
+            this.allTasks.put(idNewSubtask, newSubtask);
             getEpicAfterValid(epicId).addSubtask(idNewSubtask);
             checkEpicStatus(epicId);
-        } catch (NullPointerException exception) {
-            throw new TaskNotFoundException("Недопустимое действие. Епик с id=" + epicId + " не существует");
-        }
     }
 
     private void checkEpicStatus(Long epicId) {
