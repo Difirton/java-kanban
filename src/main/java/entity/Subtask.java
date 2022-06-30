@@ -76,7 +76,7 @@ public class Subtask extends Task implements Serializable {
 
         public SubtaskBuilder(long id, long epicsId) {
             this.id = id;
-            this.epicsId = id;
+            this.epicsId = epicsId;
         }
 
         public SubtaskBuilder Name(String name) {

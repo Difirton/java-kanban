@@ -11,7 +11,11 @@ public interface TasksManager {
 
     void createNewSubtask(String name, String description, long epicId);
 
-    Task getTaskById(Long taskId);
+    Epic getEpicById(Long taskId);
+
+    Subtask getSubtaskById(Long taskId);
+
+    Epic getEpicBySubtaskId(Long subtaskId);
 
     List<Epic> getAllEpics();
 

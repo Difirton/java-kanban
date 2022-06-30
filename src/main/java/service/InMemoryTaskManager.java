@@ -16,7 +16,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     private final Map<Long, Task> allTasks;
     private final HistoryManager inMemoryHistoryManager;
 
-    public InMemoryTaskManager() {
+    protected InMemoryTaskManager() {
         amountTaskId = 1L;
         this.allTasks = new HashMap<>();
         this.inMemoryHistoryManager = Manager.getDefaultHistory();
@@ -101,8 +101,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         }
     }
 
-    @Override
-    public Task getTaskById(Long taskId) {
+    protected Task getTaskById(Long taskId) {
         Task requestedTask;
         try {
             requestedTask = this.allTasks.get(taskId);
@@ -111,6 +110,28 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         }
         return requestedTask;
     }
+
+    @Override
+    public Epic getEpicById(Long epicId) {
+        this.inMemoryHistoryManager.add(this.getTaskById(epicId));
+        return this.getEpicAfterValid(epicId);
+    }
+
+    @Override
+    public Subtask getSubtaskById(Long subtaskId) {
+        this.inMemoryHistoryManager.add(this.getTaskById(subtaskId));
+        return this.getSubtaskAfterValid(subtaskId);
+    }
+
+
+    @Override
+    public Epic getEpicBySubtaskId(Long subtaskId) {
+        Subtask subtaskToFindEpic = getSubtaskAfterValid(subtaskId);
+        long epicId = subtaskToFindEpic.getEpicsId();
+        this.inMemoryHistoryManager.add(this.getTaskById(epicId));
+        return getEpicAfterValid(epicId);
+    }
+
 
     @Override
     public List<Epic> getAllEpics() {
@@ -164,7 +185,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         Subtask subtaskToChangeStatus = getSubtaskAfterValid(subtaskId);
         subtaskToChangeStatus.changeStatusDone();
         Long epicIdToCheckStatus = subtaskToChangeStatus.getEpicsId();
-        checkEpicStatus(epicIdToCheckStatus);
+        this.checkEpicStatus(epicIdToCheckStatus);
     }
 
     @Override
@@ -172,7 +193,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         Subtask subtaskToChangeStatus = getSubtaskAfterValid(subtaskId);
         subtaskToChangeStatus.changeStatusInProgress();
         Long epicIdToCheckStatus = subtaskToChangeStatus.getEpicsId();
-        checkEpicStatus(epicIdToCheckStatus);
+        this.checkEpicStatus(epicIdToCheckStatus);
     }
 
     @Override
