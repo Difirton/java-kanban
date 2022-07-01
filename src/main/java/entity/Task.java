@@ -8,53 +8,58 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public abstract class Task implements Serializable {
+public abstract class Task implements Serializable, Comparable<Task> {
     private final long serialVersionUID = 2L;
     private final long id;
     private String name;
     private String description;
     private TaskStatus status;
-    private Duration executionTime;
+    private Duration timeExecution;
     private LocalDateTime startDateTime;
 
     public Task(long id) {
         this.id = id;
     }
 
+    @Override
+    public int compareTo(Task anotherTask) {
+        return startDateTime.compareTo(anotherTask.startDateTime);
+    }
+
     public long getId() {
         return id;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public Duration getExecutionTime() {
-        return executionTime;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setExecutionTime(Duration executionTime) {
-        this.executionTime = executionTime;
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public Duration getTimeExecution() {
+        return timeExecution;
+    }
+
+    public void setTimeExecution(Duration executionTime) {
+        this.timeExecution = executionTime;
     }
 
     public LocalDateTime getStartDateTime() {
@@ -65,6 +70,10 @@ public abstract class Task implements Serializable {
         this.startDateTime = startDateTime;
     }
 
+    public LocalDateTime getEndDateTime() {
+        return startDateTime.plus(timeExecution);
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
@@ -72,6 +81,8 @@ public abstract class Task implements Serializable {
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
                 .add("status=" + status)
+                .add("start=" + startDateTime)
+                .add("execution=" + timeExecution)
                 .toString();
     }
 
@@ -83,7 +94,9 @@ public abstract class Task implements Serializable {
         return Objects.equals(task.id, this.id) &&
                 Objects.equals(task.name, this.name) &&
                 Objects.equals(task.description, this.description) &&
-                Objects.equals(task.status, this.status);
+                Objects.equals(task.status, this.status) &&
+                Objects.equals(task.startDateTime, this.startDateTime) &&
+                Objects.equals(task.timeExecution, this.timeExecution);
     }
 
     @Override

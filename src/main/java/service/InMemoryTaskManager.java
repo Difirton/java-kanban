@@ -1,5 +1,6 @@
 package service;
 
+import com.sun.source.tree.UsesTree;
 import constant.TaskStatus;
 import entity.Epic;
 import entity.Subtask;
@@ -7,6 +8,8 @@ import entity.Task;
 import error.TaskNotFoundException;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,11 +17,13 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     private final long serialVersionUID = 2L;
     private long amountTaskId;
     private final Map<Long, Task> allTasks;
+    private final Set<Task> sortedAllTasks;
     private final HistoryManager inMemoryHistoryManager;
 
     protected InMemoryTaskManager() {
         amountTaskId = 1L;
         this.allTasks = new HashMap<>();
+        this.sortedAllTasks = new TreeSet<>();
         this.inMemoryHistoryManager = Manager.getDefaultHistory();
     }
 
@@ -41,11 +46,16 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                     .build();
             this.allTasks.put(idNewSubtask, newSubtask);
             getEpicAfterValid(epicId).addSubtask(idNewSubtask);
-            checkEpicStatus(epicId);
+            checkEpicStatusAndTimeExecution(epicId);
     }
 
-    private void checkEpicStatus(Long epicId) {
+    private void checkEpicStatusAndTimeExecution(Long epicId) {
         Epic epicToCheck = getEpicAfterValid(epicId);
+        checkEpicStatus(epicToCheck);
+        checkEpicTimeExecution(epicToCheck);
+    }
+
+    private void checkEpicStatus(Epic epicToCheck) {
         if (isAllSubtaskEpicDone(epicToCheck)) {
             epicToCheck.setStatus(TaskStatus.DONE);
         } else if (isAllSubtaskEpicNew(epicToCheck)) {
@@ -75,6 +85,31 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .map(o -> (Subtask) o)
                 .map(Subtask::getStatus)
                 .allMatch(o -> o == TaskStatus.NEW);
+    }
+
+    private void checkEpicTimeExecution(Epic epicToCheck) {
+        final int INDEX_SINGLE_ELEMENT = 0;
+        List<Subtask> sortedEpicsSubtasks = epicToCheck.getAllIdSubtasks().stream()
+                .map(this::getSubtaskAfterValid)
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
+        if (sortedEpicsSubtasks.size() == 1) {
+            epicToCheck.setStartDateTime(sortedEpicsSubtasks.get(INDEX_SINGLE_ELEMENT).getStartDateTime());
+            epicToCheck.setTimeExecution(sortedEpicsSubtasks.get(INDEX_SINGLE_ELEMENT).getTimeExecution());
+        } else if (sortedEpicsSubtasks.size() > 1) {
+            setEpicTimeCharacteristics(epicToCheck, sortedEpicsSubtasks);
+        }
+    }
+
+    private void setEpicTimeCharacteristics(Epic epicToSet, List<Subtask> sortedEpicsSubtasks) {
+        final int INDEX_FIRST_ELEMENT = 0;
+        LocalDateTime minStartDate = sortedEpicsSubtasks.get(INDEX_FIRST_ELEMENT).getStartDateTime();
+        LocalDateTime maxEndDate = sortedEpicsSubtasks.stream()
+                .map(Subtask::getEndDateTime)
+                .max(LocalDateTime::compareTo)
+                .get();
+        epicToSet.setStartDateTime(minStartDate);
+        epicToSet.setTimeExecution(Duration.between(minStartDate, maxEndDate));
     }
 
     private Epic getEpicAfterValid(Long epicId) {
@@ -185,7 +220,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         Subtask subtaskToChangeStatus = getSubtaskAfterValid(subtaskId);
         subtaskToChangeStatus.changeStatusDone();
         Long epicIdToCheckStatus = subtaskToChangeStatus.getEpicsId();
-        this.checkEpicStatus(epicIdToCheckStatus);
+        this.checkEpicStatus(this.getEpicAfterValid(epicIdToCheckStatus));
     }
 
     @Override
@@ -193,7 +228,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         Subtask subtaskToChangeStatus = getSubtaskAfterValid(subtaskId);
         subtaskToChangeStatus.changeStatusInProgress();
         Long epicIdToCheckStatus = subtaskToChangeStatus.getEpicsId();
-        this.checkEpicStatus(epicIdToCheckStatus);
+        this.checkEpicStatus(this.getEpicAfterValid(epicIdToCheckStatus));
     }
 
     @Override
@@ -202,7 +237,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         Long epicId = subtaskToRemove.getEpicsId();
         getEpicAfterValid(epicId).removeSubtask(subtaskId);
         this.allTasks.remove(subtaskId);
-        this.checkEpicStatus(epicId);
+        this.checkEpicStatus(this.getEpicAfterValid(epicId));
         inMemoryHistoryManager.remove(subtaskId);
     }
 

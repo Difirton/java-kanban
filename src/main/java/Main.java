@@ -4,6 +4,10 @@ import service.Manager;
 import service.TasksManager;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -33,6 +37,15 @@ public class Main {
         System.out.println(fileBackedTasksManager.getHistory());
         System.out.println(fileBackedTasksManager.getAllSubtasks());
         System.out.println(fileBackedTasksManager.getAllEpics());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        List<LocalDateTime> localDateTimeList = new ArrayList<>();
+        localDateTimeList.add(LocalDateTime.parse("2005-12-10 12:20", formatter));
+        localDateTimeList.add(LocalDateTime.parse("2001-12-10 12:20", formatter));
+        localDateTimeList.add(LocalDateTime.parse("2002-12-10 12:20", formatter));
+        localDateTimeList.add(LocalDateTime.parse("2003-12-10 12:20", formatter));
+        System.out.println(localDateTimeList.stream().min(LocalDateTime::compareTo).get());
+        System.out.println(localDateTimeList);
+
 
     }
 }

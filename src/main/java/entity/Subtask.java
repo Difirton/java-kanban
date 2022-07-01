@@ -2,14 +2,13 @@ package entity;
 
 import constant.TaskStatus;
 
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class Subtask extends Task implements Serializable {
+public class Subtask extends Task {
     private final long serialVersionUID = 2L;
     private final long epicsId;
 
@@ -24,7 +23,7 @@ public class Subtask extends Task implements Serializable {
         super.setName(subtaskBuilder.name);
         super.setDescription(subtaskBuilder.description);
         super.setStatus(subtaskBuilder.status);
-        super.setExecutionTime(subtaskBuilder.executionTime);
+        super.setTimeExecution(subtaskBuilder.timeExecution);
         super.setStartDateTime(subtaskBuilder.startDateTime);
     }
 
@@ -48,6 +47,8 @@ public class Subtask extends Task implements Serializable {
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())
+                .add("start=" + this.getStartDateTime())
+                .add("execution=" + this.getTimeExecution())
                 .toString();
     }
 
@@ -71,7 +72,7 @@ public class Subtask extends Task implements Serializable {
         private String name = "";
         private String description = "";
         private TaskStatus status = TaskStatus.NEW;
-        private Duration executionTime = Duration.ofMinutes(0);
+        private Duration timeExecution = Duration.ofMinutes(0);
         private LocalDateTime startDateTime = LocalDateTime.MAX;
 
         public SubtaskBuilder(long id, long epicsId) {
@@ -94,8 +95,8 @@ public class Subtask extends Task implements Serializable {
             return this;
         }
 
-        public SubtaskBuilder ExecutionTime(Duration executionTime) {
-            this.executionTime = executionTime;
+        public SubtaskBuilder ExecutionTime(Duration timeExecution) {
+            this.timeExecution = timeExecution;
             return this;
         }
 

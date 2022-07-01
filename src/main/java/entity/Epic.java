@@ -2,12 +2,11 @@ package entity;
 
 import constant.TaskStatus;
 
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class Epic extends Task implements Serializable {
+public class Epic extends Task {
     private final long serialVersionUID = 2L;
     private List<Long> subtasksId; //TODO Переименовать поле
 
@@ -20,7 +19,7 @@ public class Epic extends Task implements Serializable {
         super.setName(epicBuilder.name);
         super.setDescription(epicBuilder.description);
         super.setStatus(epicBuilder.status);
-        super.setExecutionTime(epicBuilder.executionTime);
+        super.setTimeExecution(epicBuilder.timeExecution);
         super.setStartDateTime(epicBuilder.startDateTime);
         this.subtasksId = epicBuilder.subtasksId;
     }
@@ -74,7 +73,7 @@ public class Epic extends Task implements Serializable {
         private String description = "";
         private TaskStatus status = TaskStatus.NEW;
         private List<Long> subtasksId = new ArrayList<>();
-        private Duration executionTime = Duration.ofMinutes(0);
+        private Duration timeExecution = Duration.ofMinutes(0);
         private LocalDateTime startDateTime = LocalDateTime.MAX;
 
         public EpicBuilder(long id) {
