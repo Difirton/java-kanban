@@ -9,89 +9,119 @@ import java.util.Objects;
 
 public class TimeIntervalsList implements Serializable {
     private final long serialVersionUID = 1L;
-    private List<TimeInterval> timeIntervals;
+    private final int INDEX_FIRST_ELEMENT = 0;
+    private final int INDEX_SECOND_ELEMENT = 1;
+    private final int INDEX_THIRD_ELEMENT = 2;
+    private final List<TimeInterval> timeIntervals;
 
     public TimeIntervalsList() {
         this.timeIntervals = new ArrayList<>();
     }
 
+    public TimeInterval createTimeInterval(LocalDateTime startDateTime, LocalDateTime finishDateTime) {
+        return new TimeInterval(startDateTime, finishDateTime);
+    }
+
     public boolean add(TimeInterval newTimeInterval) {
-        final int INDEX_FIRST_ELEMENT = 0;
-        final int INDEX_SECOND_ELEMENT = 1;
-        final int INDEX_THIRD_ELEMENT = 2;
         if (timeIntervals.isEmpty()) {
             timeIntervals.add(newTimeInterval);
             return true;
         }
         if (timeIntervals.size() == 1) {
-            TimeInterval singleInterval = timeIntervals.get(INDEX_FIRST_ELEMENT);
-            if (singleInterval.isInsideInterval(newTimeInterval)) {
-                return false;
-            } else {
-                if (singleInterval.isBefore(newTimeInterval)) timeIntervals.add(newTimeInterval);
-                if (singleInterval.isAfter(newTimeInterval)) timeIntervals.add(INDEX_FIRST_ELEMENT, newTimeInterval);
-                return true;
-            }
+            return this.insertForOneElement(newTimeInterval);
         }
+        switch (timeIntervals.size()) {
+            case (2):
+                return this.insertForTwoElement(newTimeInterval);
+            case (3):
+                return this.insertForThreeElement(newTimeInterval);
+            default:
+                return this.insertMoreThanThreeElement(newTimeInterval);
+        }
+    }
+
+    private boolean insertForOneElement(TimeInterval newTimeInterval) {
+        TimeInterval singleInterval = timeIntervals.get(INDEX_FIRST_ELEMENT);
+        if (singleInterval.isInsideInterval(newTimeInterval)) {
+            return false;
+        } else {
+            if (singleInterval.isBefore(newTimeInterval)) timeIntervals.add(newTimeInterval);
+            if (singleInterval.isAfter(newTimeInterval)) timeIntervals.add(INDEX_FIRST_ELEMENT, newTimeInterval);
+            return true;
+        }
+    }
+
+    private boolean insertForTwoElement(TimeInterval newTimeInterval) {
+        if (timeIntervals.get(INDEX_FIRST_ELEMENT).isInsideInterval(newTimeInterval)
+                || timeIntervals.get(INDEX_SECOND_ELEMENT).isInsideInterval(newTimeInterval)) {
+            return false;
+        }
+        if (timeIntervals.get(INDEX_FIRST_ELEMENT).isAfter(newTimeInterval)) {
+            timeIntervals.add(INDEX_FIRST_ELEMENT, newTimeInterval);
+            return true;
+        }
+        if (timeIntervals.get(INDEX_SECOND_ELEMENT).isBefore(newTimeInterval))  {
+            timeIntervals.add(newTimeInterval);
+            return true;
+        }
+        timeIntervals.add(INDEX_SECOND_ELEMENT, newTimeInterval);
+        return  true;
+    }
+
+    private boolean insertForThreeElement(TimeInterval newTimeInterval) {
+        if (timeIntervals.get(INDEX_FIRST_ELEMENT).isInsideInterval(newTimeInterval)
+                || timeIntervals.get(INDEX_SECOND_ELEMENT).isInsideInterval(newTimeInterval)
+                || timeIntervals.get(INDEX_THIRD_ELEMENT).isInsideInterval(newTimeInterval)) {
+            return false;
+        }
+        if (timeIntervals.get(INDEX_FIRST_ELEMENT).isAfter(newTimeInterval)) {
+            timeIntervals.add(INDEX_FIRST_ELEMENT, newTimeInterval);
+            return true;
+        }
+        if (timeIntervals.get(INDEX_THIRD_ELEMENT).isBefore(newTimeInterval))  {
+            timeIntervals.add(newTimeInterval);
+            return true;
+        }
+        if (timeIntervals.get(INDEX_FIRST_ELEMENT).isAfter(newTimeInterval)
+                && timeIntervals.get(INDEX_SECOND_ELEMENT).isAfter(newTimeInterval)) {
+            timeIntervals.add(INDEX_SECOND_ELEMENT, newTimeInterval);
+        }
+        timeIntervals.add(INDEX_THIRD_ELEMENT, newTimeInterval);
+        return  true;
+    }
+
+    private boolean insertMoreThanThreeElement(TimeInterval newTimeInterval) {
+        CollectionMovement collectionMovement = null;
         int middleOfList = timeIntervals.size() / 2;
-        while (middleOfList > 0) {
-            switch (timeIntervals.size()) {
-                case (2):
-                    if (timeIntervals.get(INDEX_FIRST_ELEMENT).isInsideInterval(newTimeInterval)
-                            || timeIntervals.get(INDEX_SECOND_ELEMENT).isInsideInterval(newTimeInterval)) {
-                        return false;
-                    }
-                    if (timeIntervals.get(INDEX_FIRST_ELEMENT).isBefore(newTimeInterval)) {
-                        timeIntervals.add(INDEX_FIRST_ELEMENT, newTimeInterval);
-                        return true;
-                    }
-                    if (timeIntervals.get(INDEX_SECOND_ELEMENT).isAfter(newTimeInterval))  {
-                        timeIntervals.add(newTimeInterval);
-                        return true;
-                    }
-                    timeIntervals.add(INDEX_SECOND_ELEMENT, newTimeInterval);
-                    return  true;
-                case (3):
-                    if (timeIntervals.get(INDEX_FIRST_ELEMENT).isInsideInterval(newTimeInterval)
-                            || timeIntervals.get(INDEX_SECOND_ELEMENT).isInsideInterval(newTimeInterval)
-                            || timeIntervals.get(INDEX_THIRD_ELEMENT).isInsideInterval(newTimeInterval)) {
-                        return false;
-                    }
-                    if (timeIntervals.get(INDEX_FIRST_ELEMENT).isBefore(newTimeInterval)) {
-                        timeIntervals.add(INDEX_FIRST_ELEMENT, newTimeInterval);
-                        return true;
-                    }
-                    if (timeIntervals.get(INDEX_THIRD_ELEMENT).isAfter(newTimeInterval))  {
-                        timeIntervals.add(newTimeInterval);
-                        return true;
-                    }
-                    if (timeIntervals.get(INDEX_FIRST_ELEMENT).isAfter(newTimeInterval)
-                            && timeIntervals.get(INDEX_SECOND_ELEMENT).isAfter(newTimeInterval)) {
-                        timeIntervals.add(INDEX_SECOND_ELEMENT, newTimeInterval);
-                    }
-                    timeIntervals.add(INDEX_THIRD_ELEMENT, newTimeInterval);
-                    return  true;
-                default: //TODO то-то туту не то
-                    TimeInterval middleElement = timeIntervals.get(middleOfList);
-                    TimeInterval previousElement = timeIntervals.get(middleOfList - 1);
-                    if (middleElement.isBefore(newTimeInterval)) {
-                        middleOfList += middleOfList / 2;
-                        break;
-                    }
-                    if (previousElement.isBefore(middleElement)) {
-                        middleOfList -= middleOfList / 2;
-                        break;
-                    }
-                    if (previousElement.isInsideInterval(newTimeInterval)
-                            || middleElement.isInsideInterval(newTimeInterval)) {
-                        return false;
-                    }
-                    if (previousElement.isBefore(newTimeInterval) && middleElement.isAfter(newTimeInterval)) {
-                        timeIntervals.add(middleOfList, newTimeInterval);
-                    }
+        TimeInterval middleElement;
+        while (true) {
+            middleElement =  timeIntervals.get(middleOfList);
+            if (middleElement.isAfter(newTimeInterval)) {
+                if (collectionMovement == CollectionMovement.DOWN_MOVEMENT) {
+                    timeIntervals.add(middleOfList, newTimeInterval);
+                    return true;
+                } else {
+                    middleOfList -= middleOfList / 2;
+                    collectionMovement = CollectionMovement.UP_MOVEMENT;
+                    continue;
+                }
+            }
+            if (middleElement.isBefore(newTimeInterval)) {
+                if (collectionMovement == CollectionMovement.UP_MOVEMENT) {
+                    timeIntervals.add(middleOfList, newTimeInterval);
+                    return true;
+                } else {
+                    middleOfList += middleOfList / 2;
+                    collectionMovement = CollectionMovement.DOWN_MOVEMENT;
+                    continue;
+                }
             }
         }
-        return false;
+    }
+
+    enum CollectionMovement{
+        UP_MOVEMENT,
+        DOWN_MOVEMENT
     }
 
     public class TimeInterval implements Serializable, Comparable<TimeInterval> {

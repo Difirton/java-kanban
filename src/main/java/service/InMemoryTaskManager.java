@@ -6,6 +6,7 @@ import entity.Subtask;
 import entity.Task;
 import error.TaskNotFoundException;
 import utill.TimeIntervalsList;
+import utill.TimeIntervalsList.TimeInterval;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -47,11 +48,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .Name(name)
                 .Description(description)
                 .build();
-        this.checkFreeTimeInterval(newSubtask);
-        this.allTasks.put(idNewSubtask, newSubtask);
-        this.sortedSubtasks.add(newSubtask);
-        this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
-        this.checkEpicStatusAndTimeExecution(epicId);
+        this.subtaskFacade(newSubtask, idNewSubtask, epicId);
     }
 
     @Override
@@ -65,11 +62,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .Description(description)
                 .StartDateTime(startDateTime)
                 .build();
-        this.checkFreeTimeInterval(newSubtask);
-        this.allTasks.put(idNewSubtask, newSubtask);
-        this.sortedSubtasks.add(newSubtask);
-        this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
-        this.checkEpicStatusAndTimeExecution(epicId);
+        this.subtaskFacade(newSubtask, idNewSubtask, epicId);
     }
 
     @Override
@@ -85,15 +78,26 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .StartDateTime(startDateTime)
                 .TimeExecutionInMinutes(timeExecutionInMinutes)
                 .build();
-        this.checkFreeTimeInterval(newSubtask);
-        this.allTasks.put(idNewSubtask, newSubtask);
-        this.sortedSubtasks.add(newSubtask);
-        this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
-        this.checkEpicStatusAndTimeExecution(epicId);
+        this.subtaskCreatorFacade(newSubtask, idNewSubtask, epicId);
     }
 
-    private boolean checkFreeTimeInterval(Subtask newSubtask) {
-        return true;
+    private void subtaskCreatorFacade(Subtask newSubtask, long idNewSubtask, long epicId){
+        if (this.addTaskIfFreeTimeInterval(newSubtask)) {
+            this.allTasks.put(idNewSubtask, newSubtask);
+            this.sortedSubtasks.add(newSubtask);
+            this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
+            this.checkEpicStatusAndTimeExecution(epicId);
+        } else {
+            amountTaskId--;
+            System.out.println("Добавление не выполнено. Временной интервал занят.");
+        }
+    }
+
+    private boolean addTaskIfFreeTimeInterval(Subtask newSubtask) {
+        LocalDateTime startDateTime = newSubtask.getStartDateTime();
+        LocalDateTime finishDateTime = newSubtask.getEndDateTime();
+        TimeInterval timeInterval = occupiedSlots.createTimeInterval(startDateTime, finishDateTime);
+        return occupiedSlots.add(timeInterval);
     }
 
     private void checkEpicStatusAndTimeExecution(Long epicId) {

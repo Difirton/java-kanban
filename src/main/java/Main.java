@@ -26,7 +26,7 @@ public class Main {
         tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 1L, "2005-12-10 12:20", 40 );
         tasksManager.createNewSubtask("Subtask 4", "Subtask 4", 1L, "2005-10-10 12:20", 60 );
         tasksManager.createNewSubtask("Subtask 5", "Subtask 5", 1L, "2005-08-16 12:20", 650);
-        tasksManager.createNewSubtask("Subtask 6", "Subtask 6", 2L, "2005-12-10 10:00", 660);
+        tasksManager.createNewSubtask("Subtask 6", "Subtask 6", 2L, "2005-08-16 12:30", 660);
         tasksManager.createNewEpic("Epic 7", "Description Epic 7");
         tasksManager.createNewSubtask("Subtask 8", "Subtask 8", 7L, "2010-12-10 19:20", 900);
         tasksManager.createNewSubtask("Subtask 9", "Subtask 9", 2L, "2008-12-10 22:20", 6000);
@@ -36,7 +36,6 @@ public class Main {
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(2L);
         tasksManager.getSubtaskById(5L);
-        tasksManager.getSubtaskById(6L);
 
 
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File("src\\main\\resources\\data" + File.separator + "dataFileBackedTasksManager.bin"));
@@ -46,9 +45,5 @@ public class Main {
         for (Task task : tasks) {
             System.out.println(task);
         }
-
-       // System.out.println(fileBackedTasksManager.getEpicById(1L).getStartDateTime().compareTo(fileBackedTasksManager.getSubtaskById(4L).getStartDateTime()));
-
-
     }
 }
