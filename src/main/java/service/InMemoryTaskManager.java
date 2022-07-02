@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .Name(name)
                 .Description(description)
                 .build();
-        this.subtaskFacade(newSubtask, idNewSubtask, epicId);
+        this.subtaskCreatorFacade(newSubtask, idNewSubtask, epicId);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .Description(description)
                 .StartDateTime(startDateTime)
                 .build();
-        this.subtaskFacade(newSubtask, idNewSubtask, epicId);
+        this.subtaskCreatorFacade(newSubtask, idNewSubtask, epicId);
     }
 
     @Override
@@ -155,19 +155,20 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     private void setEpicTimeCharacteristics(Epic epicToSet, List<Subtask> sortedEpicsSubtasks) {
         final int INDEX_FIRST_ELEMENT = 0;
         LocalDateTime minStartDate = sortedEpicsSubtasks.get(INDEX_FIRST_ELEMENT).getStartDateTime();
-        LocalDateTime maxEndDate = sortedEpicsSubtasks.stream()
+        Optional<LocalDateTime> optMaxEndDate = sortedEpicsSubtasks.stream()
                 .map(Subtask::getEndDateTime)
-                .max(LocalDateTime::compareTo)
-                .get();
-        epicToSet.setStartDateTime(minStartDate);
-        epicToSet.setTimeExecution(Duration.between(minStartDate, maxEndDate));
+                .max(LocalDateTime::compareTo);
+        if (optMaxEndDate.isPresent()) {
+            LocalDateTime maxEndDate = optMaxEndDate.get();
+            epicToSet.setStartDateTime(minStartDate);
+            epicToSet.setTimeExecution(Duration.between(minStartDate, maxEndDate));
+        }
     }
 
     private Epic getEpicAfterValid(Long epicId) {
         try {
             Task taskToCheck = this.getTaskById(epicId);
-            Epic epicToCast = (Epic) taskToCheck;
-            return epicToCast;
+            return (Epic) taskToCheck;
         } catch (NullPointerException exception) {
             throw new TaskNotFoundException("Недопустимое действие. Эпик с id=" + epicId + " не существует");
         } catch (ClassCastException exception) {
@@ -178,8 +179,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     private Subtask getSubtaskAfterValid(Long subtaskId) {
         try {
             Task taskToCheck = this.getTaskById(subtaskId);
-            Subtask subtaskToCast = (Subtask) taskToCheck;
-            return subtaskToCast;
+            return (Subtask) taskToCheck;
         } catch (NullPointerException exception) {
             throw new TaskNotFoundException("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
         } catch (ClassCastException exception) {
@@ -221,18 +221,16 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     @Override
     public List<Epic> getAllEpics() {
-        return this.allTasks.entrySet().stream()
-                .filter(o -> o.getValue() instanceof Epic)
-                .map(Map.Entry::getValue)
+        return this.allTasks.values().stream()
+                .filter(task -> task instanceof Epic)
                 .map(o -> (Epic) o)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public List<Subtask> getAllSubtasks() {
-        return this.allTasks.entrySet().stream()
-                .filter(o -> o.getValue() instanceof Subtask)
-                .map(Map.Entry::getValue)
+        return this.allTasks.values().stream()
+                .filter(task -> task instanceof Subtask)
                 .map(o -> (Subtask) o)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -248,8 +246,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     @Override
     public List<Task> getPrioritizedTasks() {
-        System.out.println(this.sortedSubtasks);
-        return this.sortedSubtasks.stream().collect(Collectors.toList());
+        return new ArrayList<>(this.sortedSubtasks);
     }
 
     @Override
@@ -301,9 +298,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     @Override
     public void removeEpicById(Long epicId) {
         Epic epicToRemove = getEpicAfterValid(epicId);
-        epicToRemove.getAllIdSubtasks().stream()
+        epicToRemove.getAllIdSubtasks()
                 .forEach(inMemoryHistoryManager::remove);
-        epicToRemove.getAllIdSubtasks().stream()
+        epicToRemove.getAllIdSubtasks()
                 .forEach(this.allTasks::remove);
             inMemoryHistoryManager.remove(epicId);
             this.allTasks.remove(epicId);
@@ -321,21 +318,21 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .filter(o -> o.getValue() instanceof Subtask)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toCollection(ArrayList::new));
-        idSubtasksToRemove.stream()
+        idSubtasksToRemove
                 .forEach(this.allTasks::remove);
         this.allTasks.keySet().stream()
                 .map(this::getEpicAfterValid)
                 .forEach(Epic::removeSubtasks);
-        idSubtasksToRemove.stream()
+        idSubtasksToRemove
                 .forEach(inMemoryHistoryManager::remove);
     }
 
     @Override
     public void removeSubtasksByEpicId(Long epicId) {
         Epic epicToRemoveSubtasks = getEpicAfterValid(epicId);
-        epicToRemoveSubtasks.getAllIdSubtasks().stream()
+        epicToRemoveSubtasks.getAllIdSubtasks()
                 .forEach(this.allTasks::remove);
-        epicToRemoveSubtasks.getAllIdSubtasks().stream()
+        epicToRemoveSubtasks.getAllIdSubtasks()
                 .forEach(inMemoryHistoryManager::remove);
         epicToRemoveSubtasks.removeSubtasks();
     }
