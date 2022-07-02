@@ -1,4 +1,5 @@
 import constant.TypeTasksManager;
+import entity.Task;
 import service.FileBackedTasksManager;
 import service.Manager;
 import service.TasksManager;
@@ -12,16 +13,23 @@ import java.util.List;
 public class Main {
 
     public static void main(String... args) {
+        /*Спасибо за совет прочитать книгу Чистый код, очень понравилась, за первые 2 дня пол книжки прочитал. Сейчас
+        купил чистую архитектуру, но пока она до меня доехала, взялся читать другую.
+        По поводу задания: Фактически entity все переписаны на 50%, InMemoryTaskManager целиком. В FileBackedTasksManager
+        теперь путь для сохранения задается в properties, тесты запускаются от одной кнопки. Добавил еще свое исключение,
+        т.к. показалось намного проще получать исключения и исправлять логику программы в проблемном месте.
+         */
+
         TasksManager tasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         tasksManager.createNewEpic("Epic 1", "Description Epic 1");
         tasksManager.createNewEpic("Epic 2", "Description Epic 2");
-        tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 1L);
-        tasksManager.createNewSubtask("Subtask 4", "Subtask 4", 1L);
-        tasksManager.createNewSubtask("Subtask 5", "Subtask 5", 1L);
-        tasksManager.createNewSubtask("Subtask 6", "Subtask 6", 2L);
+        tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 1L, "2005-12-10 12:20", 40 );
+        tasksManager.createNewSubtask("Subtask 4", "Subtask 4", 1L, "2005-10-10 12:20", 60 );
+        tasksManager.createNewSubtask("Subtask 5", "Subtask 5", 1L, "2005-08-16 12:20", 650);
+        tasksManager.createNewSubtask("Subtask 6", "Subtask 6", 2L, "2005-12-10 10:00", 660);
         tasksManager.createNewEpic("Epic 7", "Description Epic 7");
-        tasksManager.createNewSubtask("Subtask 8", "Subtask 8", 7L);
-        tasksManager.createNewSubtask("Subtask 9", "Subtask 9", 2L);
+        tasksManager.createNewSubtask("Subtask 8", "Subtask 8", 7L, "2010-12-10 19:20", 900);
+        tasksManager.createNewSubtask("Subtask 9", "Subtask 9", 2L, "2008-12-10 22:20", 6000);
         tasksManager.getSubtaskById(3L);
         tasksManager.getEpicById(2L);
         tasksManager.getEpicById(1L);
@@ -29,22 +37,17 @@ public class Main {
         tasksManager.getEpicById(2L);
         tasksManager.getSubtaskById(5L);
         tasksManager.getSubtaskById(6L);
-        System.out.println(tasksManager.getHistory());
-        System.out.println(tasksManager.getAllSubtasks());
-        System.out.println(tasksManager.getAllEpics());
+
 
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File("src\\main\\resources\\data" + File.separator + "dataFileBackedTasksManager.bin"));
-        System.out.println(fileBackedTasksManager.getHistory());
-        System.out.println(fileBackedTasksManager.getAllSubtasks());
-        System.out.println(fileBackedTasksManager.getAllEpics());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        List<LocalDateTime> localDateTimeList = new ArrayList<>();
-        localDateTimeList.add(LocalDateTime.parse("2005-12-10 12:20", formatter));
-        localDateTimeList.add(LocalDateTime.parse("2001-12-10 12:20", formatter));
-        localDateTimeList.add(LocalDateTime.parse("2002-12-10 12:20", formatter));
-        localDateTimeList.add(LocalDateTime.parse("2003-12-10 12:20", formatter));
-        System.out.println(localDateTimeList.stream().min(LocalDateTime::compareTo).get());
-        System.out.println(localDateTimeList);
+
+        List<Task> tasks = fileBackedTasksManager.getPrioritizedTasks();
+        tasks.sort(Task::compareTo);
+        for (Task task : tasks) {
+            System.out.println(task);
+        }
+
+       // System.out.println(fileBackedTasksManager.getEpicById(1L).getStartDateTime().compareTo(fileBackedTasksManager.getSubtaskById(4L).getStartDateTime()));
 
 
     }

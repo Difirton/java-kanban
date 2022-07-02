@@ -48,7 +48,7 @@ public class Subtask extends Task {
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())
                 .add("start=" + this.getStartDateTime())
-                .add("execution=" + this.getTimeExecution())
+                .add("execution=" + this.getTimeExecution().toMinutes())
                 .toString();
     }
 
@@ -95,8 +95,8 @@ public class Subtask extends Task {
             return this;
         }
 
-        public SubtaskBuilder ExecutionTime(Duration timeExecution) {
-            this.timeExecution = timeExecution;
+        public SubtaskBuilder TimeExecutionInMinutes(int timeExecutionInMinutes) {
+            this.timeExecution = Duration.ofMinutes(timeExecutionInMinutes);
             return this;
         }
 

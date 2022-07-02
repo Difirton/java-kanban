@@ -48,6 +48,8 @@ public class Epic extends Task {
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())
+                .add("start=" + this.getStartDateTime())
+                .add("execution=" + this.getTimeExecution().toMinutes())
                 .toString();
     }
 

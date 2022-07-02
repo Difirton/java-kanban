@@ -1,11 +1,11 @@
 package service;
 
-import com.sun.source.tree.UsesTree;
 import constant.TaskStatus;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
 import error.TaskNotFoundException;
+import utill.TimeIntervalsList;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -17,18 +17,21 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     private final long serialVersionUID = 2L;
     private long amountTaskId;
     private final Map<Long, Task> allTasks;
-    private final Set<Task> sortedAllTasks;
+    private final Set<Subtask> sortedSubtasks;
     private final HistoryManager inMemoryHistoryManager;
+    private final TimeIntervalsList occupiedSlots;
 
     protected InMemoryTaskManager() {
         amountTaskId = 1L;
         this.allTasks = new HashMap<>();
-        this.sortedAllTasks = new TreeSet<>();
+        this.sortedSubtasks = new TreeSet<>();
         this.inMemoryHistoryManager = Manager.getDefaultHistory();
+        this.occupiedSlots = new TimeIntervalsList();
     }
 
     @Override
-    public void createNewEpic(String name, String description) {
+    public void createNewEpic(String name,
+                              String description) {
         long idNewEpic = amountTaskId++;
         Epic newEpic = new Epic.EpicBuilder(idNewEpic)
                 .Name(name)
@@ -39,20 +42,64 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     @Override
     public void createNewSubtask(String name, String description, long epicId) {
-            long idNewSubtask = amountTaskId++;
-            Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
-                    .Name(name)
-                    .Description(description)
-                    .build();
-            this.allTasks.put(idNewSubtask, newSubtask);
-            getEpicAfterValid(epicId).addSubtask(idNewSubtask);
-            checkEpicStatusAndTimeExecution(epicId);
+        long idNewSubtask = amountTaskId++;
+        Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
+                .Name(name)
+                .Description(description)
+                .build();
+        this.checkFreeTimeInterval(newSubtask);
+        this.allTasks.put(idNewSubtask, newSubtask);
+        this.sortedSubtasks.add(newSubtask);
+        this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
+        this.checkEpicStatusAndTimeExecution(epicId);
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
+                                 String startDateTime) {
+        long idNewSubtask = amountTaskId++;
+        Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
+                .Name(name)
+                .Description(description)
+                .StartDateTime(startDateTime)
+                .build();
+        this.checkFreeTimeInterval(newSubtask);
+        this.allTasks.put(idNewSubtask, newSubtask);
+        this.sortedSubtasks.add(newSubtask);
+        this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
+        this.checkEpicStatusAndTimeExecution(epicId);
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
+                                 String startDateTime,
+                                 int timeExecutionInMinutes) {
+        long idNewSubtask = amountTaskId++;
+        Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
+                .Name(name)
+                .Description(description)
+                .StartDateTime(startDateTime)
+                .TimeExecutionInMinutes(timeExecutionInMinutes)
+                .build();
+        this.checkFreeTimeInterval(newSubtask);
+        this.allTasks.put(idNewSubtask, newSubtask);
+        this.sortedSubtasks.add(newSubtask);
+        this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
+        this.checkEpicStatusAndTimeExecution(epicId);
+    }
+
+    private boolean checkFreeTimeInterval(Subtask newSubtask) {
+        return true;
     }
 
     private void checkEpicStatusAndTimeExecution(Long epicId) {
         Epic epicToCheck = getEpicAfterValid(epicId);
-        checkEpicStatus(epicToCheck);
-        checkEpicTimeExecution(epicToCheck);
+        this.checkEpicStatus(epicToCheck);
+        this.checkEpicTimeExecution(epicToCheck);
     }
 
     private void checkEpicStatus(Epic epicToCheck) {
@@ -193,6 +240,12 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .map(this.allTasks::get)
                 .map(o -> (Subtask) o)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        System.out.println(this.sortedSubtasks);
+        return this.sortedSubtasks.stream().collect(Collectors.toList());
     }
 
     @Override

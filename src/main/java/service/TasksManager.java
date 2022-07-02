@@ -4,12 +4,18 @@ import entity.Epic;
 import entity.Subtask;
 import entity.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TasksManager {
     void createNewEpic(String name, String description);
 
     void createNewSubtask(String name, String description, long epicId);
+
+    void createNewSubtask(String name, String description, long epicId, String startDateTime);
+
+    void createNewSubtask(String name, String description, long epicId, String startDateTime, int timeExecution);
 
     Epic getEpicById(Long taskId);
 
@@ -22,6 +28,8 @@ public interface TasksManager {
     List<Subtask> getAllSubtasks();
 
     List<Subtask> getAllEpicsSubtasks(Long epicId);
+
+    List<Task> getPrioritizedTasks();
 
     void changeSubtaskStatusDone(Long subtaskId);
 

@@ -20,7 +20,7 @@ public class FileBackedTasksManagerTest {
     String pathToTestSaveAndLoadData;
 
     @BeforeEach
-    public void setUp() throws Exception{
+    public void setUp() {
         fileBackedTasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         pathToTestSaveAndLoadData = readPathToSaveTestData();
         testFile = new File(pathToTestSaveAndLoadData + File.separator + "dataFileBackedTasksManager.bin");

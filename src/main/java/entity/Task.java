@@ -5,6 +5,7 @@ import constant.TaskStatus;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -23,7 +24,10 @@ public abstract class Task implements Serializable, Comparable<Task> {
 
     @Override
     public int compareTo(Task anotherTask) {
-        return startDateTime.compareTo(anotherTask.startDateTime);
+        if (startDateTime.compareTo(anotherTask.startDateTime) != 0) {
+            return startDateTime.compareTo(anotherTask.startDateTime);
+        }
+        return (int)(id - anotherTask.id);
     }
 
     public long getId() {
