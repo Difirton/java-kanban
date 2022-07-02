@@ -1,10 +1,10 @@
 package entity;
 
 import constant.TaskStatus;
+import utill.DateUtil;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -106,8 +106,7 @@ public class Subtask extends Task {
         }
 
         public SubtaskBuilder StartDateTime(String startDateTime) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime formatterStartDateTime = LocalDateTime.parse(startDateTime, formatter);
+            LocalDateTime formatterStartDateTime = DateUtil.stringToDate(startDateTime);
             this.startDateTime = formatterStartDateTime;
             return this;
         }

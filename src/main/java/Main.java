@@ -17,6 +17,8 @@ public class Main {
         По поводу задания: Фактически entity все переписаны на 50%, InMemoryTaskManager целиком. В FileBackedTasksManager
         теперь путь для сохранения задается в properties, тесты запускаются от одной кнопки. Добавил еще свое исключение,
         т.к. показалось намного проще получать исключения и исправлять логику программы в проблемном месте.
+        Добавил свой TimeIntervalList, т.к. не хотел реализовать общий случай по времени и достичь сложности алгоритма
+         хотя бы О(log n),
          */
 
         TasksManager tasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);

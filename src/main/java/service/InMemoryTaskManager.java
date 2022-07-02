@@ -6,7 +6,6 @@ import entity.Subtask;
 import entity.Task;
 import error.TaskNotFoundException;
 import utill.TimeIntervalsList;
-import utill.TimeIntervalsList.TimeInterval;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -88,15 +87,14 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
             this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
             this.checkEpicStatusAndTimeExecution(epicId);
         } else {
-            System.out.println("Добавление не выполнено. Временной интервал занят.");
+            System.out.println("Adding failed. Timeslot is busy.");
         }
     }
 
     private boolean addTaskIfFreeTimeInterval(Subtask newSubtask) {
         LocalDateTime startDateTime = newSubtask.getStartDateTime();
         LocalDateTime finishDateTime = newSubtask.getEndDateTime();
-        TimeInterval timeInterval = occupiedSlots.createTimeInterval(startDateTime, finishDateTime);
-        return occupiedSlots.add(timeInterval);
+        return occupiedSlots.add(startDateTime, finishDateTime);
     }
 
     private void checkEpicStatusAndTimeExecution(Long epicId) {
@@ -169,9 +167,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
             Task taskToCheck = this.getTaskById(epicId);
             return (Epic) taskToCheck;
         } catch (NullPointerException exception) {
-            throw new TaskNotFoundException("Недопустимое действие. Эпик с id=" + epicId + " не существует");
+            throw new TaskNotFoundException("Invalid action. Epic with id=" + epicId + " does not exist");
         } catch (ClassCastException exception) {
-            throw new TaskNotFoundException("Ошибка приведения типа. Эпик с id=" + epicId + " не является эпиком");
+            throw new TaskNotFoundException("Type cast error. Epic with id=" + epicId + " is not an epic");
         }
     }
 
@@ -180,9 +178,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
             Task taskToCheck = this.getTaskById(subtaskId);
             return (Subtask) taskToCheck;
         } catch (NullPointerException exception) {
-            throw new TaskNotFoundException("Недопустимое действие. Подзадача с id=" + subtaskId + " не существует");
+            throw new TaskNotFoundException("Invalid action. Subtask with id=" + subtaskId + " does not exist");
         } catch (ClassCastException exception) {
-            throw new TaskNotFoundException("Ошибка приведения типа. Подзадача с id=" + subtaskId + " не является эпиком");
+            throw new TaskNotFoundException("Type cast error. Subtask with id=" + subtaskId + " is not an epic");
         }
     }
 
@@ -191,7 +189,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         try {
             requestedTask = this.allTasks.get(taskId);
         } catch (NullPointerException exception) {
-            throw new TaskNotFoundException("Недопустимое действие. Задача с id=" + taskId + " не существует");
+            throw new TaskNotFoundException("Invalid action. Task with id=" + taskId + " does not exist");
         }
         return requestedTask;
     }
@@ -254,7 +252,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
             Task taskToChangeName = this.allTasks.get(taskId);
             taskToChangeName.setName(newName);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Задачи с id=" + taskId + " не существует");
+            System.out.println("Invalid action. Task with id=" + taskId + " does not exist");
         }
     }
 
@@ -264,7 +262,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
             Task taskToChangeDescription = this.allTasks.get(taskId);
             taskToChangeDescription.setDescription(newDescription);
         } catch (NullPointerException exception) {
-            System.out.println("Недопустимое действие. Задачи с id=" + taskId + " не существует");
+            System.out.println("Invalid action. Task with id=" + taskId + " does not exist");
         }
     }
 
