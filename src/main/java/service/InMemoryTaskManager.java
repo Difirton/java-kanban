@@ -88,7 +88,6 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
             this.getEpicAfterValid(epicId).addSubtask(idNewSubtask);
             this.checkEpicStatusAndTimeExecution(epicId);
         } else {
-            amountTaskId--;
             System.out.println("Добавление не выполнено. Временной интервал занят.");
         }
     }

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeSet;
 
 public class TimeIntervalsList implements Serializable {
     private final long serialVersionUID = 1L;
@@ -13,9 +14,11 @@ public class TimeIntervalsList implements Serializable {
     private final int INDEX_SECOND_ELEMENT = 1;
     private final int INDEX_THIRD_ELEMENT = 2;
     private final List<TimeInterval> timeIntervals;
+    private final TreeSet<TimeInterval> timeIntervalsSet;
 
     public TimeIntervalsList() {
         this.timeIntervals = new ArrayList<>();
+        this.timeIntervalsSet = new TreeSet<>();
     }
 
     public TimeInterval createTimeInterval(LocalDateTime startDateTime, LocalDateTime finishDateTime) {
@@ -23,21 +26,25 @@ public class TimeIntervalsList implements Serializable {
     }
 
     public boolean add(TimeInterval newTimeInterval) {
-        if (timeIntervals.isEmpty()) {
+        if (!timeIntervals.contains(newTimeInterval)) {
             timeIntervals.add(newTimeInterval);
             return true;
+        } else {
+            return false;
         }
-        if (timeIntervals.size() == 1) {
-            return this.insertForOneElement(newTimeInterval);
-        }
-        switch (timeIntervals.size()) {
-            case (2):
-                return this.insertForTwoElement(newTimeInterval);
-            case (3):
-                return this.insertForThreeElement(newTimeInterval);
-            default:
-                return this.insertMoreThanThreeElement(newTimeInterval);
-        }
+//        switch (timeIntervals.size()) {
+//            case (0):
+//                timeIntervals.add(newTimeInterval);
+//                return true;
+//            case (1):
+//                return this.insertForOneElement(newTimeInterval);
+//            case (2):
+//                return this.insertForTwoElement(newTimeInterval);
+//            case (3):
+//                return this.insertForThreeElement(newTimeInterval);
+//            default:
+//                return this.insertMoreThanThreeElement(newTimeInterval);
+//        }
     }
 
     private boolean insertForOneElement(TimeInterval newTimeInterval) {
@@ -93,6 +100,7 @@ public class TimeIntervalsList implements Serializable {
     private boolean insertMoreThanThreeElement(TimeInterval newTimeInterval) {
         CollectionMovement collectionMovement = null;
         int middleOfList = timeIntervals.size() / 2;
+        int numberIteration = 1;
         TimeInterval middleElement;
         while (true) {
             middleElement =  timeIntervals.get(middleOfList);
@@ -102,6 +110,14 @@ public class TimeIntervalsList implements Serializable {
                     return true;
                 } else {
                     middleOfList -= middleOfList / 2;
+                    if (middleOfList == INDEX_SECOND_ELEMENT && middleElement.isAfter(newTimeInterval)) {
+                        timeIntervals.add(INDEX_FIRST_ELEMENT, newTimeInterval);
+                        return true;
+                    }
+                    if (middleOfList == INDEX_SECOND_ELEMENT && middleElement.isBefore(newTimeInterval)) {
+                        timeIntervals.add(INDEX_SECOND_ELEMENT, newTimeInterval);
+                        return true;
+                    }
                     collectionMovement = CollectionMovement.UP_MOVEMENT;
                     continue;
                 }
@@ -111,7 +127,15 @@ public class TimeIntervalsList implements Serializable {
                     timeIntervals.add(middleOfList, newTimeInterval);
                     return true;
                 } else {
-                    middleOfList += middleOfList / 2;
+                    middleOfList += middleOfList / 2; //TODO переделать, неверны коэффициент
+                    if (middleOfList == (timeIntervals.size() - 1) && middleElement.isAfter(newTimeInterval)) {
+                        timeIntervals.add(timeIntervals.size() - 1, newTimeInterval);
+                        return true;
+                    }
+                    if (middleOfList == (timeIntervals.size() - 1) && middleElement.isBefore(newTimeInterval)) {
+                        timeIntervals.add(newTimeInterval);
+                        return true;
+                    }
                     collectionMovement = CollectionMovement.DOWN_MOVEMENT;
                     continue;
                 }
@@ -140,6 +164,14 @@ public class TimeIntervalsList implements Serializable {
             this.finish = LocalDateTime.parse(finish, formatter);
         }
 
+        @Override
+        public int compareTo(TimeInterval anotherTimeInterval) {
+            if (this.isInsideInterval(anotherTimeInterval)) {
+                return 0;
+            }
+            return this.start.compareTo(anotherTimeInterval.start);
+        }
+
         public boolean isInsideInterval(TimeInterval anotherTimeInterval) {
             if (this.finish.isBefore(anotherTimeInterval.start)) {
                 return false;
@@ -156,13 +188,6 @@ public class TimeIntervalsList implements Serializable {
 
         public boolean isBefore(TimeInterval anotherTimeInterval) {
             return this.finish.isBefore(anotherTimeInterval.start);
-        }
-
-        @Override
-        public int compareTo(TimeInterval anotherTimeInterval) {
-            if (this.start.compareTo(anotherTimeInterval.start) != 0) {
-                return this.start.compareTo(anotherTimeInterval.start);
-            } else return this.finish.compareTo(anotherTimeInterval.finish);
         }
 
         public LocalDateTime getStart() {
@@ -186,8 +211,7 @@ public class TimeIntervalsList implements Serializable {
             if (this == o) return true;
             if (o == null || this.getClass() != o.getClass()) return false;
             TimeInterval timeInterval = (TimeInterval) o;
-            return this.start == timeInterval.start &&
-                    this.finish == timeInterval.finish;
+            return this.isInsideInterval(timeInterval);
         }
 
         @Override

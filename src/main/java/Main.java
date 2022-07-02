@@ -7,8 +7,7 @@ import service.TasksManager;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
 
@@ -30,13 +29,17 @@ public class Main {
         tasksManager.createNewEpic("Epic 7", "Description Epic 7");
         tasksManager.createNewSubtask("Subtask 8", "Subtask 8", 7L, "2010-12-10 19:20", 900);
         tasksManager.createNewSubtask("Subtask 9", "Subtask 9", 2L, "2008-12-10 22:20", 6000);
+        tasksManager.createNewSubtask("Subtask 10", "Subtask 10", 2L, "2004-10-10 22:20", 60);
+        tasksManager.createNewSubtask("Subtask 11", "Subtask 11", 2L, "2004-11-10 22:20", 60);
+        tasksManager.createNewSubtask("Subtask 12", "Subtask 12", 2L, "2016-11-10 22:20", 60);
+        tasksManager.createNewSubtask("Subtask 13", "Subtask 13", 2L, "2012-11-10 22:20", 60);
+        tasksManager.createNewSubtask("Subtask 13", "Subtask 13", 2L, "2012-11-10 22:50", 60);
         tasksManager.getSubtaskById(3L);
         tasksManager.getEpicById(2L);
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(1L);
         tasksManager.getEpicById(2L);
         tasksManager.getSubtaskById(5L);
-
 
         FileBackedTasksManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File("src\\main\\resources\\data" + File.separator + "dataFileBackedTasksManager.bin"));
 
