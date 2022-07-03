@@ -1,20 +1,22 @@
 package service;
 
 import constant.TaskStatus;
-import constant.TypeTasksManager;
 import entity.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class InMemoryTaskManagerTest {
-    private TasksManager inMemoryTaskManager;
+abstract class TasksManagerTest<T extends TasksManager> {
+    private T inMemoryTaskManager;
+
+    abstract T createTaskManager();
 
     @BeforeEach
     public void setUp() {
-        inMemoryTaskManager = Manager.getTaskManager(TypeTasksManager.IN_MEMORY_TASKS_MANAGER);
+        inMemoryTaskManager = createTaskManager();
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
         inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
         inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
@@ -276,4 +278,5 @@ public class InMemoryTaskManagerTest {
         int expected = 1;
         assertEquals(actual, expected);
     }
+
 }

@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DateUtil {
+public final class DateParser {
     private static List<DateTimeFormatter> dateFormats = new ArrayList<>(){
         {
             add(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

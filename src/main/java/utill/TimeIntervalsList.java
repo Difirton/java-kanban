@@ -26,6 +26,16 @@ public class TimeIntervalsList implements Serializable {
         return new TimeInterval(startDateTime, finishDateTime);
     }
 
+    /**
+     * The TimeInterval class is not suitable for use in hash tables and other structures that use a hash code.
+     * This class is intended for storage only in structures: red-black tree.
+     * For this class, it is considered that if the time intervals overlap each other, then they are equal.
+     *
+     * An important comparison condition: if, when comparing, the starting values of two time limits are equal
+     * to LocalDateTime.MAX, then these two limits are not equal to each other. The first specified interval under such
+     * conditions will always be greater than the second.
+     */
+
     private class TimeInterval implements Serializable, Comparable<TimeInterval> {
         private final long serialVersionUID = 1L;
         private LocalDateTime start;
@@ -41,10 +51,16 @@ public class TimeIntervalsList implements Serializable {
             if (this.isInsideInterval(anotherTimeInterval)) {
                 return 0;
             }
+            if (start.equals(LocalDateTime.MAX) && anotherTimeInterval.start.equals(LocalDateTime.MAX)) {
+                return -1;
+            }
             return this.start.compareTo(anotherTimeInterval.start);
         }
 
         public boolean isInsideInterval(TimeInterval anotherTimeInterval) {
+            if (start.equals(LocalDateTime.MAX) && anotherTimeInterval.start.equals(LocalDateTime.MAX)) {
+                return false;
+            }
             if (this.finish.isBefore(anotherTimeInterval.start)) {
                 return false;
             }

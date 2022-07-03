@@ -14,23 +14,17 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTasksManagerTest {
-    private TasksManager fileBackedTasksManager;
+public class FileBackedTasksManagerTest extends TasksManagerTest {
+    TasksManager fileBackedTasksManager;
     private File testFile;
     String pathToTestSaveAndLoadData;
 
-    @BeforeEach
-    public void setUp() {
+    @Override
+    TasksManager createTaskManager() {
         fileBackedTasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         pathToTestSaveAndLoadData = readPathToSaveTestData();
         testFile = new File(pathToTestSaveAndLoadData + File.separator + "dataFileBackedTasksManager.bin");
-        fileBackedTasksManager.createNewEpic("Epic 1", "Desc 1");
-        fileBackedTasksManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
-        fileBackedTasksManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
-        fileBackedTasksManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L);
-        fileBackedTasksManager.createNewEpic("Epic 2", "Desc 2");
-        fileBackedTasksManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L);
-        fileBackedTasksManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L);
+        return fileBackedTasksManager;
     }
 
     private String readPathToSaveTestData() {

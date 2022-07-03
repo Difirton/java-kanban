@@ -9,7 +9,7 @@ import service.TasksManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DateUtilTest {
+class DateParserTest {
     TasksManager tasksManager;
 
     @BeforeEach
