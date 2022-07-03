@@ -8,17 +8,16 @@ import java.io.PrintWriter;
 
 public class TestLauncher {
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         var launcher =LauncherFactory.create();
         var listener = new SummaryGeneratingListener();
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
                 .request()
-                .selectors(DiscoverySelectors.selectPackage("src.test.java.util"))
+                .selectors(DiscoverySelectors.selectPackage(""))
                 .build();
         launcher.execute(request, listener);
         try (var writer = new PrintWriter(System.out)) {
             listener.getSummary().printTo(writer);
         }
-
     }
 }

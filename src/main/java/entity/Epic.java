@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Epic extends Task {
     private final long serialVersionUID = 2L;
-    private List<Long> subtasksId; //TODO Переименовать поле
+    private List<Long> subtasksId;
 
     private Epic() {
         super(0);

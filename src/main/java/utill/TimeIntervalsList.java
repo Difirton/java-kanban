@@ -33,7 +33,7 @@ public class TimeIntervalsList implements Serializable {
      *
      * An important comparison condition: if, when comparing, the starting values of two time limits are equal
      * to LocalDateTime.MAX, then these two limits are not equal to each other. The first specified interval under such
-     * conditions will always be greater than the second.
+     * conditions will always be greater than the second interval.
      */
 
     private class TimeInterval implements Serializable, Comparable<TimeInterval> {
@@ -57,7 +57,7 @@ public class TimeIntervalsList implements Serializable {
             return this.start.compareTo(anotherTimeInterval.start);
         }
 
-        public boolean isInsideInterval(TimeInterval anotherTimeInterval) {
+        private boolean isInsideInterval(TimeInterval anotherTimeInterval) {
             if (start.equals(LocalDateTime.MAX) && anotherTimeInterval.start.equals(LocalDateTime.MAX)) {
                 return false;
             }

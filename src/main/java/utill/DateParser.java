@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class DateParser {
-    private static List<DateTimeFormatter> dateFormats = new ArrayList<>(){
+    private static final List<DateTimeFormatter> dateFormats = new ArrayList<>(){
         {
             add(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             add(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
@@ -56,9 +56,7 @@ public final class DateParser {
         for (DateTimeFormatter format : dateFormats) {
             try {
                 dateTime = LocalDateTime.parse(input, format);
-            } catch (DateTimeParseException e) {
-                System.out.println("The entered date format is not supported.");
-            }
+            } catch (DateTimeParseException e) { }
             if (dateTime != null) {
                 break;
             }

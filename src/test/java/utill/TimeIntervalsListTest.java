@@ -1,6 +1,7 @@
 package utill;
 
 import constant.TypeTasksManager;
+import entity.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,13 +23,12 @@ class TimeIntervalsListTest {
         tasksManager.createNewSubtask("Subtask 5", "Subtask 5", 1L, "2005-08-16 12:20", 650);
         tasksManager.createNewSubtask("Subtask 6", "Subtask 6", 2L, "2005-08-16 12:30", 660);
         tasksManager.createNewEpic("Epic 7", "Description Epic 7");
-        tasksManager.createNewSubtask("Subtask 8", "Subtask 8", 7L, "2010-12-10 19:20", 900);
-        tasksManager.createNewSubtask("Subtask 9", "Subtask 9", 2L, "2008-12-10 22:20", 6000);
+        tasksManager.createNewSubtask("Subtask 8", "Subtask 8", 7L, "2010-12-10 19:20", 90);
+        tasksManager.createNewSubtask("Subtask 9", "Subtask 9", 2L, "2008-12-10 22:20", 60);
         tasksManager.createNewSubtask("Subtask 10", "Subtask 10", 2L, "2004-10-10 22:20", 60);
         tasksManager.createNewSubtask("Subtask 11", "Subtask 11", 2L, "2004-11-10 22:20", 60);
         tasksManager.createNewSubtask("Subtask 12", "Subtask 12", 2L, "2016-11-10 22:20", 60);
         tasksManager.createNewSubtask("Subtask 13", "Subtask 13", 2L, "2012-11-10 22:20", 60);
-        tasksManager.createNewSubtask("Subtask 13", "Subtask 13", 2L, "2012-11-10 22:50", 60);
     }
 
     @Test
@@ -101,5 +101,45 @@ class TimeIntervalsListTest {
         int expectedSize = 9;
         int actualSize = tasksManager.getPrioritizedTasks().size();
         assertEquals(actualSize, expectedSize);
+    }
+
+    @Test
+    @DisplayName("Test add new subtask with default time params, expected ok")
+    void testAddNewSubtaskWithDefaultTimeParams() {
+        tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L);
+        int expectedSize = 10;
+        int actualSize = tasksManager.getPrioritizedTasks().size();
+        assertEquals(actualSize, expectedSize);
+    }
+
+    @Test
+    @DisplayName("Test add three new subtask with default time params, expected ok")
+    void testAddThreeNewSubtaskWithDefaultTimeParams() {
+        tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L);
+        tasksManager.createNewSubtask("Subtask 15", "Subtask 15", 2L);
+        tasksManager.createNewSubtask("Subtask 16", "Subtask 16", 1L);
+        int expectedSize = 12;
+        int actualSize = tasksManager.getPrioritizedTasks().size();
+        assertEquals(actualSize, expectedSize);
+    }
+
+    @Test
+    @DisplayName("Time matching test of the earliest task in the list, expected ok")
+    void testTimeMatchingOfEarliestTaskInList() {
+        final int INDEX_FIRST_ITEM_WITH_HIGHEST_PRIORITY = 0;
+        tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2000-01-10 23:30", 60);
+        Task expectedTask = tasksManager.getSubtaskById(14L);
+        Task actualTask = tasksManager.getPrioritizedTasks().get(INDEX_FIRST_ITEM_WITH_HIGHEST_PRIORITY);
+        assertEquals(actualTask, expectedTask);
+    }
+
+    @Test
+    @DisplayName("Time matching test of the latest task in the list, expected ok")
+    void testTimeMatchingOfLatestTaskInList() {
+        final int INDEX_LAST_ITEM_WITH_LEAST_PRIORITY = tasksManager.getPrioritizedTasks().size();
+        tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2022-01-10 23:30", 60);
+        Task expectedTask = tasksManager.getSubtaskById(14L);
+        Task actualTask = tasksManager.getPrioritizedTasks().get(INDEX_LAST_ITEM_WITH_LEAST_PRIORITY);
+        assertEquals(actualTask, expectedTask);
     }
 }

@@ -14,9 +14,9 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTasksManagerTest extends TasksManagerTest {
-    TasksManager fileBackedTasksManager;
+    private TasksManager fileBackedTasksManager;
     private File testFile;
-    String pathToTestSaveAndLoadData;
+    private String pathToTestSaveAndLoadData;
 
     @Override
     TasksManager createTaskManager() {
@@ -67,5 +67,17 @@ public class FileBackedTasksManagerTest extends TasksManagerTest {
         assertEquals(fileBackedTasksManager.getAllSubtasks(), testFileBackedTasksManager.getAllSubtasks());
         assertEquals(fileBackedTasksManager.getHistory(), testFileBackedTasksManager.getHistory());
         testFile.delete();
+    }
+
+    @Test
+    @DisplayName("Test throw ManagerSaveException if URI is wrong, expected ok")
+    public void testThrow() throws NoSuchFieldException, IllegalAccessException {
+        File emptyFile = new File("");
+        Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
+        field.setAccessible(true);
+        field.set(fileBackedTasksManager, emptyFile);
+        assertThrows(ManagerSaveException.class, () -> {
+            fileBackedTasksManager.getEpicById(1L);
+        });
     }
 }
