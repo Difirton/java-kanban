@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Epic extends Task {
     private final long serialVersionUID = 2L;
-    private List<Long> subtasksId;
+    private List<Long> allIdSubtasksInEpic;
 
     private Epic() {
         super(0);
@@ -21,30 +21,30 @@ public class Epic extends Task {
         super.setStatus(epicBuilder.status);
         super.setTimeExecution(epicBuilder.timeExecution);
         super.setStartDateTime(epicBuilder.startDateTime);
-        this.subtasksId = epicBuilder.subtasksId;
+        this.allIdSubtasksInEpic = epicBuilder.subtasksId;
     }
 
     public void addSubtask(Long idSubtask) {
-        this.subtasksId.add(idSubtask);
+        this.allIdSubtasksInEpic.add(idSubtask);
     }
 
     public void removeSubtasks() {
-        this.subtasksId.clear();
+        this.allIdSubtasksInEpic.clear();
     }
 
     public void removeSubtask(Long idSubtask) {
-        this.subtasksId.remove(idSubtask);
+        this.allIdSubtasksInEpic.remove(idSubtask);
     }
 
     public List<Long> getAllIdSubtasks() {
-        return subtasksId;
+        return allIdSubtasksInEpic;
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Epic.class.getSimpleName() + "[", "]")
                 .add("id=" + this.getId())
-                .add("subtasksId=" + subtasksId)
+                .add("subtasksId=" + allIdSubtasksInEpic)
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())
@@ -59,14 +59,14 @@ public class Epic extends Task {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Epic epic = (Epic) o;
-        Collections.sort(subtasksId);
-        Collections.sort( epic.subtasksId);
-        return Objects.equals(subtasksId, epic.subtasksId);
+        Collections.sort(allIdSubtasksInEpic);
+        Collections.sort( epic.allIdSubtasksInEpic);
+        return Objects.equals(allIdSubtasksInEpic, epic.allIdSubtasksInEpic);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), subtasksId);
+        return Objects.hash(super.hashCode(), allIdSubtasksInEpic);
     }
 
     public static class EpicBuilder {
