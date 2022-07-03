@@ -18,12 +18,12 @@ abstract class TasksManagerTest<T extends TasksManager> {
     public void setUp() {
         inMemoryTaskManager = createTaskManager();
         inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
-        inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
-        inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
-        inMemoryTaskManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L);
+        inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);
+        inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L, "2020-01-01 01:00", 40);
+        inMemoryTaskManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L, "2020-01-01 02:00", 40);
         inMemoryTaskManager.createNewEpic("Epic 2", "Desc 2");
-        inMemoryTaskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L);
-        inMemoryTaskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L);
+        inMemoryTaskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L, "2020-01-01 03:00", 40);
+        inMemoryTaskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
     }
 
     @Test

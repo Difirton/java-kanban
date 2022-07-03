@@ -56,7 +56,9 @@ public final class DateParser {
         for (DateTimeFormatter format : dateFormats) {
             try {
                 dateTime = LocalDateTime.parse(input, format);
-            } catch (DateTimeParseException e) { }
+            } catch (DateTimeParseException e) {
+                System.out.println("The entered date format is not supported.");
+            }
             if (dateTime != null) {
                 break;
             }
