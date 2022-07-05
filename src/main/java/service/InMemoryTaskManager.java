@@ -283,10 +283,12 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     }
 
     @Override
-    public void removeSubtasksById(Long subtaskId) {
+    public void removeSubtaskById(Long subtaskId) {
         Subtask subtaskToRemove = getSubtaskAfterValid(subtaskId);
         Long epicId = subtaskToRemove.getEpicsId();
         getEpicAfterValid(epicId).removeSubtask(subtaskId);
+        this.sortedSubtasks.remove(subtaskToRemove);
+        this.occupiedSlots.remove(subtaskToRemove.getStartDateTime(), subtaskToRemove.getEndDateTime());
         this.allTasks.remove(subtaskId);
         this.checkEpicStatus(this.getEpicAfterValid(epicId));
         inMemoryHistoryManager.remove(subtaskId);

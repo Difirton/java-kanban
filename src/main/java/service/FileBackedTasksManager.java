@@ -52,8 +52,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     }
 
     @Override
-    public void removeSubtasksById(Long subtaskId) {
-        super.removeSubtasksById(subtaskId);
+    public void removeSubtaskById(Long subtaskId) {
+        super.removeSubtaskById(subtaskId);
         this.save();
     }
 

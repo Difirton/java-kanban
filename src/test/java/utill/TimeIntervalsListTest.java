@@ -33,7 +33,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test interval duplication test, if two intervals intersect, expected ok")
-    void testNotAddNewSubtaskToMilleIfIntervalIsDuplication() {
+    public void testNotAddNewSubtaskToMilleIfIntervalIsDuplication() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2012-11-10 22:30", 60);
         int expectedSize = 9;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -42,7 +42,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test interval duplication test, if two intervals not intersect and previous is intersect, expected ok")
-    void testAddNewSubtaskToMilleIfIntervalIsNotDuplication() {
+    public void testAddNewSubtaskToMilleIfIntervalIsNotDuplication() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2012-11-10 23:30", 60);
         int expectedSize = 10;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -51,7 +51,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test intersect to the start collection, expected ok")
-    void testAddNewSubtaskToStartIfIntervalIsNotDuplication() {
+    public void testAddNewSubtaskToStartIfIntervalIsNotDuplication() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2004-10-10 20:20", 60);
         int expectedSize = 10;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -60,7 +60,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test interval duplication test, if two intervals intersect in the start collection, expected ok")
-    void testNotAddNewSubtaskToStartIfIntervalIsDuplicationInsertElementForward() {
+    public void testNotAddNewSubtaskToStartIfIntervalIsDuplicationInsertElementForward() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2004-10-10 22:10", 60);
         int expectedSize = 9;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -69,7 +69,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test interval duplication test, if two intervals intersect in the start collection, expected ok")
-    void testNotAddNewSubtaskToStartIfIntervalIsDuplicationInsertElementBehind() {
+    public void testNotAddNewSubtaskToStartIfIntervalIsDuplicationInsertElementBehind() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2004-10-10 22:30", 60);
         int expectedSize = 9;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -78,7 +78,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test intersect to the finish collection, expected ok")
-    void testAddNewSubtaskToFinishIfIntervalIsNotDuplication() {
+    public void testAddNewSubtaskToFinishIfIntervalIsNotDuplication() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2016-12-10 22:30", 60);
         int expectedSize = 10;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -87,7 +87,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test interval duplication test, if two intervals intersect in the start collection, expected ok")
-    void testNotAddNewSubtaskToFinishIfIntervalIsDuplicationInsertElementForward() {
+    public void testNotAddNewSubtaskToFinishIfIntervalIsDuplicationInsertElementForward() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2016-11-10 21:50", 60);
         int expectedSize = 9;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -96,7 +96,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test interval duplication test, if two intervals intersect in the start collection, expected ok")
-    void testNotAddNewSubtaskToFinishIfIntervalIsDuplicationInsertElementBehind() {
+    public void testNotAddNewSubtaskToFinishIfIntervalIsDuplicationInsertElementBehind() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2016-11-10 22:40", 60);
         int expectedSize = 9;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -105,7 +105,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test add new subtask with default time params, expected ok")
-    void testAddNewSubtaskWithDefaultTimeParams() {
+    public void testAddNewSubtaskWithDefaultTimeParams() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L);
         int expectedSize = 10;
         int actualSize = tasksManager.getPrioritizedTasks().size();
@@ -114,7 +114,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Test add three new subtask with default time params, expected ok")
-    void testAddThreeNewSubtaskWithDefaultTimeParams() {
+    public void testAddThreeNewSubtaskWithDefaultTimeParams() {
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L);
         tasksManager.createNewSubtask("Subtask 15", "Subtask 15", 2L);
         tasksManager.createNewSubtask("Subtask 16", "Subtask 16", 1L);
@@ -125,7 +125,7 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Time matching test of the earliest task in the list, expected ok")
-    void testTimeMatchingOfEarliestTaskInList() {
+    public void testTimeMatchingOfEarliestTaskInList() {
         final int INDEX_FIRST_ITEM_WITH_HIGHEST_PRIORITY = 0;
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2000-01-10 23:30", 60);
         Task expectedTask = tasksManager.getSubtaskById(14L);
@@ -135,11 +135,21 @@ class TimeIntervalsListTest {
 
     @Test
     @DisplayName("Time matching test of the latest task in the list, expected ok")
-    void testTimeMatchingOfLatestTaskInList() {
+    public void testTimeMatchingOfLatestTaskInList() {
         final int INDEX_LAST_ITEM_WITH_LEAST_PRIORITY = tasksManager.getPrioritizedTasks().size();
         tasksManager.createNewSubtask("Subtask 14", "Subtask 14", 2L, "2022-01-10 23:30", 60);
         Task expectedTask = tasksManager.getSubtaskById(14L);
         Task actualTask = tasksManager.getPrioritizedTasks().get(INDEX_LAST_ITEM_WITH_LEAST_PRIORITY);
         assertEquals(actualTask, expectedTask);
+    }
+
+    @Test
+    @DisplayName("When deleting a subtask, the time interval should become free, expected ok")
+    public void testDeleteTimeInterval() throws NoSuchFieldException, IllegalAccessException {
+        tasksManager.removeSubtaskById(3L);
+        tasksManager.createNewSubtask("Subtask 3", "Subtask 3", 1L, "2005-12-10 12:20", 40 );
+        int expectedSize = 9;
+        int actualSize = tasksManager.getPrioritizedTasks().size();
+        assertEquals(actualSize, expectedSize);
     }
 }

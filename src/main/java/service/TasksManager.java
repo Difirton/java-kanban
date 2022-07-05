@@ -43,7 +43,7 @@ public interface TasksManager {
 
     void removeEpicById(Long epicId);
 
-    void removeSubtasksById(Long subtaskId);
+    void removeSubtaskById(Long subtaskId);
 
     void removeSubtasksByEpicId(Long epicId);
 

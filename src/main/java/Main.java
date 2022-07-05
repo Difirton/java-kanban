@@ -1,13 +1,25 @@
+import constant.TypeTasksManager;
+import service.Manager;
+import service.TasksManager;
+
 public class Main {
 
     public static void main(String... args) {
-        /**Спасибо за совет прочитать книгу "Чистый код", очень понравилась, за первые 2 дня пол книжки прочитал. Сейчас
-        *купил чистую архитектуру, но пока она до меня доехала, взялся читать другую.
-        *По поводу задания: Фактически entity все переписаны на 50%, InMemoryTaskManager целиком. В FileBackedTasksManager
-        *теперь путь для сохранения задается в properties, тесты запускаются от одной кнопки. Добавил еще свое исключение,
-        *т.к. показалось намного проще получать исключения и исправлять логику программы в проблемном месте.
-        *Добавил свой TimeIntervalList, т.к. не хотел реализовать общий случай по времени и достичь сложности алгоритма
-        *поиска хотя бы О(log n).
-        *Все тесты можно запустить с помощью TestLauncher.*/
+        TasksManager inMemoryTaskManager = Manager.getTaskManager(TypeTasksManager.IN_MEMORY_TASKS_MANAGER);
+        inMemoryTaskManager.createNewEpic("Epic 1", "Desc 1");
+        inMemoryTaskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L);
+        inMemoryTaskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L);
+        inMemoryTaskManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L, "2020-01-01 02:00", 40);
+        inMemoryTaskManager.createNewEpic("Epic 2", "Desc 2");
+        inMemoryTaskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L, "2020-01-01 03:00", 40);
+        inMemoryTaskManager.createNewSubtask("Subtask 2.4", "Desc sub 2", 5L);
+        inMemoryTaskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
+        inMemoryTaskManager.createNewSubtask("Subtask 2.3", "Desc sub 2", 5L);
+        inMemoryTaskManager.createNewSubtask("Subtask 2.5", "Desc sub 2", 5L);
+
+        System.out.println(inMemoryTaskManager.getPrioritizedTasks());
+
+        inMemoryTaskManager.removeSubtaskById(6L);
+        System.out.println(inMemoryTaskManager.getPrioritizedTasks());
     }
 }

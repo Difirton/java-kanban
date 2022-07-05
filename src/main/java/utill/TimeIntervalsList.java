@@ -26,6 +26,11 @@ public class TimeIntervalsList implements Serializable {
         return new TimeInterval(startDateTime, finishDateTime);
     }
 
+    public void remove(LocalDateTime startDateTime, LocalDateTime finishDateTime) {
+        TimeInterval removedInterval = new TimeInterval(startDateTime, finishDateTime);
+        timeIntervals.remove(removedInterval);
+    }
+
     /**
      * The TimeInterval class is not suitable for use in hash tables and other structures that use a hash code.
      * This class is intended for storage only in structures: red-black tree.
