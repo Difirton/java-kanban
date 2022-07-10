@@ -114,10 +114,10 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     }
 
     private boolean isAllSubtaskEpicDone(Epic epicToCheck) {
-        if (epicToCheck.getAllIdSubtasks().isEmpty()) {
+        if (epicToCheck.getAllIdSubtasksInEpic().isEmpty()) {
             return false;
         }
-        return epicToCheck.getAllIdSubtasks().stream()
+        return epicToCheck.getAllIdSubtasksInEpic().stream()
                 .map(this.allTasks::get)
                 .map(o -> (Subtask) o)
                 .map(Subtask::getStatus)
@@ -125,10 +125,10 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     }
 
     private boolean isAllSubtaskEpicNew(Epic epicToCheck) {
-        if (epicToCheck.getAllIdSubtasks().isEmpty()) {
+        if (epicToCheck.getAllIdSubtasksInEpic().isEmpty()) {
             return true;
         }
-        return epicToCheck.getAllIdSubtasks().stream()
+        return epicToCheck.getAllIdSubtasksInEpic().stream()
                 .map(this.allTasks::get)
                 .map(o -> (Subtask) o)
                 .map(Subtask::getStatus)
@@ -137,7 +137,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     private void checkEpicTimeExecution(Epic epicToCheck) {
         final int INDEX_SINGLE_ELEMENT = 0;
-        List<Subtask> sortedEpicsSubtasks = epicToCheck.getAllIdSubtasks().stream()
+        List<Subtask> sortedEpicsSubtasks = epicToCheck.getAllIdSubtasksInEpic().stream()
                 .map(this::getSubtaskAfterValid)
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -184,7 +184,8 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         }
     }
 
-    protected Task getTaskById(Long taskId) {
+    @Override
+    public Task getTaskById(Long taskId) {
         Task requestedTask;
         try {
             requestedTask = this.allTasks.get(taskId);
@@ -235,7 +236,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     @Override
     public List<Subtask> getAllEpicsSubtasks(Long epicId) {
         Epic epicToExtract = getEpicAfterValid(epicId);
-        return epicToExtract.getAllIdSubtasks().stream()
+        return epicToExtract.getAllIdSubtasksInEpic().stream()
                 .map(this.allTasks::get)
                 .map(o -> (Subtask) o)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -297,9 +298,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     @Override
     public void removeEpicById(Long epicId) {
         Epic epicToRemove = getEpicAfterValid(epicId);
-        epicToRemove.getAllIdSubtasks()
+        epicToRemove.getAllIdSubtasksInEpic()
                 .forEach(inMemoryHistoryManager::remove);
-        epicToRemove.getAllIdSubtasks()
+        epicToRemove.getAllIdSubtasksInEpic()
                 .forEach(this.allTasks::remove);
             inMemoryHistoryManager.remove(epicId);
             this.allTasks.remove(epicId);
@@ -329,9 +330,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     @Override
     public void removeSubtasksByEpicId(Long epicId) {
         Epic epicToRemoveSubtasks = getEpicAfterValid(epicId);
-        epicToRemoveSubtasks.getAllIdSubtasks()
+        epicToRemoveSubtasks.getAllIdSubtasksInEpic()
                 .forEach(this.allTasks::remove);
-        epicToRemoveSubtasks.getAllIdSubtasks()
+        epicToRemoveSubtasks.getAllIdSubtasksInEpic()
                 .forEach(inMemoryHistoryManager::remove);
         epicToRemoveSubtasks.removeSubtasks();
     }

@@ -79,13 +79,13 @@ public abstract class Task implements Serializable, Comparable<Task> {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Task.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Task.class.getSimpleName() + "{", "}")
                 .add("id=" + id)
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
                 .add("status=" + status)
-                .add("start=" + startDateTime)
-                .add("execution=" + timeExecution)
+                .add("startDateTime=" + startDateTime)
+                .add("timeExecution=" + timeExecution)
                 .toString();
     }
 

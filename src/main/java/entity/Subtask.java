@@ -41,7 +41,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Subtask.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Subtask.class.getSimpleName() + "{", "}")
                 .add("id=" + this.getId())
                 .add("epicsId=" + this.getEpicsId())
                 .add("name='" + this.getName() + "'")

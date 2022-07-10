@@ -21,7 +21,7 @@ public class Epic extends Task {
         super.setStatus(epicBuilder.status);
         super.setTimeExecution(epicBuilder.timeExecution);
         super.setStartDateTime(epicBuilder.startDateTime);
-        this.allIdSubtasksInEpic = epicBuilder.subtasksId;
+        this.allIdSubtasksInEpic = epicBuilder.allIdSubtasksInEpic;
     }
 
     public void addSubtask(Long idSubtask) {
@@ -36,15 +36,15 @@ public class Epic extends Task {
         this.allIdSubtasksInEpic.remove(idSubtask);
     }
 
-    public List<Long> getAllIdSubtasks() {
+    public List<Long> getAllIdSubtasksInEpic() {
         return allIdSubtasksInEpic;
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Epic.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Epic.class.getSimpleName() + "{", "}")
                 .add("id=" + this.getId())
-                .add("subtasksId=" + allIdSubtasksInEpic)
+                .add("allIdSubtasksInEpic=" + allIdSubtasksInEpic)
                 .add("name='" + this.getName() + "'")
                 .add("description='" + this.getDescription() + "'")
                 .add("status=" + this.getStatus())
@@ -74,7 +74,7 @@ public class Epic extends Task {
         private String name = "";
         private String description = "";
         private TaskStatus status = TaskStatus.NEW;
-        private List<Long> subtasksId = new ArrayList<>();
+        private List<Long> allIdSubtasksInEpic = new ArrayList<>();
         private Duration timeExecution = Duration.ofMinutes(0);
         private LocalDateTime startDateTime = LocalDateTime.MAX;
 
@@ -89,6 +89,11 @@ public class Epic extends Task {
 
         public EpicBuilder Description(String description) {
             this.description = description;
+            return this;
+        }
+
+        public EpicBuilder AllIdSubtasksInEpic(List<Long> allIdSubtasksInEpic) {
+            this.allIdSubtasksInEpic = allIdSubtasksInEpic;
             return this;
         }
 
