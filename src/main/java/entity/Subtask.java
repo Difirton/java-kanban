@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Subtask extends Task {
-    private final long serialVersionUID = 2L;
+    private final long serialVersionUID = 3L;
     private final long epicsId;
 
     private Subtask (long epicsId) {
@@ -67,17 +67,24 @@ public class Subtask extends Task {
     }
 
     public static class SubtaskBuilder {
-        private final long id;
-        private final long epicsId;
+        private long id;
+        private long epicsId;
         private String name = "";
         private String description = "";
         private TaskStatus status = TaskStatus.NEW;
         private Duration timeExecution = Duration.ofMinutes(0);
         private LocalDateTime startDateTime = LocalDateTime.MAX;
 
-        public SubtaskBuilder(long id, long epicsId) {
+        public SubtaskBuilder() { }
+
+        public SubtaskBuilder ID(long id) {
             this.id = id;
+            return this;
+        }
+
+        public SubtaskBuilder EpicsID(long epicsId) {
             this.epicsId = epicsId;
+            return this;
         }
 
         public SubtaskBuilder Name(String name) {
@@ -92,6 +99,11 @@ public class Subtask extends Task {
 
         public SubtaskBuilder Status(TaskStatus taskStatus) {
             this.status = taskStatus;
+            return this;
+        }
+
+        public SubtaskBuilder TimeExecution(Duration timeExecution) {
+            this.timeExecution = timeExecution;
             return this;
         }
 

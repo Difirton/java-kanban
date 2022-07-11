@@ -33,7 +33,8 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     public void createNewEpic(String name,
                               String description) {
         long idNewEpic = amountTaskId++;
-        Epic newEpic = new Epic.EpicBuilder(idNewEpic)
+        Epic newEpic = new Epic.EpicBuilder()
+                .ID(idNewEpic)
                 .Name(name)
                 .Description(description)
                 .build();
@@ -43,7 +44,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     @Override
     public void createNewSubtask(String name, String description, long epicId) {
         long idNewSubtask = amountTaskId++;
-        Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
+        Subtask newSubtask = new Subtask.SubtaskBuilder()
+                .ID(idNewSubtask)
+                .EpicsID(epicId)
                 .Name(name)
                 .Description(description)
                 .build();
@@ -56,7 +59,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                                  long epicId,
                                  String startDateTime) {
         long idNewSubtask = amountTaskId++;
-        Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
+        Subtask newSubtask = new Subtask.SubtaskBuilder()
+                .ID(idNewSubtask)
+                .EpicsID(epicId)
                 .Name(name)
                 .Description(description)
                 .StartDateTime(startDateTime)
@@ -71,7 +76,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                                  String startDateTime,
                                  int timeExecutionInMinutes) {
         long idNewSubtask = amountTaskId++;
-        Subtask newSubtask = new Subtask.SubtaskBuilder(idNewSubtask, epicId)
+        Subtask newSubtask = new Subtask.SubtaskBuilder()
+                .ID(idNewSubtask)
+                .EpicsID(epicId)
                 .Name(name)
                 .Description(description)
                 .StartDateTime(startDateTime)

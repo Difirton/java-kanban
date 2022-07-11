@@ -1,13 +1,14 @@
 package entity;
 
 import constant.TaskStatus;
+import utill.DateParser;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class Epic extends Task {
-    private final long serialVersionUID = 2L;
+    private final long serialVersionUID = 3L;
     private List<Long> allIdSubtasksInEpic;
 
     private Epic() {
@@ -70,7 +71,7 @@ public class Epic extends Task {
     }
 
     public static class EpicBuilder {
-        private final long id;
+        private long id;
         private String name = "";
         private String description = "";
         private TaskStatus status = TaskStatus.NEW;
@@ -78,8 +79,11 @@ public class Epic extends Task {
         private Duration timeExecution = Duration.ofMinutes(0);
         private LocalDateTime startDateTime = LocalDateTime.MAX;
 
-        public EpicBuilder(long id) {
+        public EpicBuilder() { }
+
+        public EpicBuilder ID(long id) {
             this.id = id;
+            return this;
         }
 
         public EpicBuilder Name(String name) {
@@ -92,8 +96,29 @@ public class Epic extends Task {
             return this;
         }
 
+        public EpicBuilder Status(TaskStatus status) {
+            this.status = status;
+            return this;
+        }
+
         public EpicBuilder AllIdSubtasksInEpic(List<Long> allIdSubtasksInEpic) {
             this.allIdSubtasksInEpic = allIdSubtasksInEpic;
+            return this;
+        }
+
+        public EpicBuilder TimeExecution(Duration timeExecution) {
+            this.timeExecution = timeExecution;
+            return this;
+        }
+
+        public EpicBuilder StartDateTime(LocalDateTime startDateTime) {
+            this.startDateTime = startDateTime;
+            return this;
+        }
+
+        public EpicBuilder StartDateTime(String startDateTime) {
+            LocalDateTime formatterStartDateTime = DateParser.stringToDate(startDateTime);
+            this.startDateTime = formatterStartDateTime;
             return this;
         }
 

@@ -22,19 +22,25 @@ class InMemoryHistoryManagerTest {
     @BeforeEach
     public void setUp() {
         historyManager = Manager.getDefaultHistory();
-        epic1 = new Epic.EpicBuilder(1L)
+        epic1 = new Epic.EpicBuilder()
+                .ID(1L)
                 .Name("Epic 1")
                 .Description("Epic 1")
                 .build();
-        epic2 = new Epic.EpicBuilder(2L)
+        epic2 = new Epic.EpicBuilder()
+                .ID(2L)
                 .Name("Epic 2")
                 .Description("Epic 2")
                 .build();
-        subtask3 = new Subtask.SubtaskBuilder(3L, 1L)
+        subtask3 = new Subtask.SubtaskBuilder()
+                .ID(3L)
+                .EpicsID(1L)
                 .Name("Subtask 3")
                 .Description("Subtask 3")
                 .build();
-        subtask4 = new Subtask.SubtaskBuilder(4L, 1L)
+        subtask4 = new Subtask.SubtaskBuilder()
+                .ID(4L)
+                .EpicsID(1L)
                 .Name("Subtask 4")
                 .Description("Subtask 4")
                 .build();

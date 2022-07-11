@@ -5,18 +5,20 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import config.gson.GsonEpicAdapter;
+import config.gson.GsonSubtaskAdapter;
 import constant.TypeTasksManager;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
 import service.Manager;
 import service.TasksManager;
-import utill.gson.GsonEpicAdapter;
-import utill.gson.GsonSubtaskAdapter;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class HttpTaskServer {
@@ -48,69 +50,92 @@ public class HttpTaskServer {
         server.createContext("/tasks/history", new HistoryHandler());
     }
 
-    class TasksHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
-            List<Task> priority = taskManager.getPrioritizedTasks();
-            String response = gson.toJson(taskManager.getAllSubtasks());
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        }
-    }
-
-    class SingleTasksHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
-            String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
-            if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
-                Long idTaskToFind = Long.parseLong(queryParams[1]);
-                String response = gson.toJson(taskManager.getTaskById(idTaskToFind));
-                httpExchange.sendResponseHeaders(200, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
-            }
-        }
-    }
-
-    class EpicHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
-            String response = gson.toJson(taskManager.getAllEpics());
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        }
-    }
-
-    class SubtaskHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
-            String response = gson.toJson(taskManager.getAllSubtasks());
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        }
-    }
-
-    class HistoryHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
-            String response = gson.toJson(taskManager.getHistory());
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        }
-    }
-
     public void start() {
         System.out.println("Запускаем сервер на порту " + PORT);
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         server.start();
+    }
+
+    private class TasksHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange httpExchange) {
+            List<Task> priority = taskManager.getPrioritizedTasks();
+            String response = gson.toJson(taskManager.getAllSubtasks());
+            sendResponseOkAndTasks(response, httpExchange);
+        }
+    }
+
+    private void sendResponseOkAndTasks(String response, HttpExchange httpExchange) {
+        try (OutputStream outputStream = httpExchange.getResponseBody()) {
+            httpExchange.sendResponseHeaders(200, 0);
+            outputStream.write(response.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e); //TODO подумать что делать с исключением
+        }
+    }
+
+    private void sendResponseOk(HttpExchange httpExchange) {
+        try (OutputStream outputStream = httpExchange.getResponseBody()) {
+            httpExchange.sendResponseHeaders(200, 0);
+        } catch (IOException e) {
+            throw new RuntimeException(e); //TODO подумать что делать с исключением
+        }
+    }
+
+    private class SingleTasksHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange httpExchange) {
+            String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
+            if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
+                Long idTaskToFind = Long.parseLong(queryParams[1]);
+                String response = gson.toJson(taskManager.getTaskById(idTaskToFind));
+                sendResponseOkAndTasks(response, httpExchange);
+            }
+        }
+    }
+
+    private class EpicHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            switch (httpExchange.getRequestMethod()) {
+                case ("GET"):
+                    String response = gson.toJson(taskManager.getAllEpics());
+                    sendResponseOkAndTasks(response, httpExchange);
+                    break;
+                case ("POST"):
+                    InputStream inputStream = httpExchange.getRequestBody();
+                    String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    Epic newEpic = gson.fromJson(body, Epic.class);
+                    sendResponseOk(httpExchange);
+                    break;
+            }
+
+        }
+    }
+
+    private class SubtaskHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            switch (httpExchange.getRequestMethod()) {
+                case ("GET"):
+                    String response = gson.toJson(taskManager.getAllSubtasks());
+                    sendResponseOkAndTasks(response, httpExchange);
+                    break;
+                case ("POST"):
+                    InputStream inputStream = httpExchange.getRequestBody();
+                    String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    Subtask newSubtask = gson.fromJson(body, Subtask.class);
+                    sendResponseOk(httpExchange);
+                    break;
+            }
+        }
+    }
+
+    private class HistoryHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            String response = gson.toJson(taskManager.getHistory());
+            sendResponseOkAndTasks(response, httpExchange);
+        }
     }
 }

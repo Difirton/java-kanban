@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public abstract class Task implements Serializable, Comparable<Task> {
-    private final long serialVersionUID = 2L;
+    private final long serialVersionUID = 3L;
     private final long id;
     private String name;
     private String description;
