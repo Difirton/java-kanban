@@ -105,8 +105,16 @@ public class HttpTaskServer {
                 case ("POST"):
                     InputStream inputStream = httpExchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    Epic newEpic = gson.fromJson(body, Epic.class);
+                    Epic newEpic = gson.fromJson(body, Epic.class); //TODO поработать над добавлением в менеджер
                     sendResponseOk(httpExchange);
+                    break;
+                case ("DELETE"):
+                    String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
+                    if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
+                        Long idEpicToRemove = Long.parseLong(queryParams[1]);
+                        taskManager.removeEpicById(idEpicToRemove);
+                        sendResponseOk(httpExchange);
+                    }
                     break;
             }
 
@@ -126,6 +134,14 @@ public class HttpTaskServer {
                     String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                     Subtask newSubtask = gson.fromJson(body, Subtask.class);
                     sendResponseOk(httpExchange);
+                    break;
+                case ("DELETE"):
+                    String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
+                    if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
+                        Long idSubtaskToRemove = Long.parseLong(queryParams[1]);
+                        taskManager.removeSubtaskById(idSubtaskToRemove);
+                        sendResponseOk(httpExchange);
+                    }
                     break;
             }
         }
