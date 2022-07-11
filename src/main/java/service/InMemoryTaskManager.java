@@ -164,7 +164,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     private Epic getEpicAfterValid(Long epicId) {
         try {
-            Task taskToCheck = this.getTaskById(epicId);
+            Task taskToCheck = this.getTaskByIdWithoutHistory(epicId);
             return (Epic) taskToCheck;
         } catch (NullPointerException exception) {
             throw new TaskNotFoundException("Invalid action. Epic with id=" + epicId + " does not exist");
@@ -175,7 +175,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     private Subtask getSubtaskAfterValid(Long subtaskId) {
         try {
-            Task taskToCheck = this.getTaskById(subtaskId);
+            Task taskToCheck = this.getTaskByIdWithoutHistory(subtaskId);
             return (Subtask) taskToCheck;
         } catch (NullPointerException exception) {
             throw new TaskNotFoundException("Invalid action. Subtask with id=" + subtaskId + " does not exist");
@@ -184,8 +184,7 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         }
     }
 
-    @Override
-    public Task getTaskById(Long taskId) {
+    public Task getTaskByIdWithoutHistory(Long taskId) {
         Task requestedTask;
         try {
             requestedTask = this.allTasks.get(taskId);
@@ -197,22 +196,27 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
 
     @Override
     public Epic getEpicById(Long epicId) {
-        this.inMemoryHistoryManager.add(this.getTaskById(epicId));
+        this.inMemoryHistoryManager.add(this.getTaskByIdWithoutHistory(epicId));
         return this.getEpicAfterValid(epicId);
     }
 
     @Override
     public Subtask getSubtaskById(Long subtaskId) {
-        this.inMemoryHistoryManager.add(this.getTaskById(subtaskId));
+        this.inMemoryHistoryManager.add(this.getTaskByIdWithoutHistory(subtaskId));
         return this.getSubtaskAfterValid(subtaskId);
     }
 
+    @Override
+    public Task getTaskById(Long taskId) {
+        this.inMemoryHistoryManager.add(this.getTaskByIdWithoutHistory(taskId));
+        return this.getTaskByIdWithoutHistory(taskId);
+    }
 
     @Override
     public Epic getEpicBySubtaskId(Long subtaskId) {
         Subtask subtaskToFindEpic = getSubtaskAfterValid(subtaskId);
         long epicId = subtaskToFindEpic.getEpicsId();
-        this.inMemoryHistoryManager.add(this.getTaskById(epicId));
+        this.inMemoryHistoryManager.add(this.getTaskByIdWithoutHistory(epicId));
         return getEpicAfterValid(epicId);
     }
 
