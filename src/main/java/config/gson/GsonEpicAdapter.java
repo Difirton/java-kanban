@@ -10,7 +10,6 @@ import entity.Epic;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,6 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
         reader.beginObject();
         String fieldName = null;
         Epic.EpicBuilder epicBuilder = new Epic.EpicBuilder();
-        List<Long> allIdSubtasksInEpic = new ArrayList<>(); //TODO сделать парсинг листа
         while (reader.hasNext()) {
             JsonToken token = reader.peek();
             if (token.equals(JsonToken.NAME)) {

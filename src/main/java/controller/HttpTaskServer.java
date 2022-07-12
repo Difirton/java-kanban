@@ -6,11 +6,13 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import config.gson.GsonEpicAdapter;
+import config.gson.GsonHistoryManagerAdapter;
 import config.gson.GsonSubtaskAdapter;
 import constant.TypeTasksManager;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
+import service.InMemoryHistoryManager;
 import service.Manager;
 import service.TasksManager;
 
@@ -29,18 +31,10 @@ public class HttpTaskServer {
 
     public HttpTaskServer() throws IOException {
         this.taskManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
-        taskManager.createNewEpic("Epic 1", "Desc 1");
-        taskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);
-        taskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L, "2020-01-01 01:00", 40);
-        taskManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L, "2020-01-01 02:00", 40);
-        taskManager.createNewEpic("Epic 2", "Desc 2");
-        taskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L, "2020-01-01 03:00", 40);
-        taskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
-        taskManager.getEpicById(1L);
-        taskManager.getSubtaskById(2L);
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
+                .registerTypeAdapter(InMemoryHistoryManager.class, new GsonHistoryManagerAdapter())
                 .create();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks", new TasksHandler());
@@ -118,7 +112,6 @@ public class HttpTaskServer {
                     }
                     break;
             }
-
         }
     }
 
@@ -156,8 +149,12 @@ public class HttpTaskServer {
     private class HistoryHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-            String response = gson.toJson(taskManager.getHistory());
-            sendResponseOkAndTasks(response, httpExchange);
+//            String response = gson.toJson(taskManager.getHistory());
+//            sendResponseOkAndTasks(response, httpExchange);
+            InputStream inputStream = httpExchange.getRequestBody();
+            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            InMemoryHistoryManager historyManager = gson.fromJson(body, InMemoryHistoryManager.class);
+            System.out.println(historyManager.getHistory());
         }
     }
 }

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.TreeSet;
 
 public class TimeIntervalsList implements Serializable {
-    private final long serialVersionUID = 1L;
     private final TreeSet<TimeInterval> timeIntervals;
 
     public TimeIntervalsList() {

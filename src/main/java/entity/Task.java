@@ -26,7 +26,7 @@ public abstract class Task implements Serializable, Comparable<Task> {
         if (startDateTime.compareTo(anotherTask.startDateTime) != 0) {
             return startDateTime.compareTo(anotherTask.startDateTime);
         }
-        return (int)(id - anotherTask.id);
+        return Long.compare(id, anotherTask.id);
     }
 
     public long getId() {
