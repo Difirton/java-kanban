@@ -4,6 +4,8 @@ import entity.Epic;
 import entity.Subtask;
 import entity.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TasksManager {
@@ -11,7 +13,11 @@ public interface TasksManager {
 
     void createNewSubtask(String name, String description, long epicId);
 
+    void createNewSubtask(String name, String description, long epicId, LocalDateTime startDateTime);
+
     void createNewSubtask(String name, String description, long epicId, String startDateTime);
+
+    void createNewSubtask(String name, String description, long epicId, LocalDateTime startDateTime, Duration timeExecution);
 
     void createNewSubtask(String name, String description, long epicId, String startDateTime, int timeExecution);
 

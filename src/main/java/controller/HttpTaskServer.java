@@ -67,7 +67,7 @@ public class HttpTaskServer {
 
     private void sendResponseOkAndTasks(String response, HttpExchange httpExchange) {
         try (OutputStream outputStream = httpExchange.getResponseBody()) {
-            httpExchange.sendResponseHeaders(200, 0);
+            httpExchange.sendResponseHeaders(200, response.length());
             outputStream.write(response.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e); //TODO подумать что делать с исключением
@@ -105,7 +105,8 @@ public class HttpTaskServer {
                 case ("POST"):
                     InputStream inputStream = httpExchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    Epic newEpic = gson.fromJson(body, Epic.class); //TODO поработать над добавлением в менеджер
+                    Epic newEpic = gson.fromJson(body, Epic.class);
+                    taskManager.createNewEpic(newEpic.getName(), newEpic.getDescription());
                     sendResponseOk(httpExchange);
                     break;
                 case ("DELETE"):
@@ -133,6 +134,11 @@ public class HttpTaskServer {
                     InputStream inputStream = httpExchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                     Subtask newSubtask = gson.fromJson(body, Subtask.class);
+                    taskManager.createNewSubtask(newSubtask.getName(),
+                                                 newSubtask.getDescription(),
+                                                 newSubtask.getEpicsId(),
+                                                 newSubtask.getStartDateTime(),
+                                                 newSubtask.getTimeExecution());
                     sendResponseOk(httpExchange);
                     break;
                 case ("DELETE"):

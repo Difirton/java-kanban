@@ -15,6 +15,9 @@ public class Manager {
                 break;
             case FILE_BACKED_TASKS_MANAGER:
                 tasksManager = new FileBackedTasksManager();
+                break;
+            case HTTP_TASKS_MANAGER:
+                tasksManager = new HTTPTasksManager();
         }
         return tasksManager;
     }

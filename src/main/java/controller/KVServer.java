@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +28,30 @@ public class KVServer {
 		server.createContext("/load", this::load);
 	}
 
-	private void load(HttpExchange h) {
-		// TODO Добавьте получение значения по ключу
+	private void load(HttpExchange h) throws IOException {
+		String response = null;
+		try {
+			System.out.println("\n/load");
+			if ("GET".equals(h.getRequestMethod())) {
+				String key = h.getRequestURI().getPath().substring("/save/".length());
+				if (data.containsKey(key)) {
+					response = data.get(key);
+				} else {
+					System.out.println("Key для извлечения данных пустой. Key указывается в теле запроса");
+					h.sendResponseHeaders(400, 0);
+					return;
+				}
+			} else {
+				System.out.println("/load ждёт GET-запрос, а получил " + h.getRequestMethod());
+				h.sendResponseHeaders(405, 0);
+			}
+			h.sendResponseHeaders(200, response.length());
+			try (OutputStream outputStream = h.getResponseBody()) {
+				outputStream.write(response.getBytes());
+			}
+		} finally {
+			h.close();
+		}
 	}
 
 	private void save(HttpExchange h) throws IOException {

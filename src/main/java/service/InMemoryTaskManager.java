@@ -57,6 +57,22 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     public void createNewSubtask(String name,
                                  String description,
                                  long epicId,
+                                 LocalDateTime startDateTime) {
+        long idNewSubtask = amountTaskId++;
+        Subtask newSubtask = new Subtask.SubtaskBuilder()
+                .ID(idNewSubtask)
+                .EpicsID(epicId)
+                .Name(name)
+                .Description(description)
+                .StartDateTime(startDateTime)
+                .build();
+        this.subtaskCreatorFacade(newSubtask, idNewSubtask, epicId);
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
                                  String startDateTime) {
         long idNewSubtask = amountTaskId++;
         Subtask newSubtask = new Subtask.SubtaskBuilder()
@@ -65,6 +81,24 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
                 .Name(name)
                 .Description(description)
                 .StartDateTime(startDateTime)
+                .build();
+        this.subtaskCreatorFacade(newSubtask, idNewSubtask, epicId);
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
+                                 LocalDateTime startDateTime,
+                                 Duration timeExecutionInMinutes) {
+        long idNewSubtask = amountTaskId++;
+        Subtask newSubtask = new Subtask.SubtaskBuilder()
+                .ID(idNewSubtask)
+                .EpicsID(epicId)
+                .Name(name)
+                .Description(description)
+                .StartDateTime(startDateTime)
+                .TimeExecution(timeExecutionInMinutes)
                 .build();
         this.subtaskCreatorFacade(newSubtask, idNewSubtask, epicId);
     }
