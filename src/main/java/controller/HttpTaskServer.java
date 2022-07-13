@@ -31,6 +31,13 @@ public class HttpTaskServer {
 
     public HttpTaskServer() throws IOException {
         this.taskManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
+        taskManager.createNewEpic("Epic 1", "Desc 1");
+        taskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);
+        taskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L, "2020-01-01 01:00", 40);
+        taskManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L, "2020-01-01 02:00", 40);
+        taskManager.createNewEpic("Epic 2", "Desc 2");
+        taskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L, "2020-01-01 03:00", 40);
+        taskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
@@ -149,12 +156,8 @@ public class HttpTaskServer {
     private class HistoryHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-//            String response = gson.toJson(taskManager.getHistory());
-//            sendResponseOkAndTasks(response, httpExchange);
-            InputStream inputStream = httpExchange.getRequestBody();
-            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            InMemoryHistoryManager historyManager = gson.fromJson(body, InMemoryHistoryManager.class);
-            System.out.println(historyManager.getHistory());
+            String response = gson.toJson(taskManager.getHistory());
+            sendResponseOkAndTasks(response, httpExchange);
         }
     }
 }

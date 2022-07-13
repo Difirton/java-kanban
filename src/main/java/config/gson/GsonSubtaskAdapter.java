@@ -16,7 +16,22 @@ public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
     public Subtask read(JsonReader reader) throws IOException {
         reader.beginObject();
         String fieldName = null;
+        JsonToken token = reader.peek();
+        if (token.equals(JsonToken.NAME)) {
+            fieldName = reader.nextName();
+        }
+        if ("task_type".equals(fieldName)) {
+            token = reader.peek();
+            reader.skipValue();
+        }
+        Subtask newSubtask = constructSubtask(reader);
+        reader.endObject();
+        return newSubtask;
+    }
+
+    protected static Subtask constructSubtask(JsonReader reader) throws IOException {
         Subtask.SubtaskBuilder subtaskBuilder = new Subtask.SubtaskBuilder();
+        String fieldName = null;
         while (reader.hasNext()) {
             JsonToken token = reader.peek();
             if (token.equals(JsonToken.NAME)) {
@@ -51,13 +66,14 @@ public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
                 subtaskBuilder.TimeExecution(Duration.parse(reader.nextString()));
             }
         }
-        reader.endObject();
         return subtaskBuilder.build();
     }
 
     @Override
     public void write(JsonWriter writer, Subtask subtask) throws IOException {
         writer.beginObject();
+        writer.name("task_type");
+        writer.value(subtask.getClass().getSimpleName());
         writer.name("id");
         writer.value(subtask.getId());
         writer.name("epicsId");

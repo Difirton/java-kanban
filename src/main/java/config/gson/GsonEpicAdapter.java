@@ -20,7 +20,22 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
     public Epic read(JsonReader reader) throws IOException {
         reader.beginObject();
         String fieldName = null;
+        JsonToken token = reader.peek();
+        if (token.equals(JsonToken.NAME)) {
+            fieldName = reader.nextName();
+        }
+        if ("task_type".equals(fieldName)) {
+            token = reader.peek();
+            reader.skipValue();
+        }
+        Epic newEpic = constructEpic(reader);
+        reader.endObject();
+        return newEpic;
+    }
+
+    protected static Epic constructEpic(JsonReader reader) throws IOException {
         Epic.EpicBuilder epicBuilder = new Epic.EpicBuilder();
+        String fieldName = null;
         while (reader.hasNext()) {
             JsonToken token = reader.peek();
             if (token.equals(JsonToken.NAME)) {
@@ -30,7 +45,7 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
                 token = reader.peek();
                 epicBuilder.ID(reader.nextLong());
             }
-            if("allIdSubtasksInEpic".equals(fieldName)) {
+            if ("all_id_subtasks_in_epic".equals(fieldName)) {
                 token = reader.peek();
                 epicBuilder.AllIdSubtasksInEpic(parsingIdSubtasks(reader.nextString()));
             }
@@ -55,11 +70,10 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
                 epicBuilder.TimeExecution(Duration.parse(reader.nextString()));
             }
         }
-        reader.endObject();
         return epicBuilder.build();
     }
 
-    private List<Long> parsingIdSubtasks(String arrayIdSubtasks) {
+    protected static List<Long> parsingIdSubtasks(String arrayIdSubtasks) {
         return Arrays.stream(arrayIdSubtasks.substring(1, arrayIdSubtasks.length()-1).split(","))
                 .map(String::trim)
                 .map(Long::parseLong)
@@ -69,9 +83,11 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
     @Override
     public void write(JsonWriter writer, Epic epic) throws IOException {
         writer.beginObject();
+        writer.name("task_type");
+        writer.value(epic.getClass().getSimpleName());
         writer.name("id");
         writer.value(epic.getId());
-        writer.name("allIdSubtasksInEpic");
+        writer.name("all_id_subtasks_in_epic");
         writer.value(epic.getAllIdSubtasksInEpic().toString());
         writer.name("name");
         writer.value(epic.getName());
