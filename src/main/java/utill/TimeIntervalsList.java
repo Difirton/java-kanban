@@ -53,7 +53,6 @@ public class TimeIntervalsList implements Serializable {
      */
 
     public class TimeInterval implements Serializable, Comparable<TimeInterval> {
-        private final long serialVersionUID = 1L;
         private LocalDateTime start;
         private LocalDateTime finish;
 

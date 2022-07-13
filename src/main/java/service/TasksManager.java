@@ -3,7 +3,6 @@ package service;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
-import utill.TimeIntervalsList;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -57,6 +56,4 @@ public interface TasksManager {
     void removeSubtasksByEpicId(Long epicId);
 
     List<Task> getHistory();
-
-    TimeIntervalsList getT();
 }

@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager, Serializable {
-    private final long serialVersionUID = 1L;
     private final CustomLinkedList historyQueueTasks = new CustomLinkedList();
 
     @Override

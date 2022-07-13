@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.Properties;
 
 public class HTTPTasksManager extends FileBackedTasksManager {
-    private transient KVTaskClient kvTaskClient;
+    private transient final KVTaskClient kvTaskClient;
     private URI serverURI;
     private Gson gson;
 

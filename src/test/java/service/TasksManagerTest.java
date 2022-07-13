@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 abstract class TasksManagerTest<T extends TasksManager> {
     private T taskManager;
 
-    abstract T createTaskManager();
+    abstract T createTaskManager() throws NoSuchFieldException, IllegalAccessException;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
         taskManager = createTaskManager();
         taskManager.createNewEpic("Epic 1", "Desc 1");
         taskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);

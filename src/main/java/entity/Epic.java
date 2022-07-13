@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class Epic extends Task {
-    private final long serialVersionUID = 3L;
     private List<Long> allIdSubtasksInEpic;
 
     private Epic() {

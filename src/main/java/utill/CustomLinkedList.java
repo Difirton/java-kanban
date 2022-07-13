@@ -81,7 +81,6 @@ public class CustomLinkedList implements Serializable {
     }
 
     private class Node implements Serializable {
-        private final long serialVersionUID = 1L;
         private final Task task;
         private Long head;
         private Long tail;

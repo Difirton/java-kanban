@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager, Serializable {
-    private final long serialVersionUID = 2L;
     private long amountTaskId;
     private final Map<Long, Task> allTasks;
     private final Set<Subtask> sortedSubtasks;
@@ -385,10 +384,5 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     @Override
     public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
-    }
-
-    @Override
-    public TimeIntervalsList getT() {
-        return occupiedSlots;
     }
 }

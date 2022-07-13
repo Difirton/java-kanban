@@ -1,5 +1,7 @@
 package service;
 
+import entity.Epic;
+import entity.Subtask;
 import entity.Task;
 import error.ManagerSaveException;
 
@@ -7,7 +9,7 @@ import java.io.*;
 import java.util.Properties;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements Serializable {
-    private File file;
+    private final File file;
 
     protected FileBackedTasksManager() {
         String pathToSaveAndLoadData = readPathToSave();
@@ -58,7 +60,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
 
     @Override
     public Task getTaskById(Long taskId) {
-        Task tempSubtask = super.getTaskById(taskId);
+        Task tempTask = super.getTaskById(taskId);
+        this.save();
+        return tempTask;
+    }
+
+    @Override
+    public Epic getEpicById(Long taskId) {
+        Epic tempEpic = super.getEpicById(taskId);
+        this.save();
+        return tempEpic;
+    }
+
+    @Override
+    public Subtask getSubtaskById(Long taskId) {
+        Subtask tempSubtask = super.getSubtaskById(taskId);
         this.save();
         return tempSubtask;
     }

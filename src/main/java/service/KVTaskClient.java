@@ -42,7 +42,7 @@ public class KVTaskClient {
     public void put(String json) {
         try {
             HttpRequest saveRequest = HttpRequest.newBuilder()
-                    .uri(new URI(serverURI + "/save/" + API_TOKEN))
+                    .uri(new URI(serverURI + "/save/manager?API_TOKEN="+ API_TOKEN))
                     .timeout(Duration.ofSeconds(20L))
                     .headers("Content-Type", "text/plain;charset=UTF-8")
                     .POST(HttpRequest.BodyPublishers.ofString(json))

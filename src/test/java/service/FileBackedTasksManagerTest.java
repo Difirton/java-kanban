@@ -19,10 +19,13 @@ public class FileBackedTasksManagerTest extends TasksManagerTest {
     private String pathToTestSaveAndLoadData;
 
     @Override
-    TasksManager createTaskManager() {
+    TasksManager createTaskManager() throws NoSuchFieldException, IllegalAccessException {
         fileBackedTasksManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         pathToTestSaveAndLoadData = readPathToSaveTestData();
         testFile = new File(pathToTestSaveAndLoadData + File.separator + "dataFileBackedTasksManager.bin");
+        Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
+        field.setAccessible(true);
+        field.set(fileBackedTasksManager, testFile);
         return fileBackedTasksManager;
     }
 
@@ -41,9 +44,6 @@ public class FileBackedTasksManagerTest extends TasksManagerTest {
     @Test
     @DisplayName("Test save in file all parameters of fileBackedTasksManager, expected ok")
     public void testSave() throws NoSuchFieldException, IllegalAccessException {
-        Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
-        field.setAccessible(true);
-        field.set(fileBackedTasksManager, testFile);
         fileBackedTasksManager.getEpicById(1L);
         File actualFile = new File(pathToTestSaveAndLoadData + File.separator + "dataFileBackedTasksManager.bin");
         assertTrue(actualFile.exists());
@@ -56,11 +56,11 @@ public class FileBackedTasksManagerTest extends TasksManagerTest {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);
         field.set(fileBackedTasksManager, testFile);
-        fileBackedTasksManager.getEpicById(1L);
-        fileBackedTasksManager.getEpicById(5L);
-        fileBackedTasksManager.getSubtaskById(2L);
-        fileBackedTasksManager.getSubtaskById(6L);
-        fileBackedTasksManager.getEpicById(1L);
+        fileBackedTasksManager.getTaskById(1L);
+        fileBackedTasksManager.getTaskById(5L);
+        fileBackedTasksManager.getTaskById(2L);
+        fileBackedTasksManager.getTaskById(6L);
+        fileBackedTasksManager.getTaskById(1L);
 
         FileBackedTasksManager testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(testFile);
         assertEquals(fileBackedTasksManager.getAllEpics(), testFileBackedTasksManager.getAllEpics());
@@ -77,7 +77,7 @@ public class FileBackedTasksManagerTest extends TasksManagerTest {
         field.setAccessible(true);
         field.set(fileBackedTasksManager, emptyFile);
         assertThrows(ManagerSaveException.class, () -> {
-            fileBackedTasksManager.getEpicById(1L);
+            fileBackedTasksManager.getTaskById(1L);
         });
     }
 }
