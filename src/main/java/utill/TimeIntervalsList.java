@@ -35,6 +35,11 @@ public class TimeIntervalsList implements Serializable {
         return timeIntervals;
     }
 
+    @Override
+    public String toString() {
+        return timeIntervals.toString();
+    }
+
     /**
      * The TimeInterval class is not suitable for use in hash tables and other structures that use a hash code.
      * This class is intended for storage only in structures: red-black tree.
@@ -89,9 +94,9 @@ public class TimeIntervalsList implements Serializable {
 
         @Override
         public String toString() {
-            return new StringJoiner(", ", TimeInterval.class.getSimpleName() + "{", "}")
-                    .add("start: " + start)
-                    .add("finish: " + finish)
+            return new StringJoiner(",", "{", "}")
+                    .add("\"start\"" + ":\""+ start.toString() + "\"")
+                    .add("\"finish\"" + ":\"" + finish.toString() + "\"")
                     .toString();
         }
     }

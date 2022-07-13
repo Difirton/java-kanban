@@ -386,4 +386,9 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
     }
+
+    @Override
+    public TimeIntervalsList getT() {
+        return occupiedSlots;
+    }
 }
