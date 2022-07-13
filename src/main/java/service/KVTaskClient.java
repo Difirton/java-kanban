@@ -78,4 +78,20 @@ public class KVTaskClient {
                     exception.getMessage());
         }
     }
+
+    public URI getServerURI() {
+        return serverURI;
+    }
+
+    public HttpClient getKvHttpTaskClient() {
+        return kvHttpTaskClient;
+    }
+
+    public String getAPI_TOKEN() {
+        return API_TOKEN;
+    }
+
+    public HttpResponse.BodyHandler<String> getHandler() {
+        return handler;
+    }
 }

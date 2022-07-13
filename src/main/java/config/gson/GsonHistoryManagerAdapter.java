@@ -1,7 +1,5 @@
 package config.gson;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -14,12 +12,25 @@ import service.Manager;
 import java.io.IOException;
 
 public class GsonHistoryManagerAdapter extends TypeAdapter<HistoryManager> {
+    GsonSubtaskAdapter gsonSubtaskAdapter = new GsonSubtaskAdapter();
+    GsonEpicAdapter gsonEpicAdapter = new GsonEpicAdapter();
 
     @Override
     public void write(JsonWriter writer, HistoryManager historyManager) throws IOException {
-        writer.beginObject();
-        writer.value(historyManager.getHistory().toString());
-        writer.endObject();
+        writer.beginArray();
+        historyManager.getHistory().forEach(o -> {
+            try {
+                switch (o.getClass().getSimpleName()) {
+                    case ("Epic"):
+                        gsonEpicAdapter.write(writer, (Epic) o);
+                    case ("Subtask"):
+                        gsonSubtaskAdapter.write(writer, (Subtask) o);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        writer.endArray();
     }
 
     @Override

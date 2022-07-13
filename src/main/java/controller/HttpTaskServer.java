@@ -158,12 +158,8 @@ public class HttpTaskServer {
 
     private class HistoryHandler implements HttpHandler {
         @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
-//            String response = gson.toJson(taskManager.getHistory());
-//            sendResponseOkAndTasks(response, httpExchange);
-            System.out.println(taskManager.getT());
-            System.out.println(gson.toJson(taskManager.getHistory()));
-            String response = gson.toJson(taskManager.getT());
+        public void handle(HttpExchange httpExchange) {
+            String response = gson.toJson(taskManager.getHistory());
             System.out.println(response);
             sendResponseOkAndTasks(response, httpExchange);
         }

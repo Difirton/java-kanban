@@ -37,7 +37,9 @@ public class TimeIntervalsList implements Serializable {
 
     @Override
     public String toString() {
-        return timeIntervals.toString();
+        return new StringJoiner(", ", TimeIntervalsList.class.getSimpleName() + "[", "]")
+                .add("timeIntervals=" + timeIntervals)
+                .toString();
     }
 
     /**
@@ -50,7 +52,7 @@ public class TimeIntervalsList implements Serializable {
      * conditions will always be greater than the second interval.
      */
 
-    private class TimeInterval implements Serializable, Comparable<TimeInterval> {
+    public class TimeInterval implements Serializable, Comparable<TimeInterval> {
         private final long serialVersionUID = 1L;
         private LocalDateTime start;
         private LocalDateTime finish;
@@ -58,6 +60,14 @@ public class TimeIntervalsList implements Serializable {
         private TimeInterval(LocalDateTime start, LocalDateTime finish) {
             this.start = start;
             this.finish = finish;
+        }
+
+        public LocalDateTime getStart() {
+            return start;
+        }
+
+        public LocalDateTime getFinish() {
+            return finish;
         }
 
         @Override
@@ -94,9 +104,9 @@ public class TimeIntervalsList implements Serializable {
 
         @Override
         public String toString() {
-            return new StringJoiner(",", "{", "}")
-                    .add("\"start\"" + ":\""+ start.toString() + "\"")
-                    .add("\"finish\"" + ":\"" + finish.toString() + "\"")
+            return new StringJoiner(", ", TimeInterval.class.getSimpleName() + "[", "]")
+                    .add("start=" + start)
+                    .add("finish=" + finish)
                     .toString();
         }
     }

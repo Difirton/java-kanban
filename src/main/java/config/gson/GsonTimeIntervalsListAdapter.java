@@ -12,9 +12,20 @@ import java.time.LocalDateTime;
 public class GsonTimeIntervalsListAdapter extends TypeAdapter<TimeIntervalsList> {
     @Override
     public void write(JsonWriter writer, TimeIntervalsList timeIntervalsList) throws IOException {
-        writer.beginObject();
-        writer.value(timeIntervalsList.getTimeIntervals().toString());
-        writer.endObject();
+        writer.beginArray();
+        timeIntervalsList.getTimeIntervals().stream().forEach(o -> {
+            try {
+                writer.beginObject();
+                writer.name("start");
+                writer.value(o.getStart().toString());
+                writer.name("finish");
+                writer.value(o.getFinish().toString());
+                writer.endObject();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        writer.endArray();
     }
 
     @Override
@@ -24,10 +35,10 @@ public class GsonTimeIntervalsListAdapter extends TypeAdapter<TimeIntervalsList>
         TimeIntervalsList timeIntervalsList = new TimeIntervalsList();
         while (reader.hasNext()) {
             reader.beginObject();
+            LocalDateTime start = LocalDateTime.MAX;
+            LocalDateTime finish = LocalDateTime.MAX;
             while (reader.hasNext()) {
                 JsonToken token = reader.peek();
-                LocalDateTime start = LocalDateTime.MAX;
-                LocalDateTime finish = LocalDateTime.MAX;
                 if (token.equals(JsonToken.NAME)) {
                     fieldName = reader.nextName();
                 }
@@ -39,8 +50,8 @@ public class GsonTimeIntervalsListAdapter extends TypeAdapter<TimeIntervalsList>
                     token = reader.peek();
                     finish = LocalDateTime.parse(reader.nextString());
                 }
-                timeIntervalsList.add(start, finish);
             }
+            timeIntervalsList.add(start, finish);
             reader.endObject();
         }
         reader.endArray();

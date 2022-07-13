@@ -7,8 +7,7 @@ import java.io.*;
 import java.util.Properties;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements Serializable {
-    private final long serialVersionUID = 2L;
-    private final File file;
+    private File file;
 
     protected FileBackedTasksManager() {
         String pathToSaveAndLoadData = readPathToSave();

@@ -3,20 +3,22 @@ package service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import config.gson.GsonEpicAdapter;
+import config.gson.GsonHistoryManagerAdapter;
 import config.gson.GsonSubtaskAdapter;
+import config.gson.GsonTimeIntervalsListAdapter;
 import entity.Epic;
 import entity.Subtask;
 import error.ManagerSaveException;
+import utill.TimeIntervalsList;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
 
-public class HTTPTasksManager extends FileBackedTasksManager{
-    private final long serialVersionUID = 2L;
-    private final KVTaskClient kvTaskClient;
-    private final URI serverURI;
+public class HTTPTasksManager extends FileBackedTasksManager {
+    private transient KVTaskClient kvTaskClient;
+    private URI serverURI;
     private Gson gson;
 
     protected HTTPTasksManager() {
@@ -25,6 +27,8 @@ public class HTTPTasksManager extends FileBackedTasksManager{
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
+                .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
+                .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
                 .create();
     }
 
@@ -43,8 +47,18 @@ public class HTTPTasksManager extends FileBackedTasksManager{
     }
 
     @Override
+    public void createNewEpic(String name, String description) {
+        super.createNewEpic(name, description);
+        this.save();
+    }
+
+    @Override
+    public void createNewSubtask(String name, String description, long epicId) {
+        super.createNewSubtask(name, description, epicId);
+        this.save();
+    }
+
     protected void save() {
-        System.out.println(gson.toJson(this)); //TODO убрать
         kvTaskClient.put(gson.toJson(this));
     }
 
