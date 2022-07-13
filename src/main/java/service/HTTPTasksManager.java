@@ -58,13 +58,19 @@ public class HTTPTasksManager extends FileBackedTasksManager {
         this.save();
     }
 
+    @Override
     protected void save() {
         kvTaskClient.put(gson.toJson(this));
     }
 
-    public void loadFromServer() {
+    @Override
+    public KVTaskClient getKvTaskClient() {
+        return kvTaskClient;
+    }
+
+    public TasksManager loadFromServer() {
         String json = kvTaskClient.load();
         System.out.println(json);
-        gson.fromJson(json, HTTPTasksManager.class);
+        return gson.fromJson(json, HTTPTasksManager.class);
     }
 }

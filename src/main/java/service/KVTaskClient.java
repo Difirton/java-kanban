@@ -62,7 +62,7 @@ public class KVTaskClient {
     public String load() {
         try {
             HttpRequest loadRequest = HttpRequest.newBuilder()
-                    .uri(new URI(serverURI + "/load/" + API_TOKEN))
+                    .uri(new URI(serverURI + "/load/manager?API_TOKEN="+ API_TOKEN))
                     .timeout(Duration.ofSeconds(20L))
                     .GET()
                     .build();
