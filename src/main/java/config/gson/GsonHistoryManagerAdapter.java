@@ -14,10 +14,13 @@ import service.Manager;
 import java.io.IOException;
 
 public class GsonHistoryManagerAdapter extends TypeAdapter<HistoryManager> {
-    private Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
-            .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-            .create();;
+
+    @Override
+    public void write(JsonWriter writer, HistoryManager historyManager) throws IOException {
+        writer.beginObject();
+        writer.value(historyManager.getHistory().toString());
+        writer.endObject();
+    }
 
     @Override
     public HistoryManager read(JsonReader reader) throws IOException {
@@ -44,12 +47,5 @@ public class GsonHistoryManagerAdapter extends TypeAdapter<HistoryManager> {
         }
         reader.endArray();
         return historyManager;
-    }
-
-    @Override
-    public void write(JsonWriter writer, HistoryManager historyManager) throws IOException {
-        writer.beginObject();
-        writer.value(historyManager.getHistory().toString());
-        writer.endObject();
     }
 }

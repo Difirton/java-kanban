@@ -17,6 +17,28 @@ import java.util.stream.Collectors;
 public class GsonEpicAdapter extends TypeAdapter<Epic> {
 
     @Override
+    public void write(JsonWriter writer, Epic epic) throws IOException {
+        writer.beginObject();
+        writer.name("task_type");
+        writer.value(epic.getClass().getSimpleName());
+        writer.name("id");
+        writer.value(epic.getId());
+        writer.name("all_id_subtasks_in_epic");
+        writer.value(epic.getAllIdSubtasksInEpic().toString());
+        writer.name("name");
+        writer.value(epic.getName());
+        writer.name("description");
+        writer.value(epic.getDescription());
+        writer.name("status");
+        writer.value(epic.getStatus().toString());
+        writer.name("start");
+        writer.value(epic.getStartDateTime().toString());
+        writer.name("execution");
+        writer.value(epic.getTimeExecution().toString());
+        writer.endObject();
+    }
+
+    @Override
     public Epic read(JsonReader reader) throws IOException {
         reader.beginObject();
         String fieldName = null;
@@ -78,27 +100,5 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
                 .map(String::trim)
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void write(JsonWriter writer, Epic epic) throws IOException {
-        writer.beginObject();
-        writer.name("task_type");
-        writer.value(epic.getClass().getSimpleName());
-        writer.name("id");
-        writer.value(epic.getId());
-        writer.name("all_id_subtasks_in_epic");
-        writer.value(epic.getAllIdSubtasksInEpic().toString());
-        writer.name("name");
-        writer.value(epic.getName());
-        writer.name("description");
-        writer.value(epic.getDescription());
-        writer.name("status");
-        writer.value(epic.getStatus().toString());
-        writer.name("start");
-        writer.value(epic.getStartDateTime().toString());
-        writer.name("execution");
-        writer.value(epic.getTimeExecution().toString());
-        writer.endObject();
     }
 }

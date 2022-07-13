@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpServer;
 import config.gson.GsonEpicAdapter;
 import config.gson.GsonHistoryManagerAdapter;
 import config.gson.GsonSubtaskAdapter;
+import config.gson.GsonTimeIntervalsListAdapter;
 import constant.TypeTasksManager;
 import entity.Epic;
 import entity.Subtask;
@@ -15,6 +16,7 @@ import entity.Task;
 import service.InMemoryHistoryManager;
 import service.Manager;
 import service.TasksManager;
+import utill.TimeIntervalsList;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +44,7 @@ public class HttpTaskServer {
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
                 .registerTypeAdapter(InMemoryHistoryManager.class, new GsonHistoryManagerAdapter())
+                .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
                 .create();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks", new TasksHandler());

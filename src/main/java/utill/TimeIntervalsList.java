@@ -2,6 +2,7 @@ package utill;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.StringJoiner;
 import java.util.TreeSet;
 
 public class TimeIntervalsList implements Serializable {
@@ -28,6 +29,10 @@ public class TimeIntervalsList implements Serializable {
     public void remove(LocalDateTime startDateTime, LocalDateTime finishDateTime) {
         TimeInterval removedInterval = new TimeInterval(startDateTime, finishDateTime);
         timeIntervals.remove(removedInterval);
+    }
+
+    public TreeSet<TimeInterval> getTimeIntervals() {
+        return timeIntervals;
     }
 
     /**
@@ -80,6 +85,14 @@ public class TimeIntervalsList implements Serializable {
             if (o == null || this.getClass() != o.getClass()) return false;
             TimeInterval timeInterval = (TimeInterval) o;
             return this.isInsideInterval(timeInterval);
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", TimeInterval.class.getSimpleName() + "{", "}")
+                    .add("start: " + start)
+                    .add("finish: " + finish)
+                    .toString();
         }
     }
 }

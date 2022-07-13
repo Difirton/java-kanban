@@ -12,6 +12,29 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
+
+    @Override
+    public void write(JsonWriter writer, Subtask subtask) throws IOException {
+        writer.beginObject();
+        writer.name("task_type");
+        writer.value(subtask.getClass().getSimpleName());
+        writer.name("id");
+        writer.value(subtask.getId());
+        writer.name("epicsId");
+        writer.value(subtask.getEpicsId());
+        writer.name("name");
+        writer.value(subtask.getName());
+        writer.name("description");
+        writer.value(subtask.getDescription());
+        writer.name("status");
+        writer.value(subtask.getStatus().toString());
+        writer.name("start");
+        writer.value(subtask.getStartDateTime().toString());
+        writer.name("execution");
+        writer.value(subtask.getTimeExecution().toString());
+        writer.endObject();
+    }
+
     @Override
     public Subtask read(JsonReader reader) throws IOException {
         reader.beginObject();
@@ -67,27 +90,5 @@ public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
             }
         }
         return subtaskBuilder.build();
-    }
-
-    @Override
-    public void write(JsonWriter writer, Subtask subtask) throws IOException {
-        writer.beginObject();
-        writer.name("task_type");
-        writer.value(subtask.getClass().getSimpleName());
-        writer.name("id");
-        writer.value(subtask.getId());
-        writer.name("epicsId");
-        writer.value(subtask.getEpicsId());
-        writer.name("name");
-        writer.value(subtask.getName());
-        writer.name("description");
-        writer.value(subtask.getDescription());
-        writer.name("status");
-        writer.value(subtask.getStatus().toString());
-        writer.name("start");
-        writer.value(subtask.getStartDateTime().toString());
-        writer.name("execution");
-        writer.value(subtask.getTimeExecution().toString());
-        writer.endObject();
     }
 }
