@@ -7,10 +7,7 @@ import controller.KVServer;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
-import service.HTTPTasksManager;
-import service.HistoryManager;
-import service.Manager;
-import service.TasksManager;
+import service.*;
 import utill.TimeIntervalsList;
 
 import java.io.IOException;
@@ -23,30 +20,32 @@ public class Main {
         TasksManager taskManager = Manager.getTaskManager(TypeTasksManager.HTTP_TASKS_MANAGER);
         taskManager.createNewEpic("Epic 1", "Desc 1");
         taskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);
-        taskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L, "2020-01-01 01:00", 40);
+        taskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L, "2020-05-01 01:00", 40);
         taskManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L, "2020-01-01 02:00", 40);
         taskManager.createNewEpic("Epic 2", "Desc 2");
         taskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L, "2020-01-01 03:00", 40);
         taskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
+        System.out.println(taskManager.getTaskById(1L));
 
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-                .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
                 .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
-                .registerTypeAdapter(TasksManager.class, new GsonHttpManagerAdapter())
+                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
+                .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
                 .create();
+
+        System.out.println(gson.toJson(taskManager));
 
         String managerStr = taskManager.getKvTaskClient().load();
         System.out.println(managerStr);
-        TasksManager newManager = gson.fromJson(managerStr, TasksManager.class);
+        TasksManager newManager = gson.fromJson(managerStr, HTTPTasksManager.class);
         System.out.println(newManager.getTaskById(1L));
-        System.out.println("111");
-
-
-
-
+        System.out.println(newManager.getSubtaskById(3L));
+        System.out.println(newManager.getAllEpics());
+        System.out.println(newManager.getAllSubtasks());
+        System.out.println(newManager.getHistory());
+        System.out.println(newManager.getPrioritizedTasks());
 
     }
 }

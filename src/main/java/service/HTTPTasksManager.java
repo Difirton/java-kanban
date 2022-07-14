@@ -25,8 +25,10 @@ public class HTTPTasksManager extends FileBackedTasksManager {
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
+                .registerTypeAdapter(InMemoryTaskManager.class, new GsonHistoryManagerAdapter())
                 .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
+                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
+        //        .registerTypeAdapter(HTTPTasksManager.class, new GsonHttpManagerAdapter())
                 .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
                 .create();
     }
@@ -43,18 +45,6 @@ public class HTTPTasksManager extends FileBackedTasksManager {
                     "Check that there is a config.properties file at the root of the project with the keys " +
                     "KVServer.address and KVServer.port" + exception.getMessage());
         }
-    }
-
-    @Override
-    public void createNewEpic(String name, String description) {
-        super.createNewEpic(name, description);
-        this.save();
-    }
-
-    @Override
-    public void createNewSubtask(String name, String description, long epicId) {
-        super.createNewSubtask(name, description, epicId);
-        this.save();
     }
 
     @Override

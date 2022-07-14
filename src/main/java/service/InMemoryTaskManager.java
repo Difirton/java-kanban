@@ -260,7 +260,6 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
         return getEpicAfterValid(epicId);
     }
 
-
     @Override
     public List<Epic> getAllEpics() {
         return this.allTasks.values().stream()
@@ -385,64 +384,4 @@ public class InMemoryTaskManager implements TasksManager, Serializable {
     public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
     }
-//    public long getAmountTaskId() {
-//        return amountTaskId;
-//    }
-//
-//    public Map<Long, Task> getAllTasks() {
-//        return allTasks;
-//    }
-//
-//    public Set<Subtask> getSortedSubtasks() {
-//        return sortedSubtasks;
-//    }
-//
-//    public HistoryManager getInMemoryHistoryManager() {
-//        return inMemoryHistoryManager;
-//    }
-//
-//    public TimeIntervalsList getOccupiedSlots() {
-//        return occupiedSlots;
-//    }
-//
-//    private InMemoryTaskManager(InMemoryTaskManagerBuilder inMemoryTaskManagerBuilder) { }
-//
-//    protected static class InMemoryTaskManagerBuilder {
-//        private long amountTaskId;
-//        private Map<Long, Task> allTasks;
-//        private Set<Subtask> sortedSubtasks;
-//        private HistoryManager inMemoryHistoryManager;
-//        private TimeIntervalsList occupiedSlots;
-//
-//        protected InMemoryTaskManagerBuilder() { }
-//
-//        protected InMemoryTaskManagerBuilder AmountTaskId(long amountTaskId) {
-//            this.amountTaskId = amountTaskId;
-//            return this;
-//        }
-//
-//        protected InMemoryTaskManagerBuilder AllTasks(Map<Long, Task> allTasks) {
-//            this.allTasks = allTasks;
-//            return this;
-//        }
-//
-//        protected InMemoryTaskManagerBuilder SortedSubtasks(Set<Subtask> sortedSubtasks) {
-//            this.sortedSubtasks = sortedSubtasks;
-//            return this;
-//        }
-//
-//        protected InMemoryTaskManagerBuilder InMemoryHistoryManager(HistoryManager inMemoryHistoryManager) {
-//            this.inMemoryHistoryManager = inMemoryHistoryManager;
-//            return this;
-//        }
-//
-//        protected InMemoryTaskManagerBuilder OccupiedSlots(TimeIntervalsList occupiedSlots) {
-//            this.occupiedSlots = occupiedSlots;
-//            return this;
-//        }
-//
-//        protected InMemoryTaskManager build() {
-//            return new InMemoryTaskManager(this);
-//        }
-//    }
 }

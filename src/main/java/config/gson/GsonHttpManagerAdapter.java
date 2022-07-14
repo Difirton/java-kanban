@@ -15,8 +15,7 @@ import utill.TimeIntervalsList;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GsonHttpManagerAdapter extends TypeAdapter<HTTPTasksManager> {
     Gson gson = new GsonBuilder()
@@ -31,35 +30,35 @@ public class GsonHttpManagerAdapter extends TypeAdapter<HTTPTasksManager> {
     public void write(JsonWriter writer, HTTPTasksManager httpTasksManager) throws IOException {
         writer.beginObject();
         try {
-            Field amountTaskIdField = httpTasksManager.getClass().getDeclaredField("amountTaskId");
+            Field amountTaskIdField = InMemoryTaskManager.class.getDeclaredField("amountTaskId");
             amountTaskIdField.setAccessible(true);
             long amountTaskId =  amountTaskIdField.getLong(httpTasksManager);
             writer.name("amount_task_id");
             writer.value(gson.toJson(amountTaskId));
 
-            Field allTasksField = httpTasksManager.getClass().getDeclaredField("allTasks");
+            Field allTasksField = InMemoryTaskManager.class.getDeclaredField("allTasks");
             allTasksField.setAccessible(true);
             Map<Long, Task> allTasks =  (Map<Long, Task>) allTasksField.get(httpTasksManager);
             writer.name("all_tasks");
-            writer.value(gson.toJson(allTasks));
+            writer.jsonValue(gson.toJson(allTasks));
 
-            Field sortedSubtasksField = httpTasksManager.getClass().getDeclaredField("sortedSubtasks");
+            Field sortedSubtasksField = InMemoryTaskManager.class.getDeclaredField("sortedSubtasks");
             sortedSubtasksField.setAccessible(true);
             Set<Subtask> sortedSubtasks =  (Set<Subtask>) sortedSubtasksField.get(httpTasksManager);
             writer.name("sorted_subtasks");
-            writer.value(gson.toJson(sortedSubtasks));
+            writer.jsonValue(gson.toJson(sortedSubtasks));
 
-            Field inMemoryHistoryManagerField = httpTasksManager.getClass().getDeclaredField("inMemoryHistoryManager");
+            Field inMemoryHistoryManagerField = InMemoryTaskManager.class.getDeclaredField("inMemoryHistoryManager");
             inMemoryHistoryManagerField.setAccessible(true);
             HistoryManager inMemoryHistoryManager =  (HistoryManager) inMemoryHistoryManagerField.get(httpTasksManager);
             writer.name("in_memory_history_manager");
-            writer.value(gson.toJson(inMemoryHistoryManager));
+            writer.jsonValue(gson.toJson(inMemoryHistoryManager));
 
-            Field occupiedSlotsField = httpTasksManager.getClass().getDeclaredField("occupiedSlots");
+            Field occupiedSlotsField = InMemoryTaskManager.class.getDeclaredField("occupiedSlots");
             occupiedSlotsField.setAccessible(true);
             TimeIntervalsList occupiedSlots =  (TimeIntervalsList) occupiedSlotsField.get(httpTasksManager);
             writer.name("occupied_slots");
-            writer.value(gson.toJson(occupiedSlots));
+            writer.jsonValue(gson.toJson(occupiedSlots));
             writer.endObject();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
@@ -79,23 +78,72 @@ public class GsonHttpManagerAdapter extends TypeAdapter<HTTPTasksManager> {
                 if (token.equals(JsonToken.NAME)) {
                     fieldName = reader.nextName();
                 }
-                if ("file".equals(fieldName)) {
-                    token = reader.peek();
-                    reader.skipValue();
-                }
-                if ("amountTaskId".equals(fieldName)) {
+
+                if ("amount_task_id".equals(fieldName)) {
                     token = reader.peek();
                     Field amountTaskIdField = InMemoryTaskManager.class.getDeclaredField("amountTaskId");
                     amountTaskIdField.setAccessible(true);
                     amountTaskIdField.set(httpTasksManager, reader.nextLong());
-                    System.out.println("111");
                 }
-                if ("allTasks".equals(fieldName)) {
+
+                if ("all_tasks".equals(fieldName)) {
                     token = reader.peek();
+                    Map<Long, Task> allTasks = new HashMap<>();
+                    reader.beginObject();
+                    while (reader.hasNext()) {
+                        Long key = Long.parseLong(reader.nextName());
+                        reader.beginObject();
+                        token = reader.peek();
+                        if (token.equals(JsonToken.NAME)) {
+                            fieldName = reader.nextName();
+                        }
+                        if ("task_type".equals(fieldName)) {
+                            switch (reader.nextString()) {
+                                case ("Epic"):
+                                    allTasks.put(key, GsonEpicAdapter.constructEpic(reader));
+                                    break;
+                                case ("Subtask"):
+                                    allTasks.put(key, GsonSubtaskAdapter.constructSubtask(reader));
+                            }
+                            reader.endObject();
+                        }
+                        token = reader.peek();
+                    }
+                    reader.endObject();
                     Field allTasksField = InMemoryTaskManager.class.getDeclaredField("allTasks");
                     allTasksField.setAccessible(true);
-                    allTasksField.set(httpTasksManager, (Map<Long, Task>) gson.fromJson(reader.nextString(), Map.class));
+                    allTasksField.set(httpTasksManager, allTasks);
                 }
+
+                if ("sorted_subtasks".equals(fieldName)) {
+                    token = reader.peek();
+                    Set<Subtask> sortedSubtasks = new TreeSet<>();
+                    reader.beginArray();
+                    while (reader.hasNext()) {
+                        reader.beginObject();
+                        token = reader.peek();
+                        if (token.equals(JsonToken.NAME)) {
+                            fieldName = reader.nextName();
+                        }
+                        if ("task_type".equals(fieldName)) {
+                            reader.skipValue();
+                            Subtask subtask = GsonSubtaskAdapter.constructSubtask(reader);
+                            sortedSubtasks.add(subtask);
+                            reader.endObject();
+                        }
+                        token = reader.peek();
+                    }
+                    reader.endArray();
+                    Field amountTaskIdField = InMemoryTaskManager.class.getDeclaredField("sortedSubtasks");
+                    amountTaskIdField.setAccessible(true);
+                    amountTaskIdField.set(httpTasksManager, sortedSubtasks);
+                }
+
+
+                if ("in_memory_history_manager".equals(fieldName)) {
+
+                }
+
 
             }
         } catch (NoSuchFieldException e) {
@@ -103,8 +151,6 @@ public class GsonHttpManagerAdapter extends TypeAdapter<HTTPTasksManager> {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
-        reader.endObject();
         return httpTasksManager;
     }
 }

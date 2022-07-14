@@ -6,6 +6,8 @@ import entity.Task;
 import error.ManagerSaveException;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements Serializable {
@@ -86,8 +88,48 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     }
 
     @Override
-    public void createNewSubtask(String name, String description, long epicId) {
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId) {
         super.createNewSubtask(name, description, epicId);
+        this.save();
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
+                                 LocalDateTime startDateTime) {
+        super.createNewSubtask(name, description, epicId, startDateTime);
+        this.save();
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
+                                 String startDateTime) {
+        super.createNewSubtask(name, description, epicId, startDateTime);
+        this.save();
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
+                                 LocalDateTime startDateTime,
+                                 Duration timeExecutionInMinutes) {
+        super.createNewSubtask(name, description, epicId, startDateTime, timeExecutionInMinutes);
+        this.save();
+    }
+
+    @Override
+    public void createNewSubtask(String name,
+                                 String description,
+                                 long epicId,
+                                 String startDateTime,
+                                 int timeExecutionInMinutes) {
+        super.createNewSubtask(name, description, epicId, startDateTime, timeExecutionInMinutes);
         this.save();
     }
 

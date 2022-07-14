@@ -17,6 +17,7 @@ public class GsonTaskAdapter extends TypeAdapter<Task> {
     @Override
     public void write(JsonWriter writer, Task task) throws IOException {
         writer.beginObject();
+        System.out.println(task.getClass().getSimpleName());
         try {
             switch (task.getClass().getSimpleName()) {
                 case ("Epic"):
@@ -27,6 +28,7 @@ public class GsonTaskAdapter extends TypeAdapter<Task> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        writer.endObject();
     }
 
     @Override
