@@ -25,7 +25,7 @@ public class HTTPTasksManager extends FileBackedTasksManager {
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-                .registerTypeAdapter(InMemoryTaskManager.class, new GsonHistoryManagerAdapter())
+       //         .registerTypeAdapter(InMemoryTaskManager.class, new GsonHistoryManagerAdapter())
                 .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
                 .registerTypeAdapter(Task.class, new GsonTaskAdapter())
         //        .registerTypeAdapter(HTTPTasksManager.class, new GsonHttpManagerAdapter())

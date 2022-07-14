@@ -18,6 +18,9 @@ public class CustomLinkedList implements Serializable {
 
     public void add(Task task) {
         Long id = task.getId();
+        if (this.entryMap.containsKey(id) && this.entryMap.size() == 1) {
+            return;
+        }
         if (this.head == null) {
             Node node = new Node(task);
             this.entryMap.put(id, node);
