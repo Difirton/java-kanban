@@ -2,12 +2,10 @@ package service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import config.gson.GsonEpicAdapter;
-import config.gson.GsonHistoryManagerAdapter;
-import config.gson.GsonSubtaskAdapter;
-import config.gson.GsonTimeIntervalsListAdapter;
+import config.gson.*;
 import entity.Epic;
 import entity.Subtask;
+import entity.Task;
 import error.ManagerSaveException;
 import utill.TimeIntervalsList;
 
@@ -18,8 +16,8 @@ import java.util.Properties;
 
 public class HTTPTasksManager extends FileBackedTasksManager {
     private transient final KVTaskClient kvTaskClient;
-    private URI serverURI;
-    private Gson gson;
+    private transient Gson gson;
+    private transient URI serverURI;
 
     protected HTTPTasksManager() {
         serverURI  = readKVServerURL();
@@ -27,6 +25,7 @@ public class HTTPTasksManager extends FileBackedTasksManager {
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
+                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
                 .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
                 .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
                 .create();
