@@ -9,6 +9,7 @@ import entity.Task;
 import error.ManagerSaveException;
 import utill.TimeIntervalsList;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -25,10 +26,9 @@ public class HTTPTasksManager extends FileBackedTasksManager {
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-       //         .registerTypeAdapter(InMemoryTaskManager.class, new GsonHistoryManagerAdapter())
+                .registerTypeAdapter(File.class, new GsonFileAdapter())
                 .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
                 .registerTypeAdapter(Task.class, new GsonTaskAdapter())
-        //        .registerTypeAdapter(HTTPTasksManager.class, new GsonHttpManagerAdapter())
                 .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
                 .create();
     }

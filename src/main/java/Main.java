@@ -7,9 +7,13 @@ import controller.KVServer;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
-import service.*;
+import service.HTTPTasksManager;
+import service.HistoryManager;
+import service.Manager;
+import service.TasksManager;
 import utill.TimeIntervalsList;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main {
@@ -33,6 +37,7 @@ public class Main {
                 .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
                 .registerTypeAdapter(Task.class, new GsonTaskAdapter())
                 .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
+                .registerTypeAdapter(File.class, new GsonFileAdapter())
                 .create();
 
         System.out.println(gson.toJson(taskManager));
