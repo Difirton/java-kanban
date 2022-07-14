@@ -52,5 +52,7 @@ public class Main {
         System.out.println(newManager.getHistory());
         System.out.println(newManager.getPrioritizedTasks());
 
+        new KVServer().stop();
+
     }
 }
