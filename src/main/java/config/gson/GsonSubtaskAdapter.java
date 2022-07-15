@@ -47,14 +47,14 @@ public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
             reader.peek();
             reader.skipValue();
         }
-        Subtask newSubtask = constructSubtask(reader);
+        Subtask newSubtask = constructSubtask(reader, fieldName);
         reader.endObject();
         return newSubtask;
     }
 
-    protected static Subtask constructSubtask(JsonReader reader) throws IOException {
+    protected static Subtask constructSubtask(JsonReader reader, String fieldNameIfAlreadyDefine) throws IOException {
         Subtask.SubtaskBuilder subtaskBuilder = new Subtask.SubtaskBuilder();
-        String fieldName = null;
+        String fieldName = fieldNameIfAlreadyDefine;
         while (reader.hasNext()) {
             JsonToken token = reader.peek();
             if (token.equals(JsonToken.NAME)) {

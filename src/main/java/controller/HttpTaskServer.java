@@ -123,12 +123,15 @@ public class HttpTaskServer {
                     sendResponseOk(httpExchange);
                     break;
                 case ("DELETE"):
-                    String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
-                    if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
-                        Long idEpicToRemove = Long.parseLong(queryParams[1]);
+                    if (isRequestContainsParameters(httpExchange)) {
+                        long idEpicToRemove = defineIdRequest(httpExchange);
                         taskManager.removeEpicById(idEpicToRemove);
                         sendResponseOk(httpExchange);
+                    } else {
+                        taskManager.removeAllEpics();
+                        sendResponseOk(httpExchange);
                     }
+                    break;
             }
         }
     }

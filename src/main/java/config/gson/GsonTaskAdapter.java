@@ -46,7 +46,7 @@ public class GsonTaskAdapter extends TypeAdapter<Task> {
                     taskToParse = GsonEpicAdapter.constructEpic(reader, fieldName);
                     break;
                 case ("Subtask"):
-                    taskToParse = GsonSubtaskAdapter.constructSubtask(reader);
+                    taskToParse = GsonSubtaskAdapter.constructSubtask(reader, fieldName);
             }
         }
         reader.endObject();

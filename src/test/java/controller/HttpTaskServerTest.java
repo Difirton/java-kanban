@@ -29,8 +29,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpTaskServerTest {
     private HttpTaskServer httpTaskServer;
@@ -191,5 +190,39 @@ public class HttpTaskServerTest {
         assertEquals(expectedStatusCode, actualStatusCode);
         assertEquals(expectedEpicName, actualEpicName);
         assertEquals(expectedEpicDescription, actualEpicDescription);
+    }
+
+    @Test
+    @DisplayName("Test delete epic by id: DELETE /tasks/epic?id=5, expected ok")
+    public void testDeleteEpicById() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/epic?id=5"))
+                .timeout(Duration.ofSeconds(20L))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expectedStatusCode = 200;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertThrows(NullPointerException.class, () -> {
+            fileBackedTasksManager.getTaskById(5L);
+        });
+    }
+
+    @Test
+    @DisplayName("Test delete all epics: DELETE /tasks/epic, expected ok")
+    public void testDeleteAllEpics() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/epic"))
+                .timeout(Duration.ofSeconds(20L))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expected = 0;
+        int actual = fileBackedTasksManager.getAllEpics().size();
+        int expectedStatusCode = 200;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertEquals(expected, actual);
     }
 }
