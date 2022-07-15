@@ -106,7 +106,7 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
         String expected = gson.toJson(fileBackedTasksManager.getPrioritizedTasks());
         String actual = response.body();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
         String expected = gson.toJson(fileBackedTasksManager.getAllEpics());
         String actual = response.body();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class HttpTaskServerTest {
         HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
         String expected = gson.toJson(fileBackedTasksManager.getTaskById(5L));
         String actual = response.body();
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -204,9 +204,7 @@ public class HttpTaskServerTest {
         int expectedStatusCode = 200;
         int actualStatusCode = response.statusCode();
         assertEquals(expectedStatusCode, actualStatusCode);
-        assertThrows(NullPointerException.class, () -> {
-            fileBackedTasksManager.getTaskById(5L);
-        });
+        assertThrows(NullPointerException.class, () -> fileBackedTasksManager.getTaskById(5L));
     }
 
     @Test

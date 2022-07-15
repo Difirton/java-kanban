@@ -76,8 +76,6 @@ public class FileBackedTasksManagerTest extends TasksManagerTest {
         Field field = fileBackedTasksManager.getClass().getDeclaredField("file");
         field.setAccessible(true);
         field.set(fileBackedTasksManager, emptyFile);
-        assertThrows(ManagerSaveException.class, () -> {
-            fileBackedTasksManager.getTaskById(1L);
-        });
+        assertThrows(ManagerSaveException.class, () -> fileBackedTasksManager.getTaskById(1L));
     }
 }
