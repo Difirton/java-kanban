@@ -30,8 +30,8 @@ public class HttpTaskServer {
     private static String hostname;
     private static int PORT;
     private final HttpServer server;
-    private TasksManager taskManager;
-    private Gson gson = new GsonBuilder()
+    private final TasksManager taskManager;
+    private final Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
                 .registerTypeAdapter(InMemoryHistoryManager.class, new GsonHistoryManagerAdapter())
@@ -50,7 +50,6 @@ public class HttpTaskServer {
         taskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
         server = HttpServer.create(new InetSocketAddress(hostname, PORT), 0);
         server.createContext("/tasks", new TasksHandler());
-        server.createContext("/tasks/task", new SingleTasksHandler());
         server.createContext("/tasks/epic", new EpicHandler());
         server.createContext("/tasks/subtask", new SubtaskHandler());
         server.createContext("/tasks/history", new HistoryHandler());
@@ -72,7 +71,7 @@ public class HttpTaskServer {
 
     public HttpTaskServer start() {
         System.out.println("Запускаем HttpTaskServer на порту " + PORT);
-        System.out.println("Открой в браузере " + + PORT + "/");
+        System.out.println("Открой в браузере http://" + hostname + ":" + PORT + "/");
         server.start();
         return this;
     }
@@ -102,24 +101,18 @@ public class HttpTaskServer {
         }
     }
 
-    private class SingleTasksHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange httpExchange) {
-            String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
-            if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
-                Long idTaskToFind = Long.parseLong(queryParams[1]);
-                String response = gson.toJson(taskManager.getTaskById(idTaskToFind));
-                sendResponseOkAndTasks(response, httpExchange);
-            }
-        }
-    }
-
     private class EpicHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
+            String response;
             switch (httpExchange.getRequestMethod()) {
                 case ("GET"):
-                    String response = gson.toJson(taskManager.getAllEpics());
+                    if (isRequestContainsParameters(httpExchange)) {
+                        long idEpicToFind = defineIdRequest(httpExchange);
+                        response = gson.toJson(taskManager.getEpicById(idEpicToFind));
+                    } else {
+                        response = gson.toJson(taskManager.getAllEpics());
+                    }
                     sendResponseOkAndTasks(response, httpExchange);
                     break;
                 case ("POST"):
@@ -136,9 +129,24 @@ public class HttpTaskServer {
                         taskManager.removeEpicById(idEpicToRemove);
                         sendResponseOk(httpExchange);
                     }
-                    break;
             }
         }
+    }
+
+    private long defineIdRequest(HttpExchange httpExchange) {
+        Long idTaskToFind;
+        String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
+        if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
+            idTaskToFind = Long.parseLong(queryParams[1]);
+        } else{
+            throw new RuntimeException(); //TODO подумать что делать с исключением
+        }
+        return idTaskToFind;
+    }
+
+    private boolean isRequestContainsParameters(HttpExchange httpExchange) {
+        String requestURI = httpExchange.getRequestURI().toString();
+        return requestURI.contains("?");
     }
 
     private class SubtaskHandler implements HttpHandler {

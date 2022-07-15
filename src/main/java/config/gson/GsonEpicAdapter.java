@@ -50,14 +50,14 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
             token = reader.peek();
             reader.skipValue();
         }
-        Epic newEpic = constructEpic(reader);
+        Epic newEpic = constructEpic(reader, fieldName);
         reader.endObject();
         return newEpic;
     }
 
-    protected static Epic constructEpic(JsonReader reader) throws IOException {
+    protected static Epic constructEpic(JsonReader reader, String fieldNameIfAlreadyDefine) throws IOException {
         Epic.EpicBuilder epicBuilder = new Epic.EpicBuilder();
-        String fieldName = null;
+        String fieldName = fieldNameIfAlreadyDefine;
         while (reader.hasNext()) {
             JsonToken token = reader.peek();
             if (token.equals(JsonToken.NAME)) {

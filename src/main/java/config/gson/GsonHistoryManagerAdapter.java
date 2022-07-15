@@ -47,7 +47,7 @@ public class GsonHistoryManagerAdapter extends TypeAdapter<InMemoryHistoryManage
                 reader.peek();
                 switch (reader.nextString()) {
                     case ("Epic"):
-                        historyManager.add(GsonEpicAdapter.constructEpic(reader));
+                        historyManager.add(GsonEpicAdapter.constructEpic(reader, fieldName));
                         break;
                     case ("Subtask"):
                         historyManager.add(GsonSubtaskAdapter.constructSubtask(reader));
