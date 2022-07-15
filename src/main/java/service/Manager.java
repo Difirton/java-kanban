@@ -21,4 +21,16 @@ public class Manager {
         }
         return tasksManager;
     }
+
+//    public static HTTPTasksManager getDefault(String key) {
+//        Gson gson = new GsonBuilder()
+//                .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
+//                .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
+//                .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
+//                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
+//                .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
+//                .registerTypeAdapter(File.class, new GsonFileAdapter())
+//                .create();
+//
+//    }
 }

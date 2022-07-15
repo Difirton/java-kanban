@@ -1,19 +1,10 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import config.gson.*;
 import constant.TypeTasksManager;
 import controller.HttpTaskServer;
 import controller.KVServer;
-import entity.Epic;
-import entity.Subtask;
-import entity.Task;
 import service.HTTPTasksManager;
-import service.HistoryManager;
 import service.Manager;
 import service.TasksManager;
-import utill.TimeIntervalsList;
 
-import java.io.File;
 import java.io.IOException;
 
 public class Main {
@@ -31,28 +22,14 @@ public class Main {
         taskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
         System.out.println(taskManager.getTaskById(1L));
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
-                .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-                .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
-                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
-                .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
-                .registerTypeAdapter(File.class, new GsonFileAdapter())
-                .create();
 
-        System.out.println(gson.toJson(taskManager));
-
-        String managerStr = taskManager.getKvTaskClient().load();
-        System.out.println(managerStr);
-        TasksManager newManager = gson.fromJson(managerStr, HTTPTasksManager.class);
+        TasksManager newManager = HTTPTasksManager.loadFromServer("manager");
         System.out.println(newManager.getTaskById(1L));
         System.out.println(newManager.getSubtaskById(3L));
         System.out.println(newManager.getAllEpics());
         System.out.println(newManager.getAllSubtasks());
         System.out.println(newManager.getHistory());
         System.out.println(newManager.getPrioritizedTasks());
-
-        new KVServer().stop();
 
     }
 }

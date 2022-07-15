@@ -56,8 +56,4 @@ public interface TasksManager {
     void removeSubtasksByEpicId(Long epicId);
 
     List<Task> getHistory();
-
-    default KVTaskClient getKvTaskClient() {
-        return null;
-    }
 }

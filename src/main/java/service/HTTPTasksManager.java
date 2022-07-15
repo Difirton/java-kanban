@@ -17,13 +17,14 @@ import java.util.Properties;
 
 public class HTTPTasksManager extends FileBackedTasksManager {
     private transient final KVTaskClient kvTaskClient;
-    private transient Gson gson;
     private transient URI serverURI;
+    private static Gson gson;
+    private static String key;
 
     protected HTTPTasksManager() {
         serverURI  = readKVServerURL();
         this.kvTaskClient = new KVTaskClient(serverURI);
-        this.gson = new GsonBuilder()
+        gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
                 .registerTypeAdapter(File.class, new GsonFileAdapter())
@@ -33,12 +34,13 @@ public class HTTPTasksManager extends FileBackedTasksManager {
                 .create();
     }
 
-    private URI readKVServerURL() {
+    private static URI readKVServerURL() {
         try (FileInputStream propertiesReader = new FileInputStream("config.properties")) {
             Properties properties = new Properties();
             properties.load(propertiesReader);
             String address = properties.getProperty("KVServer.address");
             String port = properties.getProperty("KVServer.port");
+            key = properties.getProperty("KVServer.key");
             return URI.create(address + port);
         } catch (IOException exception) {
             throw new ManagerSaveException("There is no data on the address and port, the address is located KVServer. " +
@@ -49,17 +51,13 @@ public class HTTPTasksManager extends FileBackedTasksManager {
 
     @Override
     protected void save() {
-        kvTaskClient.put(gson.toJson(this));
+        kvTaskClient.put(key, gson.toJson(this));
     }
 
-    @Override
-    public KVTaskClient getKvTaskClient() {
-        return kvTaskClient;
-    }
-
-    public TasksManager loadFromServer() {
-        String json = kvTaskClient.load();
-        System.out.println(json);
+    public static TasksManager loadFromServer(String key) {
+        URI serverURI = HTTPTasksManager.readKVServerURL();
+        KVTaskClient kvTaskClient = new KVTaskClient(serverURI);
+        String json = kvTaskClient.load(key);
         return gson.fromJson(json, HTTPTasksManager.class);
     }
 }

@@ -13,26 +13,36 @@ import constant.TypeTasksManager;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
+import error.ManagerSaveException;
 import service.InMemoryHistoryManager;
 import service.Manager;
 import service.TasksManager;
 import utill.TimeIntervalsList;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Properties;
 
 public class HttpTaskServer {
-    public static final int PORT = 8080;
+    private static String hostname;
+    private static int PORT;
     private final HttpServer server;
     private TasksManager taskManager;
-    private Gson gson;
+    private Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
+                .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
+                .registerTypeAdapter(InMemoryHistoryManager.class, new GsonHistoryManagerAdapter())
+                .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
+                .create();
 
     public HttpTaskServer() throws IOException {
         this.taskManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
+        readKVServerURL();
         taskManager.createNewEpic("Epic 1", "Desc 1");
         taskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);
         taskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L, "2020-01-01 01:00", 40);
@@ -40,13 +50,7 @@ public class HttpTaskServer {
         taskManager.createNewEpic("Epic 2", "Desc 2");
         taskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L, "2020-01-01 03:00", 40);
         taskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
-                .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-                .registerTypeAdapter(InMemoryHistoryManager.class, new GsonHistoryManagerAdapter())
-                .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
-                .create();
-        server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
+        server = HttpServer.create(new InetSocketAddress(hostname, PORT), 0);
         server.createContext("/tasks", new TasksHandler());
         server.createContext("/tasks/task", new SingleTasksHandler());
         server.createContext("/tasks/epic", new EpicHandler());
@@ -54,9 +58,23 @@ public class HttpTaskServer {
         server.createContext("/tasks/history", new HistoryHandler());
     }
 
+    private static void readKVServerURL() {
+        try (FileInputStream propertiesReader = new FileInputStream("config.properties")) {
+            Properties properties = new Properties();
+            properties.load(propertiesReader);
+            hostname = properties.getProperty("HttpTaskServer.hostname");
+            String port = properties.getProperty("HttpTaskServer.port");
+            PORT = Integer.parseInt(port);
+        } catch (IOException exception) {
+            throw new ManagerSaveException("There is no data on the address and port, the address is located " +
+                    "HttpTaskServer. Check that there is a config.properties file at the root of the project with " +
+                    "the keys HttpTaskServer.address and HttpTaskServer.port" + exception.getMessage());
+        }
+    }
+
     public void start() {
-        System.out.println("Запускаем сервер на порту " + PORT);
-        System.out.println("Открой в браузере http://localhost:" + PORT + "/");
+        System.out.println("Запускаем HttpTaskServer на порту " + PORT);
+        System.out.println("Открой в браузере " + + PORT + "/");
         server.start();
     }
 

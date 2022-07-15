@@ -39,10 +39,10 @@ public class KVTaskClient {
         }
     }
 
-    public void put(String json) {
+    public void put(String key, String json) {
         try {
             HttpRequest saveRequest = HttpRequest.newBuilder()
-                    .uri(new URI(serverURI + "/save/manager?API_TOKEN="+ API_TOKEN))
+                    .uri(new URI(serverURI + "/save/" + key + "?API_TOKEN="+ API_TOKEN))
                     .timeout(Duration.ofSeconds(20L))
                     .headers("Content-Type", "text/plain;charset=UTF-8")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -59,10 +59,10 @@ public class KVTaskClient {
         }
     }
 
-    public String load() {
+    public String load(String key) {
         try {
             HttpRequest loadRequest = HttpRequest.newBuilder()
-                    .uri(new URI(serverURI + "/load/manager?API_TOKEN="+ API_TOKEN))
+                    .uri(new URI(serverURI + "/load/" + key + "?API_TOKEN="+ API_TOKEN))
                     .timeout(Duration.ofSeconds(20L))
                     .GET()
                     .build();
