@@ -12,7 +12,6 @@ import config.gson.GsonTimeIntervalsListAdapter;
 import constant.TypeTasksManager;
 import entity.Epic;
 import entity.Subtask;
-import entity.Task;
 import error.ManagerSaveException;
 import service.InMemoryHistoryManager;
 import service.Manager;
@@ -25,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Properties;
 
 public class HttpTaskServer {
@@ -72,17 +70,17 @@ public class HttpTaskServer {
         }
     }
 
-    public void start() {
+    public HttpTaskServer start() {
         System.out.println("Запускаем HttpTaskServer на порту " + PORT);
         System.out.println("Открой в браузере " + + PORT + "/");
         server.start();
+        return this;
     }
 
     private class TasksHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) {
-            List<Task> priority = taskManager.getPrioritizedTasks();
-            String response = gson.toJson(taskManager.getAllSubtasks());
+            String response = gson.toJson(taskManager.getPrioritizedTasks());
             sendResponseOkAndTasks(response, httpExchange);
         }
     }
@@ -181,5 +179,10 @@ public class HttpTaskServer {
             System.out.println(response);
             sendResponseOkAndTasks(response, httpExchange);
         }
+    }
+
+    public void stop() {
+        server.stop(1);
+        System.out.println("Cервер на порту " + PORT +" остановлен");
     }
 }

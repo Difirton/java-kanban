@@ -101,16 +101,17 @@ public class KVServer {
 		}
 	}
 
-	public void start() {
+	public KVServer start() {
 		System.out.println("Запускаем KVServer на порту " + PORT);
 		System.out.println("Открой в браузере http://localhost:" + PORT + "/");
 		System.out.println("API_TOKEN: " + apiToken);
 		server.start();
+		return this;
 	}
 
 	public void stop() {
-		System.out.println("Cервер на порту " + PORT +" остановлен");
 		server.stop(1);
+		System.out.println("Cервер на порту " + PORT +" остановлен");
 	}
 
 	private String generateApiToken() {

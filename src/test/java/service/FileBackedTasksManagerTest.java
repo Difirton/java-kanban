@@ -43,7 +43,7 @@ public class FileBackedTasksManagerTest extends TasksManagerTest {
 
     @Test
     @DisplayName("Test save in file all parameters of fileBackedTasksManager, expected ok")
-    public void testSave() throws NoSuchFieldException, IllegalAccessException {
+    public void testSave() {
         fileBackedTasksManager.getEpicById(1L);
         File actualFile = new File(pathToTestSaveAndLoadData + File.separator + "dataFileBackedTasksManager.bin");
         assertTrue(actualFile.exists());

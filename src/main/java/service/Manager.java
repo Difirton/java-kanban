@@ -18,6 +18,9 @@ public class Manager {
                 break;
             case HTTP_TASKS_MANAGER:
                 tasksManager = new HTTPTasksManager();
+                break;
+            default:
+                throw new RuntimeException("No such TaskManager " + typeTasksManager);
         }
         return tasksManager;
     }

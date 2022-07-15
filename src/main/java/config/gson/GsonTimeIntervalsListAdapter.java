@@ -43,11 +43,11 @@ public class GsonTimeIntervalsListAdapter extends TypeAdapter<TimeIntervalsList>
                     fieldName = reader.nextName();
                 }
                 if ("start".equals(fieldName)) {
-                    token = reader.peek();
+                    reader.peek();
                     start = LocalDateTime.parse(reader.nextString());
                 }
                 if ("finish".equals(fieldName)) {
-                    token = reader.peek();
+                    reader.peek();
                     finish = LocalDateTime.parse(reader.nextString());
                 }
             }

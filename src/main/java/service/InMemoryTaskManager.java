@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TasksManager, Serializable {
     private long amountTaskId;
-    private Map<Long, Task> allTasks;
-    private Set<Subtask> sortedSubtasks;
-    private HistoryManager inMemoryHistoryManager;
-    private TimeIntervalsList occupiedSlots;
+    private final Map<Long, Task> allTasks;
+    private final Set<Subtask> sortedSubtasks;
+    private final HistoryManager inMemoryHistoryManager;
+    private final TimeIntervalsList occupiedSlots;
 
     protected InMemoryTaskManager() {
         amountTaskId = 1L;

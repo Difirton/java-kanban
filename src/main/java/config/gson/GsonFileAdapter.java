@@ -27,7 +27,7 @@ public class GsonFileAdapter extends TypeAdapter<File> {
             fieldName = reader.nextName();
         }
         if ("file".equals(fieldName)) {
-            token = reader.peek();
+            reader.peek();
             path = reader.nextString();
         }
         reader.endObject();

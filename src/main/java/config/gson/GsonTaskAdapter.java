@@ -17,7 +17,6 @@ public class GsonTaskAdapter extends TypeAdapter<Task> {
     @Override
     public void write(JsonWriter writer, Task task) throws IOException {
         writer.beginObject();
-        System.out.println(task.getClass().getSimpleName());
         try {
             switch (task.getClass().getSimpleName()) {
                 case ("Epic"):
@@ -41,7 +40,7 @@ public class GsonTaskAdapter extends TypeAdapter<Task> {
             fieldName = reader.nextName();
         }
         if ("task_type".equals(fieldName)) {
-            token = reader.peek();
+            reader.peek();
             switch (reader.nextString()) {
                 case ("Epic"):
                     taskToParse = GsonEpicAdapter.constructEpic(reader);

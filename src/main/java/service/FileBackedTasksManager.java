@@ -169,13 +169,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
     }
 
     public static FileBackedTasksManager loadFromFile(File loadFile) {
-        FileBackedTasksManager fileBackedTasksManager = null;
+        FileBackedTasksManager fileBackedTasksManager;
         try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(loadFile))) {
             fileBackedTasksManager = (FileBackedTasksManager) reader.readObject();
-        } catch (FileNotFoundException | ClassNotFoundException exception) {
-            exception.printStackTrace();
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        } catch (ClassNotFoundException | IOException exception) {
+            throw new RuntimeException("The link to the file is incorrect");
         }
         return fileBackedTasksManager;
     }

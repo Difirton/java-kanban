@@ -44,7 +44,7 @@ public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
             fieldName = reader.nextName();
         }
         if ("task_type".equals(fieldName)) {
-            token = reader.peek();
+            reader.peek();
             reader.skipValue();
         }
         Subtask newSubtask = constructSubtask(reader);
@@ -61,31 +61,31 @@ public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
                 fieldName = reader.nextName();
             }
             if ("id".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 subtaskBuilder.ID(reader.nextLong());
             }
             if("epicsId".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 subtaskBuilder.EpicsID(reader.nextLong());
             }
             if ("name".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 subtaskBuilder.Name(reader.nextString());
             }
             if ("description".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 subtaskBuilder.Description(reader.nextString());
             }
             if ("status".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 subtaskBuilder.Status(TaskStatus.valueOf(reader.nextString()));
             }
             if ("start".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 subtaskBuilder.StartDateTime(LocalDateTime.parse(reader.nextString()));
             }
             if ("execution".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 subtaskBuilder.TimeExecution(Duration.parse(reader.nextString()));
             }
         }

@@ -64,31 +64,31 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
                 fieldName = reader.nextName();
             }
             if ("id".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 epicBuilder.ID(reader.nextLong());
             }
             if ("all_id_subtasks_in_epic".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 epicBuilder.AllIdSubtasksInEpic(parsingIdSubtasks(reader.nextString()));
             }
             if ("name".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 epicBuilder.Name(reader.nextString());
             }
             if ("description".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 epicBuilder.Description(reader.nextString());
             }
             if ("status".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 epicBuilder.Status(TaskStatus.valueOf(reader.nextString()));
             }
             if ("start".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 epicBuilder.StartDateTime(LocalDateTime.parse(reader.nextString()));
             }
             if ("execution".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 epicBuilder.TimeExecution(Duration.parse(reader.nextString()));
             }
         }

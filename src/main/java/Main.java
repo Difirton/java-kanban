@@ -10,8 +10,8 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String... args) throws IOException { //TODO добавить обработчик
-        new KVServer().start();
-        new HttpTaskServer().start();
+        KVServer kvServer = new KVServer().start();
+        HttpTaskServer httpTaskServer = new HttpTaskServer().start();
         TasksManager taskManager = Manager.getTaskManager(TypeTasksManager.HTTP_TASKS_MANAGER);
         taskManager.createNewEpic("Epic 1", "Desc 1");
         taskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);
@@ -31,5 +31,7 @@ public class Main {
         System.out.println(newManager.getHistory());
         System.out.println(newManager.getPrioritizedTasks());
 
+        kvServer.stop();
+        httpTaskServer.stop();
     }
 }

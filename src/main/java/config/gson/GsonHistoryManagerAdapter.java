@@ -44,7 +44,7 @@ public class GsonHistoryManagerAdapter extends TypeAdapter<InMemoryHistoryManage
                 fieldName = reader.nextName();
             }
             if ("task_type".equals(fieldName)) {
-                token = reader.peek();
+                reader.peek();
                 switch (reader.nextString()) {
                     case ("Epic"):
                         historyManager.add(GsonEpicAdapter.constructEpic(reader));
