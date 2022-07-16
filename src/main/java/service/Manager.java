@@ -8,7 +8,7 @@ public class Manager {
     }
 
     public static TasksManager getTaskManager(TypeTasksManager typeTasksManager) {
-        TasksManager tasksManager = null;
+        TasksManager tasksManager;
         switch (typeTasksManager) {
             case IN_MEMORY_TASKS_MANAGER:
                 tasksManager = new InMemoryTaskManager();
@@ -25,15 +25,7 @@ public class Manager {
         return tasksManager;
     }
 
-//    public static HTTPTasksManager getDefault(String key) {
-//        Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
-//                .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
-//                .registerTypeAdapter(TimeIntervalsList.class, new GsonTimeIntervalsListAdapter())
-//                .registerTypeAdapter(Task.class, new GsonTaskAdapter())
-//                .registerTypeAdapter(HistoryManager.class, new GsonHistoryManagerAdapter())
-//                .registerTypeAdapter(File.class, new GsonFileAdapter())
-//                .create();
-//
+//    public static TasksManager getDefault(String key) {
+//        return Manager.getTaskManager(TypeTasksManager.HTTP_TASKS_MANAGER);
 //    }
 }

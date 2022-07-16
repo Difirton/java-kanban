@@ -81,24 +81,27 @@ public class HttpTaskServer {
         try (OutputStream outputStream = httpExchange.getResponseBody()) {
             httpExchange.sendResponseHeaders(200, response.length());
             outputStream.write(response.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e); //TODO подумать что делать с исключением
+        } catch (IOException exception) {
+            throw new RuntimeException("Error while sending message from server with status code 200 and body" +
+                    exception.getMessage());
         }
     }
 
     private void sendResponseOk(HttpExchange httpExchange) {
-        try (OutputStream outputStream = httpExchange.getResponseBody()) {
+        try (OutputStream ignored = httpExchange.getResponseBody()) {
             httpExchange.sendResponseHeaders(200, 0);
-        } catch (IOException e) {
-            throw new RuntimeException(e); //TODO подумать что делать с исключением
+        } catch (IOException exception) {
+            throw new RuntimeException("Error while sending message from server with status code 200" +
+                    exception.getMessage());
         }
     }
 
     private void sendResponseCreated(HttpExchange httpExchange) {
-        try (OutputStream outputStream = httpExchange.getResponseBody()) {
+        try (OutputStream ignored = httpExchange.getResponseBody()) {
             httpExchange.sendResponseHeaders(201, 0);
-        } catch (IOException e) {
-            throw new RuntimeException(e); //TODO подумать что делать с исключением
+        } catch (IOException exception) {
+            throw new RuntimeException("Error while sending message from server with status code 201" +
+                    exception.getMessage());
         }
     }
 
@@ -119,12 +122,13 @@ public class HttpTaskServer {
                     handleEpicPutRequestMethod(httpExchange);
                     break;
                 default:
-                    throw new RuntimeException(); //TODO подумать что делать с исключением
+                    System.out.println("/tasks/epic Method Not Allowed " + httpExchange.getRequestMethod());
+                    httpExchange.sendResponseHeaders(405, 0);
             }
         }
     }
 
-    private void handleEpicGetRequestMethod(HttpExchange httpExchange) {
+    private void handleEpicGetRequestMethod(HttpExchange httpExchange) throws IOException {
         String response;
         if (isRequestContainsParameters(httpExchange)) {
             long idEpicToFind = defineIdRequest(httpExchange);
@@ -143,7 +147,7 @@ public class HttpTaskServer {
         sendResponseCreated(httpExchange);
     }
 
-    private void handleEpicDeleteRequestMethod(HttpExchange httpExchange) {
+    private void handleEpicDeleteRequestMethod(HttpExchange httpExchange) throws IOException {
         if (isRequestContainsParameters(httpExchange)) {
             long idEpicToRemove = defineIdRequest(httpExchange);
             taskManager.removeEpicById(idEpicToRemove);
@@ -164,17 +168,19 @@ public class HttpTaskServer {
             taskManager.updateTaskDescription(idEpicToPut, newEpic.getDescription());
             sendResponseOk(httpExchange);
         } else {
-            throw new RuntimeException(); //TODO подумать что делать с исключением
+            System.out.println("/tasks/epic Bad Request " + httpExchange.getRequestMethod());
+            httpExchange.sendResponseHeaders(400, 0);
         }
     }
 
-    private long defineIdRequest(HttpExchange httpExchange) {
-        long idTaskToFind;
+    private long defineIdRequest(HttpExchange httpExchange) throws IOException {
+        long idTaskToFind = 0;
         String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
         if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
             idTaskToFind = Long.parseLong(queryParams[1]);
         } else{
-            throw new RuntimeException(); //TODO подумать что делать с исключением
+            System.out.println("/tasks/epic Bad Request " + httpExchange.getRequestMethod());
+            httpExchange.sendResponseHeaders(400, 0);
         }
         return idTaskToFind;
     }
@@ -201,12 +207,13 @@ public class HttpTaskServer {
                     handleSubtaskPutRequestMethod(httpExchange);
                     break;
                 default:
-                    throw new RuntimeException(); //TODO подумать что делать с исключением
+                    System.out.println("/tasks/subtask Method Not Allowed " + httpExchange.getRequestMethod());
+                    httpExchange.sendResponseHeaders(405, 0);
             }
         }
     }
 
-    private void handleSubtaskGetRequestMethod(HttpExchange httpExchange) {
+    private void handleSubtaskGetRequestMethod(HttpExchange httpExchange) throws IOException {
         String response;
         if (isRequestContainsParameters(httpExchange)) {
             long idSubtaskToFind = defineIdRequest(httpExchange);
@@ -225,7 +232,7 @@ public class HttpTaskServer {
         sendResponseCreated(httpExchange);
     }
 
-    private void handleSubtaskDeleteRequestMethod(HttpExchange httpExchange) {
+    private void handleSubtaskDeleteRequestMethod(HttpExchange httpExchange) throws IOException {
         if (isRequestContainsParameters(httpExchange)) {
             long idSubtaskToRemove = defineIdRequest(httpExchange);
             taskManager.removeSubtaskById(idSubtaskToRemove);
@@ -246,15 +253,21 @@ public class HttpTaskServer {
             taskManager.updateTaskDescription(idSubtaskToPut, newSubtask.getDescription());
             sendResponseOk(httpExchange);
         } else {
-            throw new RuntimeException(); //TODO подумать что делать с исключением
+            System.out.println("/tasks/epic Bad Request " + httpExchange.getRequestMethod());
+            httpExchange.sendResponseHeaders(400, 0);
         }
     }
 
     private class HistoryHandler implements HttpHandler {
         @Override
-        public void handle(HttpExchange httpExchange) {
-            String response = gson.toJson(taskManager.getHistory());
-            sendResponseOkAndTasks(response, httpExchange);
+        public void handle(HttpExchange httpExchange) throws IOException {
+            if (httpExchange.getRequestMethod().equals("GET")) {
+                String response = gson.toJson(taskManager.getHistory());
+                sendResponseOkAndTasks(response, httpExchange);
+            } else {
+                System.out.println("/tasks/subtask Method Not Allowed " + httpExchange.getRequestMethod());
+                httpExchange.sendResponseHeaders(405, 0);
+            }
         }
     }
 
