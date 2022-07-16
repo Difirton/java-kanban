@@ -3,11 +3,13 @@ package controller;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -15,21 +17,37 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
 public class KVServer {
-	public static final int PORT = 8078;
+	private static int PORT;
+	private static String hostname;
 	private final String apiToken;
 	private final HttpServer server;
 	private final Map<String, String> data = new HashMap<>();
 
 	public KVServer() throws IOException {
+		readKVServerConfig();
 		apiToken = generateApiToken();
-		server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
+		server = HttpServer.create(new InetSocketAddress(hostname, PORT), 0);
 		server.createContext("/register", this::register);
 		server.createContext("/save", this::save);
 		server.createContext("/load", this::load);
 	}
 
+	private static void readKVServerConfig() {
+		try (FileInputStream propertiesReader = new FileInputStream("config.properties")) {
+			Properties properties = new Properties();
+			properties.load(propertiesReader);
+			hostname = properties.getProperty("KVServer.hostname");
+			String port = properties.getProperty("KVServer.port");
+			PORT = Integer.parseInt(port);
+		} catch (IOException exception) {
+			throw new RuntimeException("There is no data on the hostname and port, the hostname is located " +
+					"KVServer. Check that there is a config.properties file at the root of the project with " +
+					"the keys KVServer.hostname and KVServer.port" + exception.getMessage());
+		}
+	}
+
 	private void load(HttpExchange h) throws IOException {
-		String response = null;
+		String response = "";
 		try {
 			System.out.println("\n/load");
 			if ("GET".equals(h.getRequestMethod())) {
