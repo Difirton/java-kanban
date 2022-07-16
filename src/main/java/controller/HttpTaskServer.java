@@ -41,13 +41,6 @@ public class HttpTaskServer {
     public HttpTaskServer() throws IOException {
         this.taskManager = Manager.getTaskManager(TypeTasksManager.FILE_BACKED_TASKS_MANAGER);
         readKVServerURL();
-        taskManager.createNewEpic("Epic 1", "Desc 1");
-        taskManager.createNewSubtask("Subtask 1.1", "Desc sub 1", 1L, "2020-01-01 00:00", 40);
-        taskManager.createNewSubtask("Subtask 1.2", "Desc sub 1", 1L, "2020-01-01 01:00", 40);
-        taskManager.createNewSubtask("Subtask 1.3", "Desc sub 1", 1L, "2020-01-01 02:00", 40);
-        taskManager.createNewEpic("Epic 2", "Desc 2");
-        taskManager.createNewSubtask("Subtask 2.1", "Desc sub 2", 5L, "2020-01-01 03:00", 40);
-        taskManager.createNewSubtask("Subtask 2.2", "Desc sub 2", 5L, "2020-01-01 04:00", 40);
         server = HttpServer.create(new InetSocketAddress(hostname, PORT), 0);
         server.createContext("/tasks", new TasksHandler());
         server.createContext("/tasks/epic", new EpicHandler());
@@ -71,8 +64,8 @@ public class HttpTaskServer {
 
     public HttpTaskServer start() {
         System.out.println("Запускаем HttpTaskServer на порту " + PORT);
-        System.out.println("Открой в браузере http://" + hostname + ":" + PORT + "/");
         server.start();
+        System.out.println("Открой в браузере http://" + hostname + ":" + PORT + "/");
         return this;
     }
 
@@ -101,43 +94,82 @@ public class HttpTaskServer {
         }
     }
 
+    private void sendResponseCreated(HttpExchange httpExchange) {
+        try (OutputStream outputStream = httpExchange.getResponseBody()) {
+            httpExchange.sendResponseHeaders(201, 0);
+        } catch (IOException e) {
+            throw new RuntimeException(e); //TODO подумать что делать с исключением
+        }
+    }
+
     private class EpicHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-            String response;
             switch (httpExchange.getRequestMethod()) {
                 case ("GET"):
-                    if (isRequestContainsParameters(httpExchange)) {
-                        long idEpicToFind = defineIdRequest(httpExchange);
-                        response = gson.toJson(taskManager.getEpicById(idEpicToFind));
-                    } else {
-                        response = gson.toJson(taskManager.getAllEpics());
-                    }
-                    sendResponseOkAndTasks(response, httpExchange);
+                    handleEpicGetRequestMethod(httpExchange);
                     break;
                 case ("POST"):
-                    InputStream inputStream = httpExchange.getRequestBody();
-                    String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    Epic newEpic = gson.fromJson(body, Epic.class);
-                    taskManager.createNewEpic(newEpic.getName(), newEpic.getDescription());
-                    sendResponseOk(httpExchange);
+                    handleEpicPostRequestMethod(httpExchange);
                     break;
                 case ("DELETE"):
-                    if (isRequestContainsParameters(httpExchange)) {
-                        long idEpicToRemove = defineIdRequest(httpExchange);
-                        taskManager.removeEpicById(idEpicToRemove);
-                        sendResponseOk(httpExchange);
-                    } else {
-                        taskManager.removeAllEpics();
-                        sendResponseOk(httpExchange);
-                    }
+                    handleEpicDeleteRequestMethod(httpExchange);
                     break;
+                case ("PUT"):
+                    handleEpicPutRequestMethod(httpExchange);
+                    break;
+                default:
+                    throw new RuntimeException(); //TODO подумать что делать с исключением
             }
         }
     }
 
+    private void handleEpicGetRequestMethod(HttpExchange httpExchange) {
+        String response;
+        if (isRequestContainsParameters(httpExchange)) {
+            long idEpicToFind = defineIdRequest(httpExchange);
+            response = gson.toJson(taskManager.getEpicById(idEpicToFind));
+        } else {
+            response = gson.toJson(taskManager.getAllEpics());
+        }
+        sendResponseOkAndTasks(response, httpExchange);
+    }
+
+    private void handleEpicPostRequestMethod(HttpExchange httpExchange) throws IOException {
+        InputStream inputStream = httpExchange.getRequestBody();
+        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        Epic newEpic = gson.fromJson(body, Epic.class);
+        taskManager.createNewEpic(newEpic.getName(), newEpic.getDescription());
+        sendResponseCreated(httpExchange);
+    }
+
+    private void handleEpicDeleteRequestMethod(HttpExchange httpExchange) {
+        if (isRequestContainsParameters(httpExchange)) {
+            long idEpicToRemove = defineIdRequest(httpExchange);
+            taskManager.removeEpicById(idEpicToRemove);
+            sendResponseOk(httpExchange);
+        } else {
+            taskManager.removeAllEpics();
+            sendResponseOk(httpExchange);
+        }
+    }
+
+    private void handleEpicPutRequestMethod(HttpExchange httpExchange) throws IOException {
+        if (isRequestContainsParameters(httpExchange)) {
+            long idEpicToPut = defineIdRequest(httpExchange);
+            InputStream inputStream = httpExchange.getRequestBody();
+            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            Epic newEpic = gson.fromJson(body, Epic.class);
+            taskManager.updateTaskName(idEpicToPut, newEpic.getName());
+            taskManager.updateTaskDescription(idEpicToPut, newEpic.getDescription());
+            sendResponseOk(httpExchange);
+        } else {
+            throw new RuntimeException(); //TODO подумать что делать с исключением
+        }
+    }
+
     private long defineIdRequest(HttpExchange httpExchange) {
-        Long idTaskToFind;
+        long idTaskToFind;
         String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
         if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
             idTaskToFind = Long.parseLong(queryParams[1]);
@@ -157,29 +189,64 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             switch (httpExchange.getRequestMethod()) {
                 case ("GET"):
-                    String response = gson.toJson(taskManager.getAllSubtasks());
-                    sendResponseOkAndTasks(response, httpExchange);
+                    handleSubtaskGetRequestMethod(httpExchange);
                     break;
                 case ("POST"):
-                    InputStream inputStream = httpExchange.getRequestBody();
-                    String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    Subtask newSubtask = gson.fromJson(body, Subtask.class);
-                    taskManager.createNewSubtask(newSubtask.getName(),
-                                                 newSubtask.getDescription(),
-                                                 newSubtask.getEpicsId(),
-                                                 newSubtask.getStartDateTime(),
-                                                 newSubtask.getTimeExecution());
-                    sendResponseOk(httpExchange);
+                    handleSubtaskPostRequestMethod(httpExchange);
                     break;
                 case ("DELETE"):
-                    String[] queryParams = httpExchange.getRequestURI().getQuery().split("=");
-                    if (queryParams[0].equals("id") && !queryParams[1].isEmpty()) {
-                        Long idSubtaskToRemove = Long.parseLong(queryParams[1]);
-                        taskManager.removeSubtaskById(idSubtaskToRemove);
-                        sendResponseOk(httpExchange);
-                    }
+                    handleSubtaskDeleteRequestMethod(httpExchange);
                     break;
+                case ("PUT"):
+                    handleSubtaskPutRequestMethod(httpExchange);
+                    break;
+                default:
+                    throw new RuntimeException(); //TODO подумать что делать с исключением
             }
+        }
+    }
+
+    private void handleSubtaskGetRequestMethod(HttpExchange httpExchange) {
+        String response;
+        if (isRequestContainsParameters(httpExchange)) {
+            long idSubtaskToFind = defineIdRequest(httpExchange);
+            response = gson.toJson(taskManager.getSubtaskById(idSubtaskToFind));
+        } else {
+            response = gson.toJson(taskManager.getAllSubtasks());
+        }
+        sendResponseOkAndTasks(response, httpExchange);
+    }
+
+    private void handleSubtaskPostRequestMethod(HttpExchange httpExchange) throws IOException {
+        InputStream inputStream = httpExchange.getRequestBody();
+        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        Subtask newSubtask = gson.fromJson(body, Subtask.class);
+        taskManager.createNewSubtask(newSubtask.getName(), newSubtask.getDescription(), newSubtask.getEpicsId());
+        sendResponseCreated(httpExchange);
+    }
+
+    private void handleSubtaskDeleteRequestMethod(HttpExchange httpExchange) {
+        if (isRequestContainsParameters(httpExchange)) {
+            long idSubtaskToRemove = defineIdRequest(httpExchange);
+            taskManager.removeSubtaskById(idSubtaskToRemove);
+            sendResponseOk(httpExchange);
+        } else {
+            taskManager.removeAllSubtasks();
+            sendResponseOk(httpExchange);
+        }
+    }
+
+    private void handleSubtaskPutRequestMethod(HttpExchange httpExchange) throws IOException {
+        if (isRequestContainsParameters(httpExchange)) {
+            long idSubtaskToPut = defineIdRequest(httpExchange);
+            InputStream inputStream = httpExchange.getRequestBody();
+            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            Subtask newSubtask = gson.fromJson(body, Subtask.class);
+            taskManager.updateTaskName(idSubtaskToPut, newSubtask.getName());
+            taskManager.updateTaskDescription(idSubtaskToPut, newSubtask.getDescription());
+            sendResponseOk(httpExchange);
+        } else {
+            throw new RuntimeException(); //TODO подумать что делать с исключением
         }
     }
 
@@ -187,7 +254,6 @@ public class HttpTaskServer {
         @Override
         public void handle(HttpExchange httpExchange) {
             String response = gson.toJson(taskManager.getHistory());
-            System.out.println(response);
             sendResponseOkAndTasks(response, httpExchange);
         }
     }

@@ -157,7 +157,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
         this.save();
     }
 
-
     protected void save() {
         try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(file))) {
             writer.writeObject(this);

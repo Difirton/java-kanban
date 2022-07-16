@@ -47,7 +47,7 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
             fieldName = reader.nextName();
         }
         if ("task_type".equals(fieldName)) {
-            token = reader.peek();
+            reader.peek();
             reader.skipValue();
         }
         Epic newEpic = constructEpic(reader, fieldName);

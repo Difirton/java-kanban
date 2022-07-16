@@ -148,7 +148,7 @@ public class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(epicJson))
                 .build();
         HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
-        int expectedStatusCode = 200;
+        int expectedStatusCode = 201;
         int actualStatusCode = response.statusCode();
         assertEquals(expectedStatusCode, actualStatusCode);
         String expectedEpicName = "Test";
@@ -180,7 +180,7 @@ public class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(epicJson))
                 .build();
         HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
-        int expectedStatusCode = 200;
+        int expectedStatusCode = 201;
         int actualStatusCode = response.statusCode();
         assertEquals(expectedStatusCode, actualStatusCode);
         String expectedEpicName = "Test";
@@ -222,5 +222,216 @@ public class HttpTaskServerTest {
         int actualStatusCode = response.statusCode();
         assertEquals(expectedStatusCode, actualStatusCode);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Test patch epic: PUT /tasks/epic, expected ok")
+    public void testPutEpic() throws URISyntaxException, IOException, InterruptedException {
+        String epicJson = "{\n" +
+                "\t\t\"task_type\": \"Epic\",\n" +
+                "\t\t\"id\": 1,\n" +
+                "\t\t\"all_id_subtasks_in_epic\": \"[2, 3, 4]\",\n" +
+                "\t\t\"name\": \"Test\",\n" +
+                "\t\t\"description\": \"Test\",\n" +
+                "\t\t\"status\": \"NEW\",\n" +
+                "\t\t\"start\": \"2020-01-01T00:00\",\n" +
+                "\t\t\"execution\": \"PT2H40M\"\n" +
+                "\t}";
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/epic?id=1"))
+                .timeout(Duration.ofSeconds(5L))
+                .headers("Content-Type", "text/plain;charset=UTF-8")
+                .PUT(HttpRequest.BodyPublishers.ofString(epicJson))
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expectedStatusCode = 200;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        String expectedEpicName = "Test";
+        String actualEpicName = fileBackedTasksManager.getEpicById(1L).getName();
+        String expectedEpicDescription = "Test";
+        String actualEpicDescription = fileBackedTasksManager.getEpicById(1L).getDescription();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertEquals(expectedEpicName, actualEpicName);
+        assertEquals(expectedEpicDescription, actualEpicDescription);
+    }
+
+    @Test
+    @DisplayName("Test find all subtasks: GET /tasks/subtask, expected ok")
+    public void testGetAllSubtasks() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask"))
+                .timeout(Duration.ofSeconds(20L))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        String expected = gson.toJson(fileBackedTasksManager.getAllSubtasks());
+        String actual = response.body();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    @DisplayName("Test subtask by id: GET /tasks/subtask?id=3, expected ok")
+    public void testGetSubtaskById() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask?id=3"))
+                .timeout(Duration.ofSeconds(20L))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        String expected = gson.toJson(fileBackedTasksManager.getTaskById(3L));
+        String actual = response.body();
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    @DisplayName("Test create new subtask (short json): POST /tasks/subtask, expected ok")
+    public void testPostNewSubtaskShortJson() throws URISyntaxException, IOException, InterruptedException {
+        String subtaskJson = "{\"epicsId\": 1,\"name\":\"Test\",\"description\":\"Test\"}";
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask"))
+                .timeout(Duration.ofSeconds(5L))
+                .headers("Content-Type", "text/plain;charset=UTF-8")
+                .POST(HttpRequest.BodyPublishers.ofString(subtaskJson))
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expectedStatusCode = 201;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        String expectedSubtaskName = "Test";
+        String actualSubtaskName = fileBackedTasksManager.getSubtaskById(8L).getName();
+        String expectedSubtaskDescription = "Test";
+        String actualSubtaskDescription = fileBackedTasksManager.getSubtaskById(8L).getDescription();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertEquals(expectedSubtaskName, actualSubtaskName);
+        assertEquals(expectedSubtaskDescription, actualSubtaskDescription);
+    }
+
+    @Test
+    @DisplayName("Test create new subtask (full json): POST /tasks/subtask, expected ok")
+    public void testPostNewSubtaskFullJson() throws URISyntaxException, IOException, InterruptedException {
+        String subtaskJson = "{\n" +
+                "\t\t\"task_type\": \"Subtask\",\n" +
+                "\t\t\"id\": 8,\n" +
+                "\t\t\"epicsId\": \"1\",\n" +
+                "\t\t\"name\": \"Test\",\n" +
+                "\t\t\"description\": \"Test\",\n" +
+                "\t\t\"status\": \"NEW\",\n" +
+                "\t\t\"start\": \"2020-01-01T00:00\",\n" +
+                "\t\t\"execution\": \"PT2H40M\"\n" +
+                "\t}";
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask"))
+                .timeout(Duration.ofSeconds(5L))
+                .headers("Content-Type", "text/plain;charset=UTF-8")
+                .POST(HttpRequest.BodyPublishers.ofString(subtaskJson))
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expectedStatusCode = 201;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        String expectedSubtaskName = "Test";
+        String actualSubtaskName = fileBackedTasksManager.getSubtaskById(8L).getName();
+        String expectedSubtaskDescription = "Test";
+        String actualSubtaskDescription = fileBackedTasksManager.getSubtaskById(8L).getDescription();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertEquals(expectedSubtaskName, actualSubtaskName);
+        assertEquals(expectedSubtaskDescription, actualSubtaskDescription);
+    }
+
+    @Test
+    @DisplayName("Test delete subtask by id: DELETE /tasks/subtask?id=2, expected ok")
+    public void testDeleteSubtaskById() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask?id=2"))
+                .timeout(Duration.ofSeconds(20L))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expectedStatusCode = 200;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertThrows(NullPointerException.class, () -> fileBackedTasksManager.getTaskById(2L));
+    }
+
+    @Test
+    @DisplayName("Test delete all subtasks: DELETE /tasks/subtask, expected ok")
+    public void testDeleteAllSubtask() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask"))
+                .timeout(Duration.ofSeconds(20L))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expected = 0;
+        int actual = fileBackedTasksManager.getAllSubtasks().size();
+        int expectedStatusCode = 200;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Test patch epic: PUT /tasks/subtask, expected ok")
+    public void testPutSubtask() throws URISyntaxException, IOException, InterruptedException {
+        String subtaskJson = "{\n" +
+                "\t\t\"task_type\": \"Subtask\",\n" +
+                "\t\t\"id\": 7,\n" +
+                "\t\t\"epicsId\": \"1\",\n" +
+                "\t\t\"name\": \"Test\",\n" +
+                "\t\t\"description\": \"Test\",\n" +
+                "\t\t\"status\": \"NEW\",\n" +
+                "\t\t\"start\": \"2020-01-01T00:00\",\n" +
+                "\t\t\"execution\": \"PT2H40M\"\n" +
+                "\t}";
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask?id=7"))
+                .timeout(Duration.ofSeconds(5L))
+                .headers("Content-Type", "text/plain;charset=UTF-8")
+                .PUT(HttpRequest.BodyPublishers.ofString(subtaskJson))
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        int expectedStatusCode = 200;
+        int actualStatusCode = response.statusCode();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        String expectedSubtaskName = "Test";
+        String actualSubtaskName = fileBackedTasksManager.getSubtaskById(7L).getName();
+        String expectedSubtaskDescription = "Test";
+        String actualSubtaskDescription = fileBackedTasksManager.getSubtaskById(7L).getDescription();
+        assertEquals(expectedStatusCode, actualStatusCode);
+        assertEquals(expectedSubtaskName, actualSubtaskName);
+        assertEquals(expectedSubtaskDescription, actualSubtaskDescription);
+    }
+
+    @Test
+    @DisplayName("Test history: GET /tasks/history, expected ok")
+    public void testGetHistory() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask?id=6"))
+                .timeout(Duration.ofSeconds(20L))
+                .GET()
+                .build();
+        httpTaskServerClient.send(getRequest, handler);
+        getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/epic?id=5"))
+                .timeout(Duration.ofSeconds(20L))
+                .GET()
+                .build();
+        httpTaskServerClient.send(getRequest, handler);
+        getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/subtask?id=2"))
+                .timeout(Duration.ofSeconds(20L))
+                .GET()
+                .build();
+        httpTaskServerClient.send(getRequest, handler);
+        getRequest = HttpRequest.newBuilder()
+                .uri(new URI(serverURI + "/tasks/history"))
+                .timeout(Duration.ofSeconds(20L))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpTaskServerClient.send(getRequest, handler);
+        String expected = gson.toJson(fileBackedTasksManager.getHistory());
+        String actual = response.body();
+        assertEquals(actual, expected);
     }
 }
