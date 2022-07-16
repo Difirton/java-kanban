@@ -13,7 +13,7 @@ public class GsonTimeIntervalsListAdapter extends TypeAdapter<TimeIntervalsList>
     @Override
     public void write(JsonWriter writer, TimeIntervalsList timeIntervalsList) throws IOException {
         writer.beginArray();
-        timeIntervalsList.getTimeIntervals().stream().forEach(o -> {
+        timeIntervalsList.getTimeIntervals().forEach(o -> {
             try {
                 writer.beginObject();
                 writer.name("start");

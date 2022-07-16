@@ -22,11 +22,16 @@ public class GsonHistoryManagerAdapter extends TypeAdapter<InMemoryHistoryManage
         writer.beginArray();
         List<Task> history = historyManager.getHistory();
         for (Task task : history) {
-            if (task.getClass().getSimpleName().equals("Epic")) {
-                gsonEpicAdapter.write(writer, (Epic) task);
-            }
-            if (task.getClass().getSimpleName().equals("Subtask")) {
-                gsonSubtaskAdapter.write(writer, (Subtask) task);
+            String typeTask = task.getClass().getSimpleName();
+            switch (typeTask) {
+                case ("Epic"):
+                    gsonEpicAdapter.write(writer, (Epic) task);
+                    break;
+                case ("Subtask"):
+                    gsonSubtaskAdapter.write(writer, (Subtask) task);
+                    break;
+                default:
+                    throw new RuntimeException("No such type task " + typeTask);
             }
         }
         writer.endArray();
