@@ -25,7 +25,7 @@ public class Manager {
         return tasksManager;
     }
 
-//    public static TasksManager getDefault(String key) {
-//        return Manager.getTaskManager(TypeTasksManager.HTTP_TASKS_MANAGER);
-//    }
+    public static TasksManager getDefault(String key) {
+        return Manager.getTaskManager(TypeTasksManager.HTTP_TASKS_MANAGER);
+    }
 }

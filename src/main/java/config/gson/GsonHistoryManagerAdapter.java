@@ -45,12 +45,16 @@ public class GsonHistoryManagerAdapter extends TypeAdapter<InMemoryHistoryManage
             }
             if ("task_type".equals(fieldName)) {
                 reader.peek();
-                switch (reader.nextString()) {
+                String typeTask = reader.nextString();
+                switch (typeTask) {
                     case ("Epic"):
                         historyManager.add(GsonEpicAdapter.constructEpic(reader, fieldName));
                         break;
                     case ("Subtask"):
                         historyManager.add(GsonSubtaskAdapter.constructSubtask(reader, fieldName));
+                        break;
+                    default:
+                        throw new RuntimeException("No such type task " + typeTask);
                 }
             }
             reader.endObject();

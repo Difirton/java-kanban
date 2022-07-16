@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 public class TestLauncher {
 
     public static void main(String... args) {
-        var launcher =LauncherFactory.create();
+        var launcher = LauncherFactory.create();
         var listener = new SummaryGeneratingListener();
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
                 .request()

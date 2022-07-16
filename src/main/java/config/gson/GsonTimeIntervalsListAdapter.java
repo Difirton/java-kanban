@@ -21,8 +21,8 @@ public class GsonTimeIntervalsListAdapter extends TypeAdapter<TimeIntervalsList>
                 writer.name("finish");
                 writer.value(o.getFinish().toString());
                 writer.endObject();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException exception) {
+                throw new RuntimeException("Error when translating to Json TimeIntervalsList. Wrong format.");
             }
         });
         writer.endArray();
