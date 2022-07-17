@@ -68,7 +68,7 @@ public class HttpTaskServerTest {
         } catch (IOException exception) {
             throw new ManagerSaveException("There is no data on the address and port, the address is located " +
                     "HttpTaskServer. Check that there is a config.properties file at the root of the project with the " +
-                    "keys HttpTaskServer.address and HttpTaskServer.port" + exception.getMessage());
+                    "keys HttpTaskServer.address and HttpTaskServer.port " + exception.getMessage());
         }
     }
 

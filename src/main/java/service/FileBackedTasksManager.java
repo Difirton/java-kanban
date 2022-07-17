@@ -26,7 +26,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
         } catch (IOException exception) {
             throw new ManagerSaveException("There is no data for the path where the object will be serialized. " +
                     "Check that there is a config.properties file at the root of the project with the key " +
-                    "directory.toSaveFileBackedTasksManager" + exception.getMessage());
+                    "directory.toSaveFileBackedTasksManager " + exception.getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements Seria
             writer.writeObject(this);
         } catch (IOException exception) {
             throw new ManagerSaveException("There was a problem saving the file, probably the directory specified for" +
-                    " saving the data does not exist. Check if the directory exists: \"resources\\data\"" +
+                    " saving the data does not exist. Check if the directory exists: \"resources\\data\" " +
                     exception.getMessage());
         }
     }

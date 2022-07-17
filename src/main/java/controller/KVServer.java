@@ -42,7 +42,7 @@ public class KVServer {
 		} catch (IOException exception) {
 			throw new RuntimeException("There is no data on the hostname and port, the hostname is located " +
 					"KVServer. Check that there is a config.properties file at the root of the project with " +
-					"the keys KVServer.hostname and KVServer.port" + exception.getMessage());
+					"the keys KVServer.hostname and KVServer.port " + exception.getMessage());
 		}
 	}
 

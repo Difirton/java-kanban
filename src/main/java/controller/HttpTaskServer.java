@@ -31,6 +31,10 @@ public class HttpTaskServer {
     private static int PORT;
     private final HttpServer server;
     private final TasksManager taskManager;
+    private final String GET = "GET";
+    private final String POST = "POST";
+    private final String DELETE = "DELETE";
+    private final String PUT = "PUT";
     private final Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Subtask.class, new GsonSubtaskAdapter())
                 .registerTypeAdapter(Epic.class, new GsonEpicAdapter())
@@ -58,7 +62,7 @@ public class HttpTaskServer {
         } catch (IOException exception) {
             throw new ManagerSaveException("There is no data on the address and port, the address is located " +
                     "HttpTaskServer. Check that there is a config.properties file at the root of the project with " +
-                    "the keys HttpTaskServer.address and HttpTaskServer.port" + exception.getMessage());
+                    "the keys HttpTaskServer.address and HttpTaskServer.port " + exception.getMessage());
         }
     }
 
@@ -82,7 +86,7 @@ public class HttpTaskServer {
             httpExchange.sendResponseHeaders(200, response.length());
             outputStream.write(response.getBytes());
         } catch (IOException exception) {
-            throw new RuntimeException("Error while sending message from server with status code 200 and body" +
+            throw new RuntimeException("Error while sending message from server with status code 200 and body " +
                     exception.getMessage());
         }
     }
@@ -91,7 +95,7 @@ public class HttpTaskServer {
         try (OutputStream ignored = httpExchange.getResponseBody()) {
             httpExchange.sendResponseHeaders(200, 0);
         } catch (IOException exception) {
-            throw new RuntimeException("Error while sending message from server with status code 200" +
+            throw new RuntimeException("Error while sending message from server with status code 200 " +
                     exception.getMessage());
         }
     }
@@ -100,7 +104,7 @@ public class HttpTaskServer {
         try (OutputStream ignored = httpExchange.getResponseBody()) {
             httpExchange.sendResponseHeaders(201, 0);
         } catch (IOException exception) {
-            throw new RuntimeException("Error while sending message from server with status code 201" +
+            throw new RuntimeException("Error while sending message from server with status code 201 " +
                     exception.getMessage());
         }
     }
@@ -109,16 +113,16 @@ public class HttpTaskServer {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
             switch (httpExchange.getRequestMethod()) {
-                case ("GET"):
+                case (GET):
                     handleEpicGetRequestMethod(httpExchange);
                     break;
-                case ("POST"):
+                case (POST):
                     handleEpicPostRequestMethod(httpExchange);
                     break;
-                case ("DELETE"):
+                case (DELETE):
                     handleEpicDeleteRequestMethod(httpExchange);
                     break;
-                case ("PUT"):
+                case (PUT):
                     handleEpicPutRequestMethod(httpExchange);
                     break;
                 default:
@@ -194,16 +198,16 @@ public class HttpTaskServer {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
             switch (httpExchange.getRequestMethod()) {
-                case ("GET"):
+                case (GET):
                     handleSubtaskGetRequestMethod(httpExchange);
                     break;
-                case ("POST"):
+                case (POST):
                     handleSubtaskPostRequestMethod(httpExchange);
                     break;
-                case ("DELETE"):
+                case (DELETE):
                     handleSubtaskDeleteRequestMethod(httpExchange);
                     break;
-                case ("PUT"):
+                case (PUT):
                     handleSubtaskPutRequestMethod(httpExchange);
                     break;
                 default:

@@ -45,7 +45,7 @@ public class HTTPTasksManager extends FileBackedTasksManager {
         } catch (IOException exception) {
             throw new ManagerSaveException("There is no data on the address and port, the address is located KVServer. " +
                     "Check that there is a config.properties file at the root of the project with the keys " +
-                    "KVServer.address and KVServer.port" + exception.getMessage());
+                    "KVServer.address and KVServer.port " + exception.getMessage());
         }
     }
 
