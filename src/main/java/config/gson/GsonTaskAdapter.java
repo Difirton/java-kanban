@@ -18,16 +18,12 @@ public class GsonTaskAdapter extends TypeAdapter<Task> {
     public void write(JsonWriter writer, Task task) throws IOException {
         writer.beginObject();
         try {
-            String typeTask = task.getClass().getSimpleName();
-            switch (task.getClass().getSimpleName()) {
-                case ("Epic"):
+            switch (task.getType()) {
+                case EPIC:
                     gsonEpicAdapter.write(writer, (Epic) task);
                     break;
-                case ("Subtask"):
+                case SUBTASK:
                     gsonSubtaskAdapter.write(writer, (Subtask) task);
-                    break;
-                default:
-                    throw new RuntimeException("No such type task " + typeTask);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

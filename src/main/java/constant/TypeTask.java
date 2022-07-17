@@ -4,13 +4,13 @@ public enum TypeTask {
     EPIC ("Epic"),
     SUBTASK ("Subtask");
 
-    private String typeTask;
+    private final String nameTypeTask;
 
-    TypeTask(String typeTask) {
-        this.typeTask = typeTask;
+    TypeTask(String nameTypeTask) {
+        this.nameTypeTask = nameTypeTask;
     }
 
-    public String getTypeTask() {
-        return typeTask;
+    public String getNameTypeTask() {
+        return nameTypeTask;
     }
 }

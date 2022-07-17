@@ -1,11 +1,14 @@
 package entity;
 
 import constant.TaskStatus;
+import constant.TypeTask;
 import utill.DateParser;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static constant.TypeTask.EPIC;
 
 public class Epic extends Task {
     private List<Long> allIdSubtasksInEpic;
@@ -22,6 +25,10 @@ public class Epic extends Task {
         super.setTimeExecution(epicBuilder.timeExecution);
         super.setStartDateTime(epicBuilder.startDateTime);
         this.allIdSubtasksInEpic = epicBuilder.allIdSubtasksInEpic;
+    }
+
+    public TypeTask getType() {
+        return EPIC;
     }
 
     public void addSubtask(Long idSubtask) {

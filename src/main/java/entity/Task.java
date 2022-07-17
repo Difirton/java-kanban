@@ -1,6 +1,7 @@
 package entity;
 
 import constant.TaskStatus;
+import constant.TypeTask;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -27,6 +28,8 @@ public abstract class Task implements Serializable, Comparable<Task> {
         }
         return Long.compare(id, anotherTask.id);
     }
+
+    public abstract TypeTask getType();
 
     public long getId() {
         return id;

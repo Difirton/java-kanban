@@ -1,12 +1,15 @@
 package entity;
 
 import constant.TaskStatus;
+import constant.TypeTask;
 import utill.DateParser;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.StringJoiner;
+
+import static constant.TypeTask.SUBTASK;
 
 public class Subtask extends Task {
     private final long epicsId;
@@ -24,6 +27,10 @@ public class Subtask extends Task {
         super.setStatus(subtaskBuilder.status);
         super.setTimeExecution(subtaskBuilder.timeExecution);
         super.setStartDateTime(subtaskBuilder.startDateTime);
+    }
+
+    public TypeTask getType() {
+        return SUBTASK;
     }
 
     public Long getEpicsId() {
