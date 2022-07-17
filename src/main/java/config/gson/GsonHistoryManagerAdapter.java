@@ -4,6 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import constant.TypeTask;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
@@ -47,11 +48,11 @@ public class GsonHistoryManagerAdapter extends TypeAdapter<InMemoryHistoryManage
             if ("task_type".equals(fieldName)) {
                 reader.peek();
                 String typeTask = reader.nextString();
-                switch (typeTask) {
-                    case ("Epic"):
+                switch (TypeTask.valueOf(typeTask)) {
+                    case EPIC:
                         historyManager.add(GsonEpicAdapter.constructEpic(reader, fieldName));
                         break;
-                    case ("Subtask"):
+                    case SUBTASK:
                         historyManager.add(GsonSubtaskAdapter.constructSubtask(reader, fieldName));
                         break;
                     default:

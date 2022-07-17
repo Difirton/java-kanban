@@ -17,7 +17,7 @@ public class GsonSubtaskAdapter extends TypeAdapter<Subtask> {
     public void write(JsonWriter writer, Subtask subtask) throws IOException {
         writer.beginObject();
         writer.name("task_type");
-        writer.value(subtask.getType().getNameTypeTask());
+        writer.value(subtask.getType().name());
         writer.name("id");
         writer.value(subtask.getId());
         writer.name("epicsId");

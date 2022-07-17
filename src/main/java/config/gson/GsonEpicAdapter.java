@@ -20,7 +20,7 @@ public class GsonEpicAdapter extends TypeAdapter<Epic> {
     public void write(JsonWriter writer, Epic epic) throws IOException {
         writer.beginObject();
         writer.name("task_type");
-        writer.value(epic.getType().getNameTypeTask());
+        writer.value(epic.getType().name());
         writer.name("id");
         writer.value(epic.getId());
         writer.name("all_id_subtasks_in_epic");
